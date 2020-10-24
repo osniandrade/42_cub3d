@@ -6,15 +6,15 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/24 12:09:35 by ocarlos-          #+#    #+#              #
-#    Updated: 2020/10/24 12:35:28 by ocarlos-         ###   ########.fr        #
+#    Updated: 2020/10/24 12:37:20 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d.out
 
-SRC =	start.c
+SRC = start.c
 
-OBJ = 	start.o
+OBJ = start.o
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -26,7 +26,7 @@ MLXFLAGS = -lmlx -lm -lX11 -lXext
 
 OPTIONS = -g
 
-all : $(NAME)
+all: $(NAME)
 
 $(NAME):
 	@gcc $(FLAGS) $(MLXHEADER) $(SRC) $(MLXLIB) $(MLXFLAGS) -o $(NAME)
