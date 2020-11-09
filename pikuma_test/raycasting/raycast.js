@@ -7,7 +7,7 @@ const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
 const FOV_ANGLE = 60 * (Math.PI / 180);
 
-const WALL_STRIP_WIDTH = 1;
+const WALL_STRIP_WIDTH = 5;
 const NUM_RAYS = WINDOW_WIDTH / WALL_STRIP_WIDTH;
 
 const MINIMAP_SCALE_FACTOR = 0.2;
@@ -208,10 +208,17 @@ class Ray {
       ? distanceBetweenPoints(player.x, player.y, vertWallHitX, vertWallHitY)
       : Number.MAX_VALUE;
     
-    this.wallHitX = (horzHitDistance < vertHitDistance) ? horzWallHitX : vertWallHitX;
-    this.wallHitY = (horzHitDistance < vertHitDistance) ? horzWallHitY : vertWallHitY;
-    this.distance = (horzHitDistance < vertHitDistance) ? horzHitDistance : vertHitDistance;
-    this.wasHitVertical = (vertHitDistance < horzHitDistance);
+    if (horzHitDistance < vertHitDistance) {
+      this.wallHitX = horzWallHitX;
+      this.wallHitY = horzWallHitY;
+      this.distance = horzHitDistance;
+      this.wasHitVertical = false;
+    } else {
+      this.wallHitX = vertWallHitX;
+      this.wallHitY = vertWallHitY;
+      this.distance = vertHitDistance;
+      this.wasHitVertical = true;
+    }
   }
 }
 
@@ -244,24 +251,50 @@ function keyReleased() {
 }
 
 function castAllRays() {
-  var columnId = 0;
-
   // inicializar primeiro raio subtraindo metade do FOV
   var rayAngle = player.rotationAngle - (FOV_ANGLE / 2);
 
   rays = [];
 
   // loop por cada coluna
-  for (var i = 0; i < NUM_RAYS; i++) {
+  for (var col = 0; col < NUM_RAYS; col++) {
     var ray = new Ray(rayAngle);
-    ray.cast(columnId);
+    ray.cast();
     rays.push(ray);
 
     rayAngle += FOV_ANGLE / NUM_RAYS;
-
-    columnId++;
   }
 
+}
+
+function render3DProjectedWalls() {
+  // loop por todos os rays no array
+  for (var i = 0; i < NUM_RAYS; i++) {
+    var ray = rays[i];
+
+    var correctWallDistance = ray.distance * Math.cos(ray.rayAngle - player.rotationAngle);
+    // calcula a distancia pro plano de projeção
+    var distanceProjectionPlane = (WINDOW_WIDTH / 2) / Math.tan(FOV_ANGLE / 2);
+
+    // altura da coluna da parede
+    var wallStripHeight = (TILE_SIZE / correctWallDistance) * distanceProjectionPlane; 
+
+    // calcula a transparencia baseado na distancia da parede
+    //var alpha = 150.0 / correctWallDistance;
+    var alpha = 1.0;
+    var color = (ray.wasHitVertical) ? 255 : 180;
+    //console.log(color);
+  
+    //fill("rgba(255, 255, 255, " + alpha + ")");
+    fill("rgba(" + color + "," + color + "," + color + "," + alpha + ")");
+    noStroke();
+    rect(
+      i * WALL_STRIP_WIDTH,
+      (WINDOW_HEIGHT / 2) - (wallStripHeight / 2),
+      WALL_STRIP_WIDTH,
+      wallStripHeight
+    );
+  }
 }
 
 function normalizeAngle(angle) {
@@ -291,11 +324,13 @@ function update() {
 
 function draw() {
     // renderiza todos os objetos frame a frame
+    clear("#212121");
     update();
+    render3DProjectedWalls();
     grid.render();
     for (ray of rays) {
       ray.render();
     }
     player.render();
-    //castAllRays();
+    
 }
