@@ -6,29 +6,39 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/11/30 11:12:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/11/30 18:14:17 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
-#include "functions.c"
+#include <stdlib.h>
+#include <stdio.h>
 #include "constants.c"
-#include "helper.c"
+#include "functions.c"
 
-int	main(void)
+// main loop - draws and moves the image
+int		main_loop(t_data *data)
 {
-	int		drwx;
-	int		drwy;
-	t_vars	vars;
+	int		sq_size = 60;
+	
+	ft_update(data, sq_size);
+	ft_move(data);
+	return (0);
+}
 
-	// TODO
-	// stop drawing after trying to do it out of window
-	vars.wtdx = 5;
-	vars.wtdy = 5;
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, SCREENW, SCREENH, "RED SQUARE!");
-	mlx_hook(vars.win, 2, 1L<<0, ft_close_win, &vars);
-	ft_draw_frame(&vars);
-	mlx_loop_hook(vars.mlx, ft_draw_frame, &vars);
-	mlx_loop(vars.mlx);
+int		main(void)
+{
+	t_data	data;
+	int		sq_size = 60;
+
+	ft_init(&data);
+	
+	data.x = 250;
+	data.y = 150;
+	ft_draw(&data, sq_size);
+	mlx_hook(data.mlx_win, KEYPRESS, 1L<<0, ft_key_press, &data);
+	mlx_hook(data.mlx_win, KEYRELEASE, 1L<<1, ft_key_release, &data);
+	mlx_loop_hook(data.mlx, main_loop, &data);
+	mlx_loop(data.mlx);
+	return (0);
 }

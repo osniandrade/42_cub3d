@@ -6,94 +6,38 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/11/30 10:40:03 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/11/30 17:25:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "constants.c"
-#include <stdio.h>
 
-typedef struct	s_data
+// returns a color in hexadecimal format to use in minilibx
+int		ft_crt_trgb(int t, int r, int g, int b)
 {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int 	endian; // if machine is little endian it will be 0, otherwise, 1
-	int 	color;  // image color
-	int		px;     // image x position
-	int		py;     // image y position
-} 			t_data;
-
-typedef struct	s_vars {
-	void	*mlx;  // connection do display
-	void	*win;  // window
-	int		wtdx;  // where to draw x
-	int		wtdy;  // where to draw y
-}			t_vars;
-
-// creates a buffer to renderize before writing a image to screen
-// rendering offset included to garantee the draw is within the window limits
-void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + ((y * data->line_length) + (x * (data->bits_per_pixel / 8)));
-	*(unsigned int *)dst = color;
+	return(t << 24 | r << 16 | g << 8 | b);
 }
 
-// draw basic shapes
-// 1 = square
-int		ft_drawbasicshape(t_data *data, int x, int y, int shape, int size)
+// gets a color in minilibx format and returns its transparency
+int		ft_get_t(int trgb)
 {
-	int newx;
-	int newy;
-
-	newx = x;
-	newy = y;
-	if (shape = 1)
-	{
-		while (newx++ < x + size)
-		{
-			while (newy++ < y + size)
-				ft_mlx_pixel_put(data, newx, newy, data->color);
-			newy = y;
-		}
-		return (TRUE);
-	}
-	return (FALSE);
+	return (trgb & (0xFF << 24));
 }
 
-// key capture using hook
-int		ft_key_hook(int keycode, t_vars *vars)
+// gets a color in minilibx format and returns its red value
+int		ft_get_r(int trgb)
 {
-	printf("Hello from key_hook!\n");
+	return (trgb & (0xFF << 16));
 }
 
-// close the window when esc key is pressed
-int		ft_close_win(int keycode, t_vars *vars)
+// gets a color in minilibx format and returns its green value
+int		ft_get_g(int trgb)
 {
-	if (keycode == ESCAPEKEY)
-		mlx_destroy_window(vars->mlx, vars->win);
+	return (trgb & (0xFF << 8));
 }
 
-int		ft_draw_frame(t_vars *vars)
+// gets a color in minilibx format and returns its blue value
+int		ft_get_b(int trgb)
 {
-	t_data	img;
-
-	img.px = vars->wtdx++;
-	img.py = vars->wtdy++;
-	img.endian = ft_bg_endian();
-	img.img = mlx_new_image(vars->mlx, SCREENW, SCREENH);
-	img.color = ft_crt_trgb(0,255,0,0);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-								  &img.line_length, &img.endian);
-	if (vars->wtdx + 60 == SCREENW || vars->wtdy + 60 == SCREENH)
-		return (FALSE);
-	else
-	{
-		ft_drawbasicshape(&img, img.px, img.py, 1, 60);
-		mlx_put_image_to_window(vars->mlx, vars->win, img.img, 0, 0);
-		return (TRUE);
-	}
+	return (trgb & 0xFF);
 }
