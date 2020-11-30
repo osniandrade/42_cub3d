@@ -6,7 +6,7 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2020/11/26 08:33:36 by ocarlos-         ###   ########.fr        #
+#    Updated: 2020/11/26 13:54:31 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,4 +31,4 @@ test:
 	gcc -g $(MLXHEADER) $(MAINCODE) $(MLXLIB) $(MLXFLAGS) -o $(OUTPUT)
 
 clean:
-	rm $(OUTPUT)
+	rm *.out

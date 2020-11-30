@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/11/26 09:52:59 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/11/26 15:09:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,14 @@ int		ft_get_b(int trgb)
 }
 
 // tests a system and returns true if it is little endian
-// CHECK IF REALLY NEEDED
-int		ft_lt_endian()
+int		ft_bg_endian()
 {
 	unsigned int	i;
 
 	i = 1;
 	char *c = (char *)&i;
 	if (*c)
-		return (TRUE);
-	else
 		return (FALSE);
+	else
+		return (TRUE);
 }
