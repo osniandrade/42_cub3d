@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/01 09:18:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/01 15:40:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,28 +69,8 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-// draws a triangle to the window
-int		ft_draw(t_data *data, int size)
-{
-	int		x = data->x;
-	int		y = data->y;
-
-	while (x < data->x + size)
-	{
-		while (y < data->y + size)
-		{
-			my_mlx_pixel_put(data, x, y, ft_crt_trgb(0,255,0,0));
-			y++;
-		}
-		y = data-> y;
-		x++;
-	}
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
-	return (TRUE);
-}
-
 // updates the image in the window
-int		ft_update(t_data *data, int size)
+int		ft_blackscreen(t_data *data)
 {
 	int		x = 0;
 	int		y = 0;
@@ -105,7 +85,42 @@ int		ft_update(t_data *data, int size)
 		y = 0;
 		x++;
 	}
-	ft_draw(data, size);
+	return (TRUE);
+}
+
+// draws a rectangle with defined heigth, width and color
+int		ft_d_rect(t_data *data, int h, int w, int color)
+{
+	int		x = data->x;
+	int 	y = data->y;
+
+	while (x < w + data->x)
+	{
+		while (y < h + data->y)
+			my_mlx_pixel_put(data, x, y++, color);
+		y = data->y;
+		x++;
+	}
+	return (TRUE);
+}
+
+// draws a square to the window
+int		ft_draw(t_data *data, int size)
+{
+	int		x = data->x;
+	int		y = data->y;
+
+	ft_blackscreen(data);
+	ft_d_rect(data, 50, 50, ft_crt_trgb(0,255,0,0));
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
+	return (TRUE);
+}
+
+// updates object position
+int		ft_update(t_data *data)
+{
+	data->x += 2;
+	data->y += 2;
 	return (TRUE);
 }
 
