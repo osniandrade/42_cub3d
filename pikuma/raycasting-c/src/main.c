@@ -5,6 +5,7 @@
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 int isGameRunning = FALSE;
+int ticksLastFrame = 0;
 
 int playerX, playerY;
 
@@ -62,8 +63,15 @@ void processInput() {
 }
 
 void update() {
-    playerX += 1;
-    playerY += 1;
+    // waste some time until we reach the target frame time length
+    while(!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TIME_LENGTH));
+
+    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f; // calculates DeltaTime
+
+    ticksLastFrame = SDL_GetTicks();
+
+    playerX += 50 * deltaTime;
+    playerY += 50 * deltaTime;
 }
 
 void render() {
