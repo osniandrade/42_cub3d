@@ -6,26 +6,25 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/01 15:39:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/01 18:11:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "constants.c"
 #include "functions.c"
 
 // main loop - draws and moves the image
 int		main_loop(t_data *data)
 {
-	int		sq_size = 60;
-	
-	ft_draw(data, sq_size);
-	ft_update(data);
-	//ft_move(data);
+	ft_erase(data);
+	//ft_update(data);
+	ft_move(data);
+	ft_draw(data);
 	return (TRUE);
 }
+
 
 int		main(void)
 {

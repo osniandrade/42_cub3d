@@ -6,10 +6,11 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/01 15:40:26 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/01 18:13:03 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>  // REMOVE LATER
 #include "constants.c"
 #include "helper.c"
 
@@ -18,7 +19,7 @@ typedef struct	s_data
 	void	*mlx;
 	void	*mlx_win;
 	int		width, height;
-	int		x, y;
+	int		x, y, s;
 	int		up, down, left, right;
 	void	*img;
 	char	*addr;
@@ -69,25 +70,6 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-// updates the image in the window
-int		ft_blackscreen(t_data *data)
-{
-	int		x = 0;
-	int		y = 0;
-
-	while (x < data->width)
-	{
-		while (y < data->height)
-		{
-			my_mlx_pixel_put(data, x, y, ft_crt_trgb(0,0,0,0));
-			y++;
-		}
-		y = 0;
-		x++;
-	}
-	return (TRUE);
-}
-
 // draws a rectangle with defined heigth, width and color
 int		ft_d_rect(t_data *data, int h, int w, int color)
 {
@@ -104,24 +86,45 @@ int		ft_d_rect(t_data *data, int h, int w, int color)
 	return (TRUE);
 }
 
-// draws a square to the window
-int		ft_draw(t_data *data, int size)
+// updates the image in the window
+int		ft_erase(t_data *data)
 {
-	int		x = data->x;
-	int		y = data->y;
+	ft_d_rect(data, data->s, data->s, ft_crt_trgb(0,0,0,0));
+	return (TRUE);
+}
 
-	ft_blackscreen(data);
-	ft_d_rect(data, 50, 50, ft_crt_trgb(0,255,0,0));
+// draws a square to the window
+int		ft_draw(t_data *data)
+{
+	ft_d_rect(data, data->s, data->s, ft_crt_trgb(0,255,0,0));
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
 	return (TRUE);
+}
+
+// checks if image is in drawable area, uses "step" as 
+int		ft_validarea(t_data *data, int step)
+{
+	if ((data->x + step <= data->width - data->s) && 
+		(data->y + step <= data->height - data->s))
+		return (TRUE);
+	else
+		return (FALSE);
 }
 
 // updates object position
 int		ft_update(t_data *data)
 {
-	data->x += 2;
-	data->y += 2;
-	return (TRUE);
+	int cnt = 0;
+
+	while(cnt++ < 2 * FPS); // stupid fps control method
+	if (ft_validarea(data, 2))
+	{
+		data->x += 2;
+		data->y += 2;
+		return (TRUE);
+	}
+	else
+		return (FALSE);
 }
 
 // moves the image in the window
@@ -129,22 +132,26 @@ int		ft_move(t_data *data)
 {
 	if (data->left == TRUE && data->x > 0)
 	{
-		data->x -= MOVESPEED;
+		if (ft_validarea(data, -MOVESPEED))
+			data->x -= MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
 	if (data->right == TRUE && data->x < data->width)
 	{
-		data->x += MOVESPEED;
+		if (ft_validarea(data, MOVESPEED))
+			data->x += MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
 	if (data->up == TRUE && data->y > 0)
 	{
-		data->y -= MOVESPEED;
+		if (ft_validarea(data, -MOVESPEED))
+			data->y -= MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
 	if (data->down == TRUE && data->y < data->height)
 	{
-		data->y += MOVESPEED;
+		if (ft_validarea(data, MOVESPEED))
+			data->y += MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
 	return (TRUE);
@@ -160,5 +167,6 @@ int		ft_init(t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	data->x = STARTX;
 	data->y = STARTY;
+	data->s = 50;
 	return (TRUE);
 }
