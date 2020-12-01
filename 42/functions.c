@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/11/30 18:14:22 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/01 09:18:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,28 @@ int		ft_key_press(int keycode, t_data *data)
 		exit(0);
 	}
 	if (keycode == LEFT)
-		data->left = 1;
+		data->left = TRUE;
 	if (keycode == RIGHT)
-		data->right = 1;
+		data->right = TRUE;
 	if (keycode == UP)
-		data->up = 1;
+		data->up = TRUE;
 	if (keycode == DOWN)
-		data->down = 1;
-	return (0);
+		data->down = TRUE;
+	return (TRUE);
 }
 
 // changes key status to not pressed
 int		ft_key_release(int keycode, t_data *data)
 {
 	if (keycode == LEFT)
-		data->left = 0;
+		data->left = FALSE;
 	if (keycode == RIGHT)
-		data->right = 0;
+		data->right = FALSE;
 	if (keycode == UP)
-		data->up = 0;
+		data->up = FALSE;
 	if (keycode == DOWN)
-		data->down = 0;
-	return (0);
+		data->down = FALSE;
+	return (TRUE);
 }
 
 // draws a pixel to the image buffer
@@ -86,7 +86,7 @@ int		ft_draw(t_data *data, int size)
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
-	return (0);
+	return (TRUE);
 }
 
 // updates the image in the window
@@ -106,33 +106,33 @@ int		ft_update(t_data *data, int size)
 		x++;
 	}
 	ft_draw(data, size);
-	return (0);
+	return (TRUE);
 }
 
 // moves the image in the window
 int		ft_move(t_data *data)
 {
-	if (data->left == 1 && data->x > 0)
+	if (data->left == TRUE && data->x > 0)
 	{
-		data->x -= 3;
+		data->x -= MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
-	if (data->right == 1 && data->x < data->width)
+	if (data->right == TRUE && data->x < data->width)
 	{
-		data->x += 3;
+		data->x += MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
-	if (data->up == 1 && data->y > 0)
+	if (data->up == TRUE && data->y > 0)
 	{
-		data->y -= 3;
+		data->y -= MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
-	if (data->down == 1 && data->y < data->height)
+	if (data->down == TRUE && data->y < data->height)
 	{
-		data->y += 3;
+		data->y += MOVESPEED;
 		printf("x = %d, y = %d\n", data->x, data->y);
 	}
-	return (0);
+	return (TRUE);
 }
 
 int		ft_init(t_data *data)
@@ -143,5 +143,7 @@ int		ft_init(t_data *data)
 	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "RED SQUARE");
 	data->img = mlx_new_image(data->mlx, SCREENW, SCREENH);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
-	return (0);
+	data->x = STARTX;
+	data->y = STARTY;
+	return (TRUE);
 }
