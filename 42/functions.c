@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/01 18:13:03 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/02 09:17:49 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ int		ft_move(t_data *data)
 	return (TRUE);
 }
 
+// initializes the main struct variables
 int		ft_init(t_data *data)
 {
 	data->mlx = mlx_init();
