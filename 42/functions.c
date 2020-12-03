@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/02 15:31:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/03 16:30:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ void	ft_init_img(t_data *data)
 }
 
 // initializes the setup for the main loop
-void	ft_setup(t_data *data)
+void	ft_setup(t_data *data, int argc, char **argv)
 {
+	ft_maparray(argc, argv);
 	ft_init_win(data);
 	ft_init_img(data);
 }

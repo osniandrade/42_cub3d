@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/02 15:10:29 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/03 17:02:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,43 @@ int		ft_get_g(int trgb)
 int		ft_get_b(int trgb)
 {
 	return (trgb & 0xFF);
+}
+
+// gets line size
+int		ft_getlinesize(char *line)
+{
+	int size = 0;
+	while (line[size] == '1' || line[size] == '0')
+		size++;
+	return (size);
+}
+
+// reads map into an array
+int		ft_maparray(int argc, char **argv)
+{
+	int		fd;
+	char	*line;
+	int		*map[][];
+
+	if (argc > 2)
+	{
+		printf("Read a file or pipe a text");
+		return (0);
+	}
+	else if (argc == 1)
+		fd = 0;
+	else if (argc == 2)
+		fd = open(argv[1], O_RDONLY);
+	else
+		return (2);
+	while (get_next_line(fd, &line))
+	{
+		printf("%d - %s\n", ft_getlinesize(line), line);
+		free(line);
+	}
+	printf("%d - %s\n", ft_getlinesize(line), line);
+	free(line);
+	if (argc == 2)
+		close(fd);
+	return (TRUE);
 }

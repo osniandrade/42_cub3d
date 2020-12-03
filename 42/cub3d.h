@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/02 15:34:26 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/03 16:31:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 #include <mlx.h>
 #include <stdlib.h>
 #include <stdio.h>  // REMOVE LATER
+#include "get_next_line.h"
 
 typedef struct s_img
 {
@@ -61,7 +62,7 @@ typedef struct	s_data
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
-void	ft_setup(t_data *data);
+void	ft_setup(t_data *data, int argc, char **argv);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
@@ -78,3 +79,4 @@ int		ft_get_t(int trgb);
 int		ft_get_r(int trgb);
 int		ft_get_g(int trgb);
 int		ft_get_b(int trgb);
+int		ft_maparray(int argc, char **argv);
