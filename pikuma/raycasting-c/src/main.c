@@ -71,13 +71,45 @@ void destroyWindow() {
 void setup() {
     player.x = WINDOW_WIDTH / 2;
     player.y = WINDOW_HEIGHT / 2;
-    player.width = 5;
-    player.height = 5;
+    player.width = 1;
+    player.height = 1;
     player.turnDirection = 0;
     player.walkDirection = 0;
     player.rotationAngle = PI / 2;
-    player.walkSpeed = 100;
+    player.walkSpeed = 80;
     player.turnSpeed = 45 * (PI / 180);
+}
+
+void movePlayer(float deltaTime) {
+    player.rotationAngle += player.turnDirection * player.turnSpeed * deltaTime;
+    float moveStep = player.walkDirection * player.walkSpeed * deltaTime;
+
+    float newPlayerX = player.x + cos(player.rotationAngle) * moveStep;
+    float newPlayerY = player.y + sin(player.rotationAngle) * moveStep;
+
+    //perform wall collision
+
+    player.x = newPlayerX;
+    player.y = newPlayerY;
+}
+
+void renderPlayer() {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_Rect playerRect = {
+        MINIMAP_SCALE_FACTOR * player.x,
+        MINIMAP_SCALE_FACTOR * player.y,
+        MINIMAP_SCALE_FACTOR * player.width,
+        MINIMAP_SCALE_FACTOR * player.height
+    };
+    SDL_RenderFillRect(renderer, &playerRect);
+
+    SDL_RenderDrawLine(
+        renderer,
+        MINIMAP_SCALE_FACTOR * player.x,
+        MINIMAP_SCALE_FACTOR * player.y,
+        MINIMAP_SCALE_FACTOR * player.x + cos(player.rotationAngle) * 40,
+        MINIMAP_SCALE_FACTOR * player.y + sin(player.rotationAngle) * 40
+    );
 }
 
 void renderMap() {
@@ -110,6 +142,25 @@ void processInput() {
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_ESCAPE)
                 isGameRunning = FALSE;
+            if (event.key.keysym.sym == SDLK_UP)
+                player.walkDirection = +1;
+            if (event.key.keysym.sym == SDLK_DOWN)
+                player.walkDirection = -1;
+            if (event.key.keysym.sym == SDLK_LEFT)
+                player.turnDirection = -1;
+            if (event.key.keysym.sym == SDLK_RIGHT)
+                player.turnDirection = +1;
+            break;
+        }
+        case SDL_KEYUP: {
+            if (event.key.keysym.sym == SDLK_UP)
+                player.walkDirection = 0;
+            if (event.key.keysym.sym == SDLK_DOWN)
+                player.walkDirection = 0;
+            if (event.key.keysym.sym == SDLK_LEFT)
+                player.turnDirection = 0;
+            if (event.key.keysym.sym == SDLK_RIGHT)
+                player.turnDirection = 0;
             break;
         }
     }
@@ -128,7 +179,7 @@ void update() {
 
     ticksLastFrame = SDL_GetTicks();
 
-    // TODO: update game objects as a function of deltaTime
+    movePlayer(deltaTime);
 }
 
 void render() {
@@ -137,7 +188,7 @@ void render() {
 
     renderMap();
     //renderRays();
-    //renderPlayer();
+    renderPlayer();
 
     SDL_RenderPresent(renderer);
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/03 17:02:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2020/12/11 09:36:16 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,12 @@ int		ft_get_b(int trgb)
 	return (trgb & 0xFF);
 }
 
-// gets line size
-int		ft_getlinesize(char *line)
+// get map stats (longest line, if is valid and map height)
+int		ft_mapstats(int *map)
 {
-	int size = 0;
-	while (line[size] == '1' || line[size] == '0')
-		size++;
-	return (size);
+	//mapwidth
+	//mapheight
+	//isvalidmap
 }
 
 // reads map into an array
@@ -56,7 +55,7 @@ int		ft_maparray(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
-	int		*map[][];
+	int		*map[SCREENW][SCREENH];
 
 	if (argc > 2)
 	{
@@ -71,10 +70,10 @@ int		ft_maparray(int argc, char **argv)
 		return (2);
 	while (get_next_line(fd, &line))
 	{
-		printf("%d - %s\n", ft_getlinesize(line), line);
+		printf("%lu - %s\n", ft_strlen(line), line);
 		free(line);
 	}
-	printf("%d - %s\n", ft_getlinesize(line), line);
+	printf("%lu - %s\n", ft_strlen(line), line);
 	free(line);
 	if (argc == 2)
 		close(fd);

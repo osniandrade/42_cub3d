@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/03 16:30:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/08 13:32:42 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int		main_loop(t_data *data)
 {
 	//ft_erase(data);
-	//ft_move(data);
+	ft_move(data);
 	ft_draw(data);
 	//ft_update(data);
 	return (TRUE);

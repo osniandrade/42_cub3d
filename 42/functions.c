@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/03 16:30:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/08 15:32:04 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int map[MAP_ROWS][MAP_COLS] = {
 int		ft_init_win(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->width = SCREENW;
-	data->height = SCREENH;
+	data->width = SCREENW * MAP_SCALE;
+	data->height = SCREENH * MAP_SCALE;
 	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "RED SQUARE");
 	data->maptable = &map;
 	return (TRUE);
@@ -53,12 +53,25 @@ void	ft_init_img(t_data *data)
 	data->tile = imagem;
 }
 
+// initializes player data
+void	ft_init_player(t_data *data)
+{
+	data->player.playerspr.x = (SCREENW / 2) * MAP_SCALE;
+	data->player.playerspr.y = (SCREENH / 2) * MAP_SCALE;
+	data->player.turnDirection = 0;
+	data->player.walkDirection = 0;
+	data->player.rotationAngle = PI / 2;
+	data->player.walkSpeed = 80;
+	data->player.turnSpeed = 45 * (PI / 180);
+}
+
 // initializes the setup for the main loop
 void	ft_setup(t_data *data, int argc, char **argv)
 {
-	ft_maparray(argc, argv);
+	//ft_maparray(argc, argv);  // reads the map into the main struct
 	ft_init_win(data);
 	ft_init_img(data);
+	ft_init_player(data);
 }
 
 // changes key status to pressed and destroys window if pressed ESC
@@ -98,9 +111,16 @@ int		ft_key_release(int keycode, t_data *data)
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
+	if (data->tile.y <= data->height && data->tile.x <= data->width)
+	{
+		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
+		*(unsigned int *)dst = color;
+	}
+}
 
-	dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
-	*(unsigned int *)dst = color;
+int		ft_d_line(t_data *data, int x, int y, int color)
+{
+	
 }
 
 // draws a rectangle with defined heigth, width and color
@@ -114,6 +134,22 @@ int		ft_d_rect(t_data *data, int h, int w, int color)
 		while (y < h + data->tile.y)
 			my_mlx_pixel_put(data, x, y++, color);
 		y = data->tile.y;
+		x++;
+	}
+	return (TRUE);
+}
+
+// draws the player on minimap
+int		ft_d_player(t_data *data, int h, int w, int color)
+{
+	int		x = data->player.playerspr.x * MAP_SCALE;
+	int		y = data->player.playerspr.y * MAP_SCALE;
+
+	while (x < w + data->player.playerspr.x * MAP_SCALE)
+	{
+		while (y < h + data->player.playerspr.y * MAP_SCALE)
+			my_mlx_pixel_put(data, x, y++, color);
+		y = data->player.playerspr.y * MAP_SCALE;
 		x++;
 	}
 	return (TRUE);
@@ -151,13 +187,42 @@ int		ft_render_map(t_data *data)
 	}
 }
 
+// updates player positions and directions
+int		ft_move_player(t_data *data)
+{
+	float	movestep;
+	float	newPlayerX;
+	float	newPlayerY;
+
+	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
+	movestep = data->player.walkDirection * data->player.walkSpeed;
+	newPlayerX = data->player.playerspr.x + cos(data->player.rotationAngle) * movestep;
+	newPlayerY = data->player.playerspr.y + sin(data->player.rotationAngle) * movestep;
+	// player collision
+	data->player.playerspr.x = newPlayerX;
+	data->player.playerspr.y = newPlayerY;
+	
+}
+
+// renders player sprite on screen
+int		ft_render_player(t_data *data)
+{
+	ft_d_player(data, 
+			   TILE_SIZE * MAP_SCALE,
+			   1,
+			   ft_crt_trgb(0, 255, 0, 255));
+}
+
 // draws a square to the window
 int		ft_draw(t_data *data)
 {
 	ft_render_map(data);
+	ft_render_player(data);
+	ft_move_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
+
 
 // checks if image is in drawable area, uses "step" as 
 int		ft_validarea(t_data *data, int step)
@@ -192,13 +257,17 @@ int		ft_move(t_data *data)
 	{
 		if (ft_validarea(data, -MOVESPEED))
 			data->tile.x -= MOVESPEED;
+		data->player.turnDirection = -1;
 		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
+		printf("x = %d\n", data->player.turnDirection);
 	}
 	if (data->right == TRUE && data->tile.x < data->width)
 	{
 		if (ft_validarea(data, MOVESPEED))
 			data->tile.x += MOVESPEED;
+		data->player.turnDirection = +1;
 		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
+		printf("x = %d\n", data->player.turnDirection);
 	}
 	if (data->up == TRUE && data->tile.y > 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/03 16:31:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/08 13:03:32 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,20 @@
 #define TILE_SIZE   32
 #define MAP_ROWS    13
 #define MAP_COLS    20
-#define MAP_SCALE   1.0
+#define MAP_SCALE   1.0  // (only values lower than 1.0)
 
 #define SCREENW 	(MAP_COLS * TILE_SIZE)
 #define SCREENH 	(MAP_ROWS * TILE_SIZE)
 
 #include <mlx.h>
 #include <stdlib.h>
+#include <math.h>
 #include <stdio.h>  // REMOVE LATER
 #include "get_next_line.h"
 
 typedef struct s_img
 {
-	int		x, y, s;
+	int		x, y, s;  // position x, position y, size
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -50,15 +51,26 @@ typedef struct s_img
 	int		endian;
 }			t_img;
 
+typedef struct s_playerdata
+{
+	int		turnDirection;  // -1 for left, +1 for right
+    int		walkDirection;  // -1 for back, +1 for front
+    float	rotationAngle;
+    float	walkSpeed;
+    float	turnSpeed;
+	t_img	playerspr;
+}			t_playerdata;
+
 typedef struct	s_data
 {
-	void	*mlx;
-	void	*mlx_win;
-	int		width, height;
-	int		up, down, left, right;
-	int		(*maptable)[MAP_ROWS][MAP_COLS];
-	t_img	tile;
-}			t_data;
+	void			*mlx;
+	void			*mlx_win;
+	int				width, height;
+	int				up, down, left, right;
+	int				(*maptable)[MAP_ROWS][MAP_COLS];
+	t_img			tile;
+	t_playerdata	player;
+}					t_data;
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
@@ -69,6 +81,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		ft_d_rect(t_data *data, int h, int w, int color);
 int		ft_erase(t_data *data);
 int		ft_render_map(t_data *data);
+int		ft_render_player(t_data *data);
 int		ft_draw(t_data *data);
 int		ft_validarea(t_data *data, int step);
 int		ft_update(t_data *data);
