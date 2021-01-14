@@ -6,13 +6,13 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2020/12/03 16:24:02 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/01/13 13:48:55 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 MAINCODE = cub3d.c
 GNLCODE = get_next_line.c get_next_line_utils.c
-SIDECODE = functions.c helper.c 
+SIDECODE = functions.c helper.c testing.c
 CODE = $(MAINCODE) $(SIDECODE) $(GNLCODE)
 FLAGS = -Wall -Wextra -Werror
 MLXHEADER = -I /usr/local/include/

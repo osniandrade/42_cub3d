@@ -6,12 +6,13 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/08 15:32:04 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/14 09:25:55 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+// map matrix (TEMPORARY)
 int map[MAP_ROWS][MAP_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -47,8 +48,8 @@ void	ft_init_img(t_data *data)
 	imagem.img = mlx_new_image(data->mlx, SCREENW, SCREENH);
 	imagem.addr = mlx_get_data_addr(imagem.img, &imagem.bits_per_pixel, 
 									&imagem.line_length, &imagem.endian);
-	imagem.x = 0;
-	imagem.y = 0;
+	imagem.pos.x = 0;
+	imagem.pos.y = 0;
 	imagem.s = 50;
 	data->tile = imagem;
 }
@@ -56,13 +57,13 @@ void	ft_init_img(t_data *data)
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.x = (SCREENW / 2) * MAP_SCALE;
-	data->player.playerspr.y = (SCREENH / 2) * MAP_SCALE;
+	data->player.playerspr.pos.x = (SCREENW / 2) * MAP_SCALE;
+	data->player.playerspr.pos.y = (SCREENH / 2) * MAP_SCALE;
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI / 2;
-	data->player.walkSpeed = 80;
-	data->player.turnSpeed = 45 * (PI / 180);
+	data->player.rotationAngle = PI * 0.25; //PI / 2;
+	data->player.walkSpeed = 80 * GAMESPEED;
+	data->player.turnSpeed = (45 * GAMESPEED) * (PI / 180);
 }
 
 // initializes the setup for the main loop
@@ -111,54 +112,99 @@ int		ft_key_release(int keycode, t_data *data)
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
-	if (data->tile.y <= data->height && data->tile.x <= data->width)
+	if (data->tile.pos.y <= data->height && data->tile.pos.x <= data->width)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
 		*(unsigned int *)dst = color;
 	}
 }
 
-int		ft_d_line(t_data *data, int x, int y, int color)
+// draws a line from i_pos to f_pos in color (Bresenham's algorithm)
+int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 {
-	
+	int dx = abs(f_pos.x - i_pos.x);
+	int sx = i_pos.x < f_pos.x ? 1 : -1;
+	int dy = abs(f_pos.y - i_pos.y);
+	int sy = i_pos.y < f_pos.y ? 1 : -1;
+	int err = (dx > dy ? dx : -dy) / 2;
+	int e2;
+
+	while(!(i_pos.x == f_pos.x && i_pos.y == f_pos.y))
+	{
+		my_mlx_pixel_put(data, i_pos.x, i_pos.y, color);
+		e2 = err;
+		if (e2 > -dx)
+		{
+			err -= dy;
+			i_pos.x += sx;
+		}
+		if (e2 < dy)
+		{
+			err += dx;
+			i_pos.y += sy;
+		}
+	}
+	return (TRUE);
 }
 
 // draws a rectangle with defined heigth, width and color
-int		ft_d_rect(t_data *data, int h, int w, int color)
+int		ft_draw_rect(t_data *data, int h, int w, int color)
 {
-	int		x = data->tile.x;
-	int 	y = data->tile.y;
+	t_coord	i_pos, f_pos;
 
-	while (x < w + data->tile.x)
+	i_pos.x = data->tile.pos.x;
+	i_pos.y = data->tile.pos.y;
+	f_pos.x = data->tile.pos.x + w;
+	f_pos.y = data->tile.pos.y;
+	while (i_pos.y <= data->tile.pos.y + h)
 	{
-		while (y < h + data->tile.y)
-			my_mlx_pixel_put(data, x, y++, color);
-		y = data->tile.y;
-		x++;
+		ft_draw_line(data, i_pos, f_pos, color);
+		i_pos.y++;
+		f_pos.y++;
 	}
 	return (TRUE);
 }
 
 // draws the player on minimap
-int		ft_d_player(t_data *data, int h, int w, int color)
+int		ft_draw_player(t_data *data, int color)
 {
-	int		x = data->player.playerspr.x * MAP_SCALE;
-	int		y = data->player.playerspr.y * MAP_SCALE;
+	t_coord i_pos, f_pos;
 
-	while (x < w + data->player.playerspr.x * MAP_SCALE)
-	{
-		while (y < h + data->player.playerspr.y * MAP_SCALE)
-			my_mlx_pixel_put(data, x, y++, color);
-		y = data->player.playerspr.y * MAP_SCALE;
-		x++;
-	}
+	i_pos.x = MAP_SCALE * data->player.playerspr.pos.x;
+	i_pos.y = MAP_SCALE * data->player.playerspr.pos.y;
+	f_pos.x = MAP_SCALE * data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE;
+	f_pos.y = MAP_SCALE * data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE;
+
+	ft_draw_line(data, i_pos, f_pos, color);
+
 	return (TRUE);
 }
 
-// updates the image in the window
+// updates player positions and directions
+int		ft_move_player(t_data *data)
+{
+	float	movestep;
+	float	newPlayerX;
+	float	newPlayerY;
+
+	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
+	if (data->player.rotationAngle >= 2 * PI)
+		data->player.rotationAngle = 0;
+	if (data->player.rotationAngle < 0)
+		data->player.rotationAngle = 2 * PI;
+	movestep = data->player.walkDirection * data->player.walkSpeed;
+	newPlayerX = data->player.playerspr.pos.x + cos(data->player.rotationAngle) * movestep;
+	newPlayerY = data->player.playerspr.pos.y + sin(data->player.rotationAngle) * movestep;
+	// player collision code here
+	data->player.playerspr.pos.x = newPlayerX;
+	data->player.playerspr.pos.y = newPlayerY;
+	
+}
+
+// erases the image in the window drawing a black rectangle on top of each tile
 int		ft_erase(t_data *data)
 {
-	ft_d_rect(data, data->tile.s, data->tile.s, ft_crt_trgb(0,0,0,0));
+	ft_draw_rect(data, data->tile.s, data->tile.s, ft_crt_trgb(0,0,0,0));
 	return (TRUE);
 }
 
@@ -173,10 +219,10 @@ int		ft_render_map(t_data *data)
 	{
 		while (j < MAP_COLS)
 		{
-			data->tile.x = (j * TILE_SIZE) * MAP_SCALE;
-			data->tile.y = (i * TILE_SIZE) * MAP_SCALE;
+			data->tile.pos.x = (j * TILE_SIZE) * MAP_SCALE;
+			data->tile.pos.y = (i * TILE_SIZE) * MAP_SCALE;
 			tileColor = (map[i][j] != 0) ? ft_crt_trgb(0,255,255,255) : 0;
-			ft_d_rect(data, 
+			ft_draw_rect(data, 
 					  TILE_SIZE * MAP_SCALE, 
 					  TILE_SIZE * MAP_SCALE, 
 					  tileColor);
@@ -187,48 +233,29 @@ int		ft_render_map(t_data *data)
 	}
 }
 
-// updates player positions and directions
-int		ft_move_player(t_data *data)
-{
-	float	movestep;
-	float	newPlayerX;
-	float	newPlayerY;
-
-	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
-	movestep = data->player.walkDirection * data->player.walkSpeed;
-	newPlayerX = data->player.playerspr.x + cos(data->player.rotationAngle) * movestep;
-	newPlayerY = data->player.playerspr.y + sin(data->player.rotationAngle) * movestep;
-	// player collision
-	data->player.playerspr.x = newPlayerX;
-	data->player.playerspr.y = newPlayerY;
-	
-}
-
 // renders player sprite on screen
 int		ft_render_player(t_data *data)
 {
-	ft_d_player(data, 
-			   TILE_SIZE * MAP_SCALE,
-			   1,
-			   ft_crt_trgb(0, 255, 0, 255));
+	ft_draw_player(data, ft_crt_trgb(0, 255, 0, 255));
+	data->player.walkDirection = 0;
+	data->player.turnDirection = 0;
+	return (TRUE);
 }
 
-// draws a square to the window
+// draws elements in the window
 int		ft_draw(t_data *data)
 {
 	ft_render_map(data);
 	ft_render_player(data);
-	ft_move_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
 
-
 // checks if image is in drawable area, uses "step" as 
 int		ft_validarea(t_data *data, int step)
 {
-	if ((data->tile.x + step <= data->width - data->tile.s) && 
-		(data->tile.y + step <= data->height - data->tile.s))
+	if ((data->player.playerspr.pos.x + TILE_SIZE + step < data->width) && 
+		(data->player.playerspr.pos.y + TILE_SIZE + step < data->height))
 		return (TRUE);
 	else
 		return (FALSE);
@@ -242,8 +269,8 @@ int		ft_update(t_data *data)
 	while(cnt++ < 2 * FPS); // stupid fps control method
 	if (ft_validarea(data, 2))
 	{
-		data->tile.x += 2;
-		data->tile.y += 2;
+		data->tile.pos.x += 2;
+		data->tile.pos.y += 2;
 		return (TRUE);
 	}
 	else
@@ -253,33 +280,26 @@ int		ft_update(t_data *data)
 // moves the image in the window
 int		ft_move(t_data *data)
 {
-	if (data->left == TRUE && data->tile.x > 0)
-	{
-		if (ft_validarea(data, -MOVESPEED))
-			data->tile.x -= MOVESPEED;
-		data->player.turnDirection = -1;
-		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
-		printf("x = %d\n", data->player.turnDirection);
-	}
-	if (data->right == TRUE && data->tile.x < data->width)
-	{
+	if (data->left == TRUE)
+		data->player.turnDirection = -MOVESPEED;
+	if (data->right == TRUE)
+		data->player.turnDirection = +MOVESPEED;
+	if (data->up == TRUE)
 		if (ft_validarea(data, MOVESPEED))
-			data->tile.x += MOVESPEED;
-		data->player.turnDirection = +1;
-		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
-		printf("x = %d\n", data->player.turnDirection);
-	}
-	if (data->up == TRUE && data->tile.y > 0)
-	{
-		if (ft_validarea(data, -MOVESPEED))
-			data->tile.y -= MOVESPEED;
-		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
-	}
-	if (data->down == TRUE && data->tile.y < data->height)
-	{
+			data->player.walkDirection = +MOVESPEED;
+	if (data->down == TRUE)
 		if (ft_validarea(data, MOVESPEED))
-			data->tile.y += MOVESPEED;
-		printf("x = %d, y = %d\n", data->tile.x, data->tile.y);
-	}
+			data->player.walkDirection = -MOVESPEED;
+	if (data->up == FALSE && data->down == FALSE)
+		data->player.walkDirection = 0;
+	if (data->left == FALSE && data->right == FALSE)
+		data->player.turnDirection = 0;
+
+	// test purposes only
+	printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	printf("angle = %f\n", data->player.rotationAngle);
+	//ft_test_collision(data);
+	ft_move_player(data);	
+
 	return (TRUE);
 }
