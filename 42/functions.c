@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/14 09:25:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/18 09:16:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,22 @@ int		ft_init_win(t_data *data)
 }
 
 // initializes a new image's struct
-void	ft_init_img(t_data *data)
+void	ft_init_img(t_data *data, t_img *imagem)
 {
-	t_img	imagem;
-
-	imagem.img = mlx_new_image(data->mlx, SCREENW, SCREENH);
-	imagem.addr = mlx_get_data_addr(imagem.img, &imagem.bits_per_pixel, 
-									&imagem.line_length, &imagem.endian);
-	imagem.pos.x = 0;
-	imagem.pos.y = 0;
-	imagem.s = 50;
-	data->tile = imagem;
+	imagem->img = mlx_new_image(data->mlx, SCREENW, SCREENH);
+	imagem->addr = mlx_get_data_addr(imagem->img, &imagem->bits_per_pixel, 
+									&imagem->line_length, &imagem->endian);
+	imagem->pos.x = 0;
+	imagem->pos.y = 0;
+	imagem->s = 50;
 }
 
 // initializes player data
 void	ft_init_player(t_data *data)
 {
+	//test
+	ft_init_img(data, &data->player.playerspr);
+	//end test
 	data->player.playerspr.pos.x = (SCREENW / 2) * MAP_SCALE;
 	data->player.playerspr.pos.y = (SCREENH / 2) * MAP_SCALE;
 	data->player.turnDirection = 0;
@@ -71,7 +71,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
 	ft_init_win(data);
-	ft_init_img(data);
+	ft_init_img(data, &data->tile);
 	ft_init_player(data);
 }
 
@@ -109,12 +109,25 @@ int		ft_key_release(int keycode, t_data *data)
 }
 
 // draws a pixel to the image buffer
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+// {
+// 	char	*dst;
+
+// 	if (data->tile.pos.y <= data->height && data->tile.pos.x <= data->width)
+// 	{
+// 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
+// 		*(unsigned int *)dst = color;
+// 	}
+// }
+void	my_mlx_pixel_put(t_data *data, t_img obj, t_coord o_pos, int color)
 {
 	char	*dst;
-	if (data->tile.pos.y <= data->height && data->tile.pos.x <= data->width)
+
+	if (obj.pos.y <= data->height && obj.pos.x <= data->width)
 	{
-		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
+		int value = ((o_pos.y * obj.line_length) + (o_pos.x * (obj.bits_per_pixel / 8)));
+		dst = obj.addr + value;
+		//dst = obj.addr + (int) ((o_pos.y * obj.line_length) + (o_pos.x * (obj.bits_per_pixel / 8)));
 		*(unsigned int *)dst = color;
 	}
 }
@@ -122,16 +135,20 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 // draws a line from i_pos to f_pos in color (Bresenham's algorithm)
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 {
-	int dx = abs(f_pos.x - i_pos.x);
+	int dx = round(abs(f_pos.x - i_pos.x));
 	int sx = i_pos.x < f_pos.x ? 1 : -1;
-	int dy = abs(f_pos.y - i_pos.y);
+	int dy = round(abs(f_pos.y - i_pos.y));
 	int sy = i_pos.y < f_pos.y ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2;
 	int e2;
 
-	while(!(i_pos.x == f_pos.x && i_pos.y == f_pos.y))
+	while(!(i_pos.x <= f_pos.x && i_pos.y <= f_pos.y))
 	{
-		my_mlx_pixel_put(data, i_pos.x, i_pos.y, color);
+		//my_mlx_pixel_put(data, round(i_pos.x), round(i_pos.y), color);
+		if (color == 16711935)
+			my_mlx_pixel_put(data, data->player.playerspr, i_pos, color);
+		else
+			my_mlx_pixel_put(data, data->tile, i_pos, color);
 		e2 = err;
 		if (e2 > -dx)
 		{
@@ -248,6 +265,7 @@ int		ft_draw(t_data *data)
 	ft_render_map(data);
 	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->player.playerspr.img, 0, 0);
 	return (TRUE);
 }
 
@@ -296,7 +314,7 @@ int		ft_move(t_data *data)
 		data->player.turnDirection = 0;
 
 	// test purposes only
-	printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
 	printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
 	ft_move_player(data);	

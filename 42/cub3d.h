@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/14 09:26:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/15 09:16:24 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@
 
 typedef struct s_coord
 {
-	int x;
-	int y;
+	float x;
+	float y;
 }		t_coord;
 
 typedef struct s_img
@@ -83,11 +83,12 @@ typedef struct	s_data
 }					t_data;
 
 int		ft_init_win(t_data *data);
-void	ft_init_img(t_data *data);
+void	ft_init_img(t_data *data, t_img *imagem);
 void	ft_setup(t_data *data, int argc, char **argv);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+//void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	my_mlx_pixel_put(t_data *data, t_img obj, t_coord o_pos, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color);
 int		ft_draw_rect(t_data *data, int h, int w, int color);
 int		ft_draw_player(t_data *data, int color);
