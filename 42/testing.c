@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/19 11:43:22 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:16:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		ft_test_line_draw(t_data *data)
 
 int     ft_test_collision(t_data *data)
 {
-    if (ft_validarea(data, MOVESPEED))
+    if (!(ft_invalidarea(data, data->player.playerspr.pos.x, data->player.playerspr.pos.y)))
 		data->player.walkDirection = +MOVESPEED;
 		data->player.turnDirection = +MOVESPEED;
     

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/19 12:07:20 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:22:07 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,16 @@ int		ft_draw_player(t_data *data, int color)
 	return (TRUE);
 }
 
+// checks if image is in drawable area, uses "step" as increment
+int		ft_invalidarea(t_data *data, float x, float y)
+{
+	if (x < 0 || x > SCREENW || y < 0  || y > SCREENH)
+		return (TRUE);
+	int mapgridx = floor(x / TILE_SIZE);
+	int mapgridy = floor(y / TILE_SIZE);
+	return (map[mapgridy][mapgridx] != 0);
+}
+
 // updates player positions and directions
 int		ft_move_player(t_data *data)
 {
@@ -195,10 +205,11 @@ int		ft_move_player(t_data *data)
 	movestep = data->player.walkDirection * data->player.walkSpeed;
 	newPlayerX = data->player.playerspr.pos.x + cos(data->player.rotationAngle) * movestep;
 	newPlayerY = data->player.playerspr.pos.y + sin(data->player.rotationAngle) * movestep;
-	// player collision code here
-	data->player.playerspr.pos.x = round(newPlayerX);
-	data->player.playerspr.pos.y = round(newPlayerY);
-	
+	if (!(ft_invalidarea(data, newPlayerX, newPlayerY)))
+	{
+		data->player.playerspr.pos.x = round(newPlayerX);
+		data->player.playerspr.pos.y = round(newPlayerY);
+	}
 }
 
 // erases the image in the window drawing a black rectangle on top of each tile
@@ -251,23 +262,13 @@ int		ft_draw(t_data *data)
 	return (TRUE);
 }
 
-// checks if image is in drawable area, uses "step" as increment
-int		ft_validarea(t_data *data, int step)
-{
-	if ((data->player.playerspr.pos.x + TILE_SIZE + step < data->width) && 
-		(data->player.playerspr.pos.y + TILE_SIZE + step < data->height))
-		return (TRUE);
-	else
-		return (FALSE);
-}
-
 // updates object position
 int		ft_update(t_data *data)
 {
 	int cnt = 0;
 
 	while(cnt++ < 2 * FPS); // stupid fps control method
-	if (ft_validarea(data, 2))
+	if (!(ft_invalidarea(data, data->tile.pos.x, data->tile.pos.y)))
 	{
 		data->tile.pos.x += 2;
 		data->tile.pos.y += 2;
@@ -285,11 +286,9 @@ int		ft_move(t_data *data)
 	if (data->right == TRUE)
 		data->player.turnDirection = +MOVESPEED;
 	if (data->up == TRUE)
-		//if (ft_validarea(data, MOVESPEED))
-			data->player.walkDirection = +MOVESPEED;
+		data->player.walkDirection = +MOVESPEED;
 	if (data->down == TRUE)
-		//if (ft_validarea(data, MOVESPEED))
-			data->player.walkDirection = -MOVESPEED;
+		data->player.walkDirection = -MOVESPEED;
 	if (data->up == FALSE && data->down == FALSE)
 		data->player.walkDirection = 0;
 	if (data->left == FALSE && data->right == FALSE)
@@ -299,6 +298,7 @@ int		ft_move(t_data *data)
 	printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
 	printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
+	
 	ft_move_player(data);	
 
 	return (TRUE);

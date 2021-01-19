@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/19 12:06:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:15:50 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int		ft_erase(t_data *data);
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_draw(t_data *data);
-int		ft_validarea(t_data *data, int step);
+int		ft_invalidarea(t_data *data, float x, float y);
 int		ft_update(t_data *data);
 int		ft_move(t_data *data);
 
