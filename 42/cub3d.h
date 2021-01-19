@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/14 09:26:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 10:39:03 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_playerdata
 	int		turnDirection;  // -1 for left, +1 for right
     int		walkDirection;  // -1 for back, +1 for front
     float	rotationAngle;
-    float	walkSpeed;
+    int		walkSpeed;
     float	turnSpeed;
 	t_img	playerspr;
 }			t_playerdata;

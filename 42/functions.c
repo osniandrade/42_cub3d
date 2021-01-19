@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/14 09:25:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 10:59:54 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_init_player(t_data *data)
 	data->player.playerspr.pos.y = (SCREENH / 2) * MAP_SCALE;
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI * 0.25; //PI / 2;
+	data->player.rotationAngle = PI / 2;
 	data->player.walkSpeed = 80 * GAMESPEED;
 	data->player.turnSpeed = (45 * GAMESPEED) * (PI / 180);
 }
@@ -183,7 +183,7 @@ int		ft_draw_player(t_data *data, int color)
 // updates player positions and directions
 int		ft_move_player(t_data *data)
 {
-	float	movestep;
+	int		movestep;
 	float	newPlayerX;
 	float	newPlayerY;
 
@@ -196,8 +196,8 @@ int		ft_move_player(t_data *data)
 	newPlayerX = data->player.playerspr.pos.x + cos(data->player.rotationAngle) * movestep;
 	newPlayerY = data->player.playerspr.pos.y + sin(data->player.rotationAngle) * movestep;
 	// player collision code here
-	data->player.playerspr.pos.x = newPlayerX;
-	data->player.playerspr.pos.y = newPlayerY;
+	data->player.playerspr.pos.x = round(newPlayerX);
+	data->player.playerspr.pos.y = round(newPlayerY);
 	
 }
 
@@ -251,7 +251,7 @@ int		ft_draw(t_data *data)
 	return (TRUE);
 }
 
-// checks if image is in drawable area, uses "step" as 
+// checks if image is in drawable area, uses "step" as increment
 int		ft_validarea(t_data *data, int step)
 {
 	if ((data->player.playerspr.pos.x + TILE_SIZE + step < data->width) && 
