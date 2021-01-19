@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/19 10:59:54 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/19 12:07:20 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	ft_init_img(t_data *data)
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.pos.x = (SCREENW / 2) * MAP_SCALE;
-	data->player.playerspr.pos.y = (SCREENH / 2) * MAP_SCALE;
+	data->player.playerspr.pos.x = (SCREENW / 2);
+	data->player.playerspr.pos.y = (SCREENH / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
 	data->player.rotationAngle = PI / 2;
@@ -285,10 +285,10 @@ int		ft_move(t_data *data)
 	if (data->right == TRUE)
 		data->player.turnDirection = +MOVESPEED;
 	if (data->up == TRUE)
-		if (ft_validarea(data, MOVESPEED))
+		//if (ft_validarea(data, MOVESPEED))
 			data->player.walkDirection = +MOVESPEED;
 	if (data->down == TRUE)
-		if (ft_validarea(data, MOVESPEED))
+		//if (ft_validarea(data, MOVESPEED))
 			data->player.walkDirection = -MOVESPEED;
 	if (data->up == FALSE && data->down == FALSE)
 		data->player.walkDirection = 0;
