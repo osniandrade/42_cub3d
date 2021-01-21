@@ -6,14 +6,14 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/19 17:15:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/01/20 17:06:11 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define TRUE		1
 #define FALSE		0
 
-#define GAMESPEED	0.05  // only values lower than 1.0
+#define GAMESPEED	0.25  // only values lower than 1.0
 #define MOVESPEED	1
 #define KEYPRESS	2
 #define KEYRELEASE	3
@@ -66,7 +66,7 @@ typedef struct s_playerdata
 	int		turnDirection;  // -1 for left, +1 for right
     int		walkDirection;  // -1 for back, +1 for front
     float	rotationAngle;
-    int		walkSpeed;
+    float	walkSpeed;
     float	turnSpeed;
 	t_img	playerspr;
 }			t_playerdata;
