@@ -13,9 +13,9 @@
 #define TRUE			1
 #define FALSE			0
 
-#define GAMESPEED		0.05  // only values lower than 1.0
-#define INIT_WALKSPD	75 * GAMESPEED
-#define INIT_TURNSPD	45 * GAMESPEED
+#define GAMESPEED		0.2  // only values lower than 1.0
+#define INIT_WALKSPD	3 * GAMESPEED
+#define INIT_TURNSPD	4.5 * GAMESPEED
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
@@ -48,8 +48,8 @@
 
 typedef struct s_coord
 {
-	int x;
-	int y;
+	float x;
+	float y;
 }		t_coord;
 
 typedef struct s_img
