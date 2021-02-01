@@ -78,8 +78,8 @@ void	ft_init_player(t_data *data)
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
 	data->player.rotationAngle = PI / 2;
-	data->player.walkSpeed = 6 * GAMESPEED;
-	data->player.turnSpeed = (4 * GAMESPEED) * (PI / 180);
+	data->player.walkSpeed = INIT_WALKSPD;
+	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
 
 // initializes the setup for the main loop
@@ -186,10 +186,10 @@ int		ft_draw_player(t_data *data, int color)
 {
 	t_coord i_pos, f_pos;
 
-	i_pos.x = MAP_SCALE * data->player.playerspr.pos.x;
-	i_pos.y = MAP_SCALE * data->player.playerspr.pos.y;
-	f_pos.x = MAP_SCALE * data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE;
-	f_pos.y = MAP_SCALE * data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE;
+	i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
+	i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
+	f_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x) + cos(data->player.rotationAngle) * PLAYERSIZE;
+	f_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y) + sin(data->player.rotationAngle) * PLAYERSIZE;
 
 	ft_draw_line(data, i_pos, f_pos, color);
 
@@ -212,6 +212,8 @@ int		ft_move_player(t_data *data)
 	float	movestep;
 	float	newPlayerX;
 	float	newPlayerY;
+	float	playerCos;
+	float	playerSin;
 
 	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
 	if (data->player.rotationAngle >= 2 * PI)
@@ -219,8 +221,10 @@ int		ft_move_player(t_data *data)
 	if (data->player.rotationAngle < 0)
 		data->player.rotationAngle = 2 * PI;
 	movestep = data->player.walkDirection * data->player.walkSpeed;
-	newPlayerX = data->player.playerspr.pos.x + cos(data->player.rotationAngle) * movestep;
-	newPlayerY = data->player.playerspr.pos.y + sin(data->player.rotationAngle) * movestep;
+	playerCos = cos(data->player.rotationAngle) * movestep;
+	playerSin = sin(data->player.rotationAngle) * movestep;
+	newPlayerX = data->player.playerspr.pos.x + playerCos;
+	newPlayerY = data->player.playerspr.pos.y + playerSin;
 	if (!(ft_invalidarea(data, newPlayerX, newPlayerY)))
 	{
 		data->player.playerspr.pos.x = round(newPlayerX);
@@ -281,17 +285,17 @@ int		ft_draw(t_data *data)
 // updates object position
 int		ft_update(t_data *data)
 {
-	int cnt = 0;
+	// int cnt = 0;
 
-	while(cnt++ < 2 * FPS); // stupid fps control method
-	if (!(ft_invalidarea(data, data->tile.pos.x, data->tile.pos.y)))
-	{
-		data->tile.pos.x += 2;
-		data->tile.pos.y += 2;
-		return (TRUE);
-	}
-	else
-		return (FALSE);
+	// while(cnt++ < 2 * FPS); // stupid fps control method
+	// if (!(ft_invalidarea(data, data->tile.pos.x, data->tile.pos.y)))
+	// {
+	// 	data->tile.pos.x += 2;
+	// 	data->tile.pos.y += 2;
+	// 	return (TRUE);
+	// }
+	// else
+	// 	return (FALSE);
 }
 
 // moves the image in the window
@@ -311,8 +315,8 @@ int		ft_move(t_data *data)
 		data->player.turnDirection = 0;
 
 	// test purposes only
-	printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
-	printf("angle = %f\n", data->player.rotationAngle);
+	// printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	// printf("angle = %f\n", data->player.rotationAngle);
 	ft_test_collision(data);
 	
 	ft_move_player(data);	

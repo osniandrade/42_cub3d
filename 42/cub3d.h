@@ -10,31 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#define TRUE		1
-#define FALSE		0
+#define TRUE			1
+#define FALSE			0
 
-#define GAMESPEED	0.25  // only values lower than 1.0
-#define MOVESPEED	1
-#define KEYPRESS	2
-#define KEYRELEASE	3
-#define FPS         1111111
+#define GAMESPEED		0.05  // only values lower than 1.0
+#define INIT_WALKSPD	75 * GAMESPEED
+#define INIT_TURNSPD	45 * GAMESPEED
+#define MOVESPEED		1
+#define KEYPRESS		2
+#define KEYRELEASE		3
+//#define FPS				1111111
 // keycodes
-#define UP			65362
-#define DOWN		65364
-#define RIGHT		65363
-#define LEFT		65361
-#define ESC			65307
+#define UP				65362
+#define DOWN			65364
+#define RIGHT			65363
+#define LEFT			65361
+#define ESC				65307
 
-#define PI          3.14159265
+#define PI				3.14159265
 
-#define TILE_SIZE   32
-#define MAP_ROWS    13
-#define MAP_COLS    20
-#define MAP_SCALE   1.0  // only values lower than 1.0
-#define PLAYERSIZE	(TILE_SIZE / 2) * MAP_SCALE
+#define TILE_SIZE		32
+#define MAP_ROWS		13
+#define MAP_COLS		20
+#define MAP_SCALE		1.0  // only values lower than 1.0
+#define PLAYERSIZE		(TILE_SIZE / 2) * MAP_SCALE
 
-#define SCREENW 	(MAP_COLS * TILE_SIZE)
-#define SCREENH 	(MAP_ROWS * TILE_SIZE)
+#define SCREENW			(MAP_COLS * TILE_SIZE)
+#define SCREENH			(MAP_ROWS * TILE_SIZE)
 
 
 
