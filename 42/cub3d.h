@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/03 21:45:45 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/04 10:17:03 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 #define SCREENH			(MAP_ROWS * TILE_SIZE)
 
 #define NUM_RAYS		15  //SCREENW
+#define FOV				(60 * (PI / 180))
 
 #include <mlx.h>
 #include <stdlib.h>
@@ -76,8 +77,6 @@ typedef struct s_playerdata
 typedef struct s_rays
 {
 	float	angle;
-	float	wallhitX;
-	float	wallhitY;
 	float	distance;
 	int		verticalhit;
 	int		rayup;
@@ -117,6 +116,7 @@ int		ft_erase(t_data *data);
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_draw(t_data *data);
+int		ft_renderray(t_data *data);
 int		ft_invalidarea(t_data *data, float x, float y);
 float	ft_normalizeangle(float angle);
 int		ft_update(t_data *data);
@@ -126,6 +126,7 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
 int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_raycast(t_data *data, float rayAngle, int stripId);
+int		ft_cast_all_rays(t_data *data);
 
 int		ft_crt_trgb(int t, int r, int g, int b);
 int		ft_get_t(int trgb);

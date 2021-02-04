@@ -217,15 +217,15 @@ void castRay(float rayAngle, int stripId) {
     xIntercept += isRayFacingRight ? TILE_SIZE : 0;
     
     // find the y-coordinate of the closest vertical grid intersection
-    yIntercept = player.y + (xIntercept - player.x) / tan(rayAngle);
+    yIntercept = player.y + (xIntercept - player.x) * tan(rayAngle);
 
     // calculate the increment xstep and ystep
     xStep = TILE_SIZE;
     xStep *= isRayFacingLeft ? -1 : 1;
 
-    yStep = TILE_SIZE / tan(rayAngle);
-    yStep *= (isRayFacingUp && xStep > 0) ? -1 : 1;
-    yStep *= (isRayFacingDown && xStep < 0) ? -1 : 1;
+    yStep = TILE_SIZE * tan(rayAngle);
+    yStep *= (isRayFacingUp && yStep > 0) ? -1 : 1;
+    yStep *= (isRayFacingDown && yStep < 0) ? -1 : 1;
 
     float nextVertTouchX = xIntercept;
     float nextVertTouchY = yIntercept;
@@ -301,6 +301,19 @@ void renderMap() {
     }
 }
 
+void renderRays() {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    for (int i = 0; i < NUM_RAYS; i++) {
+        SDL_RenderDrawLine(
+            renderer,
+            MINIMAP_SCALE_FACTOR * player.x,
+            MINIMAP_SCALE_FACTOR * player.y,
+            MINIMAP_SCALE_FACTOR * rays[i].wallHitX,
+            MINIMAP_SCALE_FACTOR * rays[i].wallHitY
+        );
+    }
+}
+
 void processInput() {
     SDL_Event event;
     SDL_PollEvent(&event);
@@ -358,7 +371,7 @@ void render() {
     SDL_RenderClear(renderer);
 
     renderMap();
-    //renderRays();
+    renderRays();
     renderPlayer();
 
     SDL_RenderPresent(renderer);

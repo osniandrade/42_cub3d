@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/03 21:52:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/04 19:25:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 	return (TRUE);
 }
 
-// draws a rectangle with defined heigth, width and color
+// draws a rectangle with defined height, width and color
 int		ft_draw_rect(t_data *data, int h, int w, int color)
 {
 	t_coord	i_pos, f_pos;
@@ -279,11 +279,33 @@ int		ft_render_player(t_data *data)
 	return (TRUE);
 }
 
+// renders all rays from rays array on screen
+int		ft_renderray(t_data *data)
+{
+	int		ray;
+	int		color;
+	t_coord i_pos;
+	t_coord f_pos;
+
+	ray = 0;
+	color = ft_crt_trgb(255, 0, 0, 255);
+	while (ray < NUM_RAYS)
+	{
+		i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
+		i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
+		f_pos.x = round(MAP_SCALE * data->rays[ray].wallhit.x);
+		f_pos.y = round(MAP_SCALE * data->rays[ray].wallhit.y);
+		ft_draw_line(data, i_pos, f_pos, color);
+		ray++;
+	}
+}
+
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
 	ft_render_map(data);
 	ft_render_player(data);
+	ft_renderray(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -325,7 +347,7 @@ int		ft_move(t_data *data)
 	// printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
 	
-	ft_move_player(data);	
+	ft_move_player(data);
 
 	return (TRUE);
 }
@@ -402,15 +424,15 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	intercept.x += raytemp->rayright ? TILE_SIZE : 0;
 
 	// find x of closest vert grid intersection
-	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) / tan(rayAngle);
+	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
 
 	// calculate increment xstep and ystep
 	step.x = TILE_SIZE;
 	step.x *= raytemp->rayleft ? -1 : 1;
 
-	step.y = TILE_SIZE / tan(rayAngle);
-	step.y *= (raytemp->rayup && step.y > 0) ? -1 : 1;   ////////////// possible typo on step.y
-	step.y *= (raytemp->raydown && step.y < 0) ? -1 : 1; ////////////// possible typo on step.y
+	step.y = TILE_SIZE * tan(rayAngle);
+	step.y *= (raytemp->rayup && step.y > 0) ? -1 : 1;
+	step.y *= (raytemp->raydown && step.y < 0) ? -1 : 1;
 
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
@@ -436,9 +458,9 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 	float coordx;
 	float coordy;
 
-	coordx = raytemp->wallhitX - data->player.playerspr.pos.x;
+	coordx = raytemp->wallhit.x - data->player.playerspr.pos.x;
 	coordx *= coordx;
-	coordy = raytemp->wallhitY - data->player.playerspr.pos.y;
+	coordy = raytemp->wallhit.y - data->player.playerspr.pos.y;
 	coordy *= coordy;
 	
 	return sqrt(coordx + coordy);
@@ -447,13 +469,15 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
 	data->rays[stripId].distance = raytemp->distance;
-	data->rays[stripId].wallhitX = raytemp->wallhitX;
-	data->rays[stripId].wallhitY = raytemp->wallhitY;
+	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
+	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
 	data->rays[stripId].rayup = raytemp->rayup;
 	data->rays[stripId].raydown = raytemp->raydown;
 	data->rays[stripId].rayleft = raytemp->rayleft;
 	data->rays[stripId].rayright = raytemp->rayright;
+	data->rays[stripId].foundwall = raytemp->foundwall;
+	data->rays[stripId].wallcontent = raytemp->wallcontent;
 	if (is_vert)
 		data->rays[stripId].verticalhit = TRUE;
 	else
@@ -486,5 +510,21 @@ int		ft_raycast(t_data *data, float rayAngle, int stripId)
 	else
 		ft_fillray(data, &raytemp_h, 0, stripId);
 	data->rays[stripId].angle = rayAngle;
+	return (TRUE);
+}
+
+int		ft_cast_all_rays(t_data *data)
+{
+	float	rayAngle;
+	int		stripId;
+
+	stripId = 0;
+	rayAngle = data->player.rotationAngle - (FOV / 2);
+	while (stripId < NUM_RAYS)
+	{
+		ft_raycast(data, rayAngle, stripId);
+		rayAngle += FOV / NUM_RAYS;
+		stripId++;
+	}
 	return (TRUE);
 }
