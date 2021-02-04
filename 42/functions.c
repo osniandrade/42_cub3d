@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/20 16:59:06 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/03 21:52:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,15 @@ int		ft_invalidarea(t_data *data, float x, float y)
 	return (map[mapgridy][mapgridx] != 0);
 }
 
+// normalize angle
+float	ft_normalizeangle(float angle) {
+	angle = remainder(angle, PI * 2);
+	if (angle < 0) {
+		angle = (2 * PI) + angle;
+	}
+	return (angle);
+}
+
 // updates player positions and directions
 int		ft_move_player(t_data *data)
 {
@@ -216,10 +225,7 @@ int		ft_move_player(t_data *data)
 	float	playerSin;
 
 	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
-	if (data->player.rotationAngle >= 2 * PI)
-		data->player.rotationAngle = 0;
-	if (data->player.rotationAngle < 0)
-		data->player.rotationAngle = 2 * PI;
+	data->player.rotationAngle = ft_normalizeangle(data->player.rotationAngle);
 	movestep = data->player.walkDirection * data->player.walkSpeed;
 	playerCos = cos(data->player.rotationAngle) * movestep;
 	playerSin = sin(data->player.rotationAngle) * movestep;
@@ -321,5 +327,164 @@ int		ft_move(t_data *data)
 	
 	ft_move_player(data);	
 
+	return (TRUE);
+}
+
+// loops until a wall is found - 0 for horizontal check and 1 for vertical check
+int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
+{
+	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= SCREENW && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= SCREENH)
+	{
+		toCheck.x = raytemp->nextTouch.x;
+		toCheck.y = raytemp->nextTouch.y;
+		if (is_vert)
+			toCheck.x += (raytemp->rayleft ? -1 : 0);
+		else
+			toCheck.y += (raytemp->rayup ? -1 : 0);
+		if (ft_invalidarea(data, toCheck.x, toCheck.y))
+		{
+			raytemp->wallhit.x = raytemp->nextTouch.x;
+			raytemp->wallhit.y = raytemp->nextTouch.y;
+			raytemp->wallcontent = map[(int)floor(toCheck.y / TILE_SIZE)][(int)floor(toCheck.x / TILE_SIZE)];
+			raytemp->foundwall = TRUE;
+			break;
+		}
+		else
+		{
+			raytemp->nextTouch.x += step.x;
+			raytemp->nextTouch.y += step.y;
+		}
+	}
+}
+
+// calculates horizontal ray intersection on the grid
+int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
+{
+	t_coord	toCheck;
+
+	raytemp->wallhit.x = 0;
+	raytemp->wallhit.y = 0;
+
+	// find y of closest horz grid intersection
+	intercept.y = floor(data->player.playerspr.pos.y / TILE_SIZE) * TILE_SIZE;
+	intercept.y += raytemp->raydown ? TILE_SIZE : 0;
+
+	// find x of closest horz grid intersection
+	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
+
+	// calculate increment xstep and ystep
+	step.y = TILE_SIZE;
+	step.y *= raytemp->rayup ? -1 : 1;
+
+	step.x = TILE_SIZE / tan(rayAngle);
+	step.x *= (raytemp->rayleft && step.x > 0) ? -1 : 1;
+	step.x *= (raytemp->rayright && step.x < 0) ? -1 : 1;
+
+	raytemp->nextTouch.x = intercept.x;
+	raytemp->nextTouch.y = intercept.y;
+
+	// increment xstep and ystep until we find a wall
+	ft_findwall(data, raytemp, toCheck, step, 0);
+	
+	return (TRUE);
+}
+
+// calculates vertical ray intersection on the grid
+int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
+{
+	t_coord	toCheck;
+
+	raytemp->wallhit.x = 0;
+	raytemp->wallhit.y = 0;
+
+	// find y of closest vert grid intersection
+	intercept.x = floor(data->player.playerspr.pos.x / TILE_SIZE) * TILE_SIZE;
+	intercept.x += raytemp->rayright ? TILE_SIZE : 0;
+
+	// find x of closest vert grid intersection
+	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) / tan(rayAngle);
+
+	// calculate increment xstep and ystep
+	step.x = TILE_SIZE;
+	step.x *= raytemp->rayleft ? -1 : 1;
+
+	step.y = TILE_SIZE / tan(rayAngle);
+	step.y *= (raytemp->rayup && step.y > 0) ? -1 : 1;   ////////////// possible typo on step.y
+	step.y *= (raytemp->raydown && step.y < 0) ? -1 : 1; ////////////// possible typo on step.y
+
+	raytemp->nextTouch.x = intercept.x;
+	raytemp->nextTouch.y = intercept.y;
+
+	// increment xstep and ystep until we find a wall
+	ft_findwall(data, raytemp, toCheck, step, 1);
+	
+	return (TRUE);
+}
+
+// initializes raytemp struct with basic values
+int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
+{
+	raytemp->rayup = rayAngle > 0 && rayAngle < PI;
+	raytemp->raydown = !raytemp->rayup;
+	raytemp->rayright = rayAngle < 0.5 * PI || rayAngle > 1.5 * PI;
+	raytemp->rayleft = !raytemp->rayright;
+	return (TRUE);
+}
+
+float	ft_distance(t_data *data, t_rays *raytemp)
+{
+	float coordx;
+	float coordy;
+
+	coordx = raytemp->wallhitX - data->player.playerspr.pos.x;
+	coordx *= coordx;
+	coordy = raytemp->wallhitY - data->player.playerspr.pos.y;
+	coordy *= coordy;
+	
+	return sqrt(coordx + coordy);
+}
+
+int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
+{
+	data->rays[stripId].distance = raytemp->distance;
+	data->rays[stripId].wallhitX = raytemp->wallhitX;
+	data->rays[stripId].wallhitY = raytemp->wallhitY;
+	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
+	data->rays[stripId].rayup = raytemp->rayup;
+	data->rays[stripId].raydown = raytemp->raydown;
+	data->rays[stripId].rayleft = raytemp->rayleft;
+	data->rays[stripId].rayright = raytemp->rayright;
+	if (is_vert)
+		data->rays[stripId].verticalhit = TRUE;
+	else
+		data->rays[stripId].verticalhit = FALSE;
+	return (TRUE);
+}
+
+// function responsible for casting each ray
+int		ft_raycast(t_data *data, float rayAngle, int stripId)
+{
+	t_rays	raytemp_h;
+	t_rays	raytemp_v;
+	t_coord intercept;
+	t_coord step;
+	t_coord	distance;
+
+	rayAngle = ft_normalizeangle(rayAngle);
+
+	ft_init_raytemp(&raytemp_h, rayAngle);
+	ft_init_raytemp(&raytemp_v, rayAngle);
+
+	ft_h_intersection(data, &raytemp_h, intercept, step, rayAngle);
+	ft_v_intersection(data, &raytemp_v, intercept, step, rayAngle);
+	
+	distance.x = raytemp_h.foundwall ? ft_distance(data, &raytemp_h) : __INT_MAX__;
+	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __INT_MAX__;
+
+	if (distance.y < distance.x)
+		ft_fillray(data, &raytemp_v, 1, stripId);
+	else
+		ft_fillray(data, &raytemp_h, 0, stripId);
+	data->rays[stripId].angle = rayAngle;
 	return (TRUE);
 }

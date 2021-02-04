@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/01/20 17:06:11 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/03 21:45:45 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-//#define FPS				1111111
+
 // keycodes
 #define UP				65362
 #define DOWN			65364
@@ -38,7 +38,7 @@
 #define SCREENW			(MAP_COLS * TILE_SIZE)
 #define SCREENH			(MAP_ROWS * TILE_SIZE)
 
-
+#define NUM_RAYS		15  //SCREENW
 
 #include <mlx.h>
 #include <stdlib.h>
@@ -73,6 +73,25 @@ typedef struct s_playerdata
 	t_img	playerspr;
 }			t_playerdata;
 
+typedef struct s_rays
+{
+	float	angle;
+	float	wallhitX;
+	float	wallhitY;
+	float	distance;
+	int		verticalhit;
+	int		rayup;
+	int		raydown;
+	int		rayleft;
+	int		rayright;
+	int		wallHitContent;
+	int		foundwall;
+	int		wallcontent;
+	t_coord	wallhit;
+	t_coord	nextTouch;
+	t_img	rayspr;
+}			t_rays;
+
 typedef struct	s_data
 {
 	void			*mlx;
@@ -81,6 +100,7 @@ typedef struct	s_data
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	t_img			tile;
+	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
 }					t_data;
 
@@ -98,8 +118,14 @@ int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_draw(t_data *data);
 int		ft_invalidarea(t_data *data, float x, float y);
+float	ft_normalizeangle(float angle);
 int		ft_update(t_data *data);
 int		ft_move(t_data *data);
+int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert);
+int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
+int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
+int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
+int		ft_raycast(t_data *data, float rayAngle, int stripId);
 
 int		ft_crt_trgb(int t, int r, int g, int b);
 int		ft_get_t(int trgb);
