@@ -6,44 +6,44 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/04 19:25:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/04 20:53:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 //map matrix (TEMPORARY)
-int map[MAP_ROWS][MAP_COLS] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-
 // int map[MAP_ROWS][MAP_COLS] = {
 //     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 //     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 //     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
 //     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 //     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 // };
+
+int map[MAP_ROWS][MAP_COLS] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
 
 // initializes the main struct variables
 int		ft_init_win(t_data *data)
@@ -77,7 +77,7 @@ void	ft_init_player(t_data *data)
 	data->player.playerspr.pos.y = (SCREENH / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI / 2;
+	data->player.rotationAngle = 0; //PI / 2;
 	data->player.walkSpeed = INIT_WALKSPD;
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
@@ -207,9 +207,11 @@ int		ft_invalidarea(t_data *data, float x, float y)
 }
 
 // normalize angle
-float	ft_normalizeangle(float angle) {
+float	ft_normalizeangle(float angle) 
+{
 	angle = remainder(angle, PI * 2);
-	if (angle < 0) {
+	if (angle < 0) 
+	{
 		angle = (2 * PI) + angle;
 	}
 	return (angle);
@@ -343,8 +345,8 @@ int		ft_move(t_data *data)
 		data->player.turnDirection = 0;
 
 	// test purposes only
-	// printf("x = %d, y = %d\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
-	// printf("angle = %f\n", data->player.rotationAngle);
+	printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
 	
 	ft_move_player(data);
@@ -446,10 +448,12 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 // initializes raytemp struct with basic values
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 {
-	raytemp->rayup = rayAngle > 0 && rayAngle < PI;
-	raytemp->raydown = !raytemp->rayup;
-	raytemp->rayright = rayAngle < 0.5 * PI || rayAngle > 1.5 * PI;
-	raytemp->rayleft = !raytemp->rayright;
+	raytemp->rayup = rayAngle < 0 && rayAngle >= PI;
+	//raytemp->raydown = !(raytemp->rayup);
+	raytemp->raydown = rayAngle >= 0 && rayAngle < PI;
+	raytemp->rayright = rayAngle <= 0.5 * PI && rayAngle > 1.5 * PI;
+	//raytemp->rayleft = !(raytemp->rayright);
+	raytemp->rayleft = rayAngle > 0.5 * PI && rayAngle <= 1.5 * PI;
 	return (TRUE);
 }
 
@@ -468,7 +472,7 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 
 int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
-	data->rays[stripId].distance = raytemp->distance;
+	data->rays[stripId].distance = 30; //raytemp->distance;
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
@@ -524,6 +528,7 @@ int		ft_cast_all_rays(t_data *data)
 	{
 		ft_raycast(data, rayAngle, stripId);
 		rayAngle += FOV / NUM_RAYS;
+		rayAngle = ft_normalizeangle(rayAngle);
 		stripId++;
 	}
 	return (TRUE);
