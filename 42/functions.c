@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/06 10:18:20 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/06 10:31:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -433,6 +433,7 @@ int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 	return (TRUE);
 }
 
+// calculates the distance between two coordinates x and y
 float	ft_distance(t_data *data, t_rays *raytemp)
 {
 	float coordx;
@@ -446,6 +447,7 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 	return sqrt(coordx + coordy);
 }
 
+// copies the values from raytemp to actual ray struct array position
 int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
 	data->rays[stripId].distance = raytemp->distance;
@@ -493,6 +495,7 @@ int		ft_raycast(t_data *data, float rayAngle, int stripId)
 	return (TRUE);
 }
 
+// loop through all rays and fill the ray struct array
 int		ft_cast_all_rays(t_data *data)
 {
 	float	rayAngle;
