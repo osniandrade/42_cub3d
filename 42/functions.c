@@ -6,44 +6,44 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/04 20:53:23 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/06 09:07:48 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//map matrix (TEMPORARY)
-// int map[MAP_ROWS][MAP_COLS] = {
-//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-//     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-// };
-
+// map matrix (TEMPORARY)
 int map[MAP_ROWS][MAP_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+    {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+
+// int map[MAP_ROWS][MAP_COLS] = {
+//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+// };
 
 // initializes the main struct variables
 int		ft_init_win(t_data *data)
@@ -362,9 +362,9 @@ int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, i
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
 		if (is_vert)
-			toCheck.x += (raytemp->rayleft ? -1 : 0);
+			toCheck.x += (raytemp->face_left ? -1 : 0);
 		else
-			toCheck.y += (raytemp->rayup ? -1 : 0);
+			toCheck.y += (raytemp->face_up ? -1 : 0);
 		if (ft_invalidarea(data, toCheck.x, toCheck.y))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
@@ -391,18 +391,18 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	// find y of closest horz grid intersection
 	intercept.y = floor(data->player.playerspr.pos.y / TILE_SIZE) * TILE_SIZE;
-	intercept.y += raytemp->raydown ? TILE_SIZE : 0;
+	intercept.y += raytemp->face_down ? TILE_SIZE : 0;
 
 	// find x of closest horz grid intersection
 	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
 
 	// calculate increment xstep and ystep
 	step.y = TILE_SIZE;
-	step.y *= raytemp->rayup ? -1 : 1;
+	step.y *= raytemp->face_up ? -1 : 1;
 
 	step.x = TILE_SIZE / tan(rayAngle);
-	step.x *= (raytemp->rayleft && step.x > 0) ? -1 : 1;
-	step.x *= (raytemp->rayright && step.x < 0) ? -1 : 1;
+	step.x *= (raytemp->face_left && step.x > 0) ? -1 : 1;
+	step.x *= (raytemp->face_right && step.x < 0) ? -1 : 1;
 
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
@@ -423,18 +423,18 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	// find y of closest vert grid intersection
 	intercept.x = floor(data->player.playerspr.pos.x / TILE_SIZE) * TILE_SIZE;
-	intercept.x += raytemp->rayright ? TILE_SIZE : 0;
+	intercept.x += raytemp->face_right ? TILE_SIZE : 0;
 
 	// find x of closest vert grid intersection
 	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
 
 	// calculate increment xstep and ystep
 	step.x = TILE_SIZE;
-	step.x *= raytemp->rayleft ? -1 : 1;
+	step.x *= raytemp->face_left ? -1 : 1;
 
 	step.y = TILE_SIZE * tan(rayAngle);
-	step.y *= (raytemp->rayup && step.y > 0) ? -1 : 1;
-	step.y *= (raytemp->raydown && step.y < 0) ? -1 : 1;
+	step.y *= (raytemp->face_up && step.y > 0) ? -1 : 1;
+	step.y *= (raytemp->face_down && step.y < 0) ? -1 : 1;
 
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
@@ -448,12 +448,10 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 // initializes raytemp struct with basic values
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 {
-	raytemp->rayup = rayAngle < 0 && rayAngle >= PI;
-	//raytemp->raydown = !(raytemp->rayup);
-	raytemp->raydown = rayAngle >= 0 && rayAngle < PI;
-	raytemp->rayright = rayAngle <= 0.5 * PI && rayAngle > 1.5 * PI;
-	//raytemp->rayleft = !(raytemp->rayright);
-	raytemp->rayleft = rayAngle > 0.5 * PI && rayAngle <= 1.5 * PI;
+	raytemp->face_down = rayAngle > 0 && rayAngle < PI;
+	raytemp->face_up = !(raytemp->face_down);
+	raytemp->face_right = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
+	raytemp->face_left = !(raytemp->face_right);
 	return (TRUE);
 }
 
@@ -476,10 +474,10 @@ int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
-	data->rays[stripId].rayup = raytemp->rayup;
-	data->rays[stripId].raydown = raytemp->raydown;
-	data->rays[stripId].rayleft = raytemp->rayleft;
-	data->rays[stripId].rayright = raytemp->rayright;
+	data->rays[stripId].face_up = raytemp->face_up;
+	data->rays[stripId].face_down = raytemp->face_down;
+	data->rays[stripId].face_left = raytemp->face_left;
+	data->rays[stripId].face_right = raytemp->face_right;
 	data->rays[stripId].foundwall = raytemp->foundwall;
 	data->rays[stripId].wallcontent = raytemp->wallcontent;
 	if (is_vert)

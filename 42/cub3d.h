@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/04 10:17:03 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/06 09:08:02 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 #define SCREENW			(MAP_COLS * TILE_SIZE)
 #define SCREENH			(MAP_ROWS * TILE_SIZE)
 
-#define NUM_RAYS		15  //SCREENW
+#define NUM_RAYS		SCREENW
 #define FOV				(60 * (PI / 180))
 
 #include <mlx.h>
@@ -79,10 +79,10 @@ typedef struct s_rays
 	float	angle;
 	float	distance;
 	int		verticalhit;
-	int		rayup;
-	int		raydown;
-	int		rayleft;
-	int		rayright;
+	int		face_up;
+	int		face_down;
+	int		face_left;
+	int		face_right;
 	int		wallHitContent;
 	int		foundwall;
 	int		wallcontent;
