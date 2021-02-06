@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/06 09:07:48 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/06 10:18:20 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ void	ft_init_img(t_data *data)
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.pos.x = (SCREENW / 2);
-	data->player.playerspr.pos.y = (SCREENH / 2);
+	data->player.playerspr.pos.x = 82;  // (SCREENW / 2);
+	data->player.playerspr.pos.y = 241;  // (SCREENH / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
 	data->player.rotationAngle = 0; //PI / 2;
@@ -240,13 +240,6 @@ int		ft_move_player(t_data *data)
 	}
 }
 
-// erases the image in the window drawing a black rectangle on top of each tile
-int		ft_erase(t_data *data)
-{
-	ft_draw_rect(data, data->tile.s, data->tile.s, ft_crt_trgb(0,0,0,0));
-	return (TRUE);
-}
-
 // renders map
 int		ft_render_map(t_data *data)
 {
@@ -312,22 +305,6 @@ int		ft_draw(t_data *data)
 	return (TRUE);
 }
 
-// updates object position
-int		ft_update(t_data *data)
-{
-	// int cnt = 0;
-
-	// while(cnt++ < 2 * FPS); // stupid fps control method
-	// if (!(ft_invalidarea(data, data->tile.pos.x, data->tile.pos.y)))
-	// {
-	// 	data->tile.pos.x += 2;
-	// 	data->tile.pos.y += 2;
-	// 	return (TRUE);
-	// }
-	// else
-	// 	return (FALSE);
-}
-
 // moves the image in the window
 int		ft_move(t_data *data)
 {
@@ -345,8 +322,8 @@ int		ft_move(t_data *data)
 		data->player.turnDirection = 0;
 
 	// test purposes only
-	printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
-	printf("angle = %f\n", data->player.rotationAngle);
+	//printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	//printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
 	
 	ft_move_player(data);
@@ -448,6 +425,7 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 // initializes raytemp struct with basic values
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 {
+	*raytemp = (t_rays) {0};  // fill the struct with zeroes
 	raytemp->face_down = rayAngle > 0 && rayAngle < PI;
 	raytemp->face_up = !(raytemp->face_down);
 	raytemp->face_right = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
@@ -470,7 +448,7 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 
 int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
-	data->rays[stripId].distance = 30; //raytemp->distance;
+	data->rays[stripId].distance = raytemp->distance;
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/06 09:08:02 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/06 10:18:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,14 +112,12 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color);
 int		ft_draw_rect(t_data *data, int h, int w, int color);
 int		ft_draw_player(t_data *data, int color);
-int		ft_erase(t_data *data);
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_draw(t_data *data);
 int		ft_renderray(t_data *data);
 int		ft_invalidarea(t_data *data, float x, float y);
 float	ft_normalizeangle(float angle);
-int		ft_update(t_data *data);
 int		ft_move(t_data *data);
 int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert);
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
