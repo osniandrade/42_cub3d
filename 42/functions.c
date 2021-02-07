@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/06 10:31:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/07 13:33:15 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,14 +299,14 @@ int		ft_renderray(t_data *data)
 int		ft_draw(t_data *data)
 {
 	ft_render_map(data);
-	ft_render_player(data);
 	ft_renderray(data);
+	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
 
-// moves the image in the window
-int		ft_move(t_data *data)
+// gets player moving direction and speed
+int		ft_playerdirection(t_data *data)
 {
 	if (data->left == TRUE)
 		data->player.turnDirection = -MOVESPEED;
@@ -320,12 +320,20 @@ int		ft_move(t_data *data)
 		data->player.walkDirection = 0;
 	if (data->left == FALSE && data->right == FALSE)
 		data->player.turnDirection = 0;
+	return (TRUE);
+}
+
+// moves the image in the window
+int		ft_update(t_data *data)
+{
+	ft_playerdirection(data);
 
 	// test purposes only
 	//printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
 	//printf("angle = %f\n", data->player.rotationAngle);
 	//ft_test_collision(data);
 	
+	ft_cast_all_rays(data);
 	ft_move_player(data);
 
 	return (TRUE);
