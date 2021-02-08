@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:44:28 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/08 16:58:54 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 #define TILE_SIZE		32
 #define MAP_ROWS		13
 #define MAP_COLS		20
-#define MAP_SCALE		1.0  // only values lower than 1.0
+#define MAP_SCALE		0.25  // only values lower than 1.0
 #define PLAYERSIZE		(TILE_SIZE / 2) * MAP_SCALE
 
 #define SCREENW			(MAP_COLS * TILE_SIZE)
@@ -44,6 +44,7 @@
 #include <mlx.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>  // REMOVE LATER
 #include "get_next_line.h"
 
@@ -98,6 +99,7 @@ typedef struct	s_data
 	int				width, height;
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
+	int				colorBuffer[SCREENW][SCREENH];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
@@ -107,6 +109,7 @@ int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
 void	ft_init_player(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
+void	ft_destroy(t_data *data);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
 void	ft_print_pixel(t_data *data, int x, int y, int color);
@@ -130,6 +133,8 @@ float	ft_distance(t_data *data, t_rays *raytemp);
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
+int		ft_edit_colorbuffer(t_data *data, int print);
+void	ft_gen_3d_proj(t_data *data);
 
 int		ft_crt_trgb(int t, int r, int g, int b);
 int		ft_get_t(int trgb);

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:44:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/08 16:58:52 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int map[MAP_ROWS][MAP_COLS] = {
 int		ft_init_win(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->width = SCREENW * MAP_SCALE;
-	data->height = SCREENH * MAP_SCALE;
+	data->width = SCREENW;
+	data->height = SCREENH;
 	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "RED SQUARE");
 	data->maptable = &map;
 	return (TRUE);
@@ -73,11 +73,11 @@ void	ft_init_img(t_data *data)
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.pos.x = 82;  // (SCREENW / 2);
-	data->player.playerspr.pos.y = 241;  // (SCREENH / 2);
+	data->player.playerspr.pos.x = (SCREENW / 2);
+	data->player.playerspr.pos.y = (SCREENH / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = 0; //PI / 2;
+	data->player.rotationAngle = PI / 2;
 	data->player.walkSpeed = INIT_WALKSPD;
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
@@ -86,19 +86,24 @@ void	ft_init_player(t_data *data)
 void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
+	ft_edit_colorbuffer(data, 0);
 	ft_init_win(data);
 	ft_init_img(data);
 	ft_init_player(data);
+}
+
+// finishes the program
+void	ft_destroy(t_data *data)
+{
+	mlx_destroy_window(data->mlx, data->mlx_win);
+	exit(0);
 }
 
 // changes key status to pressed and destroys window if pressed ESC
 int		ft_key_press(int keycode, t_data *data)
 {
 	if (keycode == ESC)
-	{
-		mlx_destroy_window(data->mlx, data->mlx_win);
-		exit(0);
-	}
+		ft_destroy(data);
 	if (keycode == LEFT)
 		data->left = TRUE;
 	if (keycode == RIGHT)
@@ -298,6 +303,8 @@ int		ft_render_ray(t_data *data)
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
+	
+	ft_edit_colorbuffer(data, 1);
 	ft_render_map(data);
 	ft_render_ray(data);
 	ft_render_player(data);
@@ -326,15 +333,18 @@ int		ft_player_direction(t_data *data)
 // moves the image in the window
 int		ft_update(t_data *data)
 {
+	
 	ft_player_direction(data);
 
 	// test purposes only
-	//printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
-	//printf("angle = %f\n", data->player.rotationAngle);
-	//ft_test_collision(data);
+	// printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
+	// printf("angle = %f\n", data->player.rotationAngle);
+	// ft_test_collision(data);
 	
 	ft_cast_all_rays(data);
 	ft_move_player(data);
+	ft_edit_colorbuffer(data, 0);
+	ft_gen_3d_proj(data);
 
 	return (TRUE);
 }
@@ -458,7 +468,8 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 // copies the values from raytemp to actual ray struct array position
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
-	data->rays[stripId].distance = raytemp->distance;
+	//data->rays[stripId].distance = raytemp->distance;
+	data->rays[stripId].distance = ft_distance(data, raytemp);
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
@@ -492,8 +503,8 @@ int		ft_cast_ray(t_data *data, float rayAngle, int stripId)
 	ft_h_intersection(data, &raytemp_h, intercept, step, rayAngle);
 	ft_v_intersection(data, &raytemp_v, intercept, step, rayAngle);
 	
-	distance.x = raytemp_h.foundwall ? ft_distance(data, &raytemp_h) : __INT_MAX__;
-	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __INT_MAX__;
+	distance.x = raytemp_h.foundwall ? ft_distance(data, &raytemp_h) : __FLT_MAX__;
+	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __FLT_MAX__;
 
 	if (distance.y < distance.x)
 		ft_fill_ray(data, &raytemp_v, 1, stripId);
@@ -519,4 +530,63 @@ int		ft_cast_all_rays(t_data *data)
 		stripId++;
 	}
 	return (TRUE);
+}
+
+// renders the color buffer and fills it with color in parameter
+// print = 0 makes color buffer black
+// print = 1 prints the color buffer on screen
+int		ft_edit_colorbuffer(t_data *data, int print)
+{
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	while (x < SCREENW)
+	{
+		while (y < SCREENH)
+		{
+			if (print == 0)
+				data->colorBuffer[x][y] = ft_crt_trgb(255, 0, 0, 0);
+			if (print == 1)
+				ft_print_pixel(data, x, y, data->colorBuffer[x][y]);
+			y++;
+		}
+		y = 0;
+		x++;
+	}
+	return (TRUE);
+}
+
+// generates the 3D projection using raycasting
+void	ft_gen_3d_proj(t_data *data)
+{
+	int		i;
+	int		y;
+	int		column_top;
+	int		column_bottom;
+	float	c_distance;
+	float	dist_proj_plane;
+	float	proj_wall_h;
+
+	i = 0;
+	while (i < NUM_RAYS)
+	{
+		c_distance = data->rays[i].distance * cos(data->rays[i].angle - data->player.rotationAngle);
+		dist_proj_plane = (SCREENW / 2) / tan(FOV / 2);
+		proj_wall_h = (TILE_SIZE / c_distance) * dist_proj_plane;
+		column_top = (SCREENH / 2) - (floor(proj_wall_h) / 2);
+		column_top = column_top < 0 ? 0 : column_top;
+		column_bottom = (SCREENH / 2) + (proj_wall_h / 2);
+		column_bottom = column_bottom > SCREENH ? SCREENH : column_bottom;
+		y = column_top;
+		while (y < column_bottom)
+		{
+			//data->colorBuffer[(SCREENW * y) + i] = data->rays[i].verticalhit ? 0xFFFFFFFF : 0xFFCCCCCC;
+			data->colorBuffer[i][y] = ft_crt_trgb(255,255,255,255);
+			y++;
+		}
+		y = 0;
+		i++;
+	}
 }
