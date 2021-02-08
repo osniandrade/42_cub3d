@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/08 17:11:41 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/08 17:24:13 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,11 +581,11 @@ void	ft_gen_3d_proj(t_data *data)
 		column_bottom = (SCREENH / 2) + (proj_wall_h / 2);
 		column_bottom = column_bottom > SCREENH ? SCREENH : column_bottom;
 		while (y < column_top)
-			data->colorBuffer[i][y++] = ft_crt_trgb(255, 16, 16, 255);
+			data->colorBuffer[i][y++] = ft_crt_trgb(255, 192, 192, 192);
 		while (y < column_bottom)
-			data->colorBuffer[i][y++] = ft_crt_trgb(255, 255, 255, 255);
+			data->colorBuffer[i][y++] = data->rays[i].verticalhit ? ft_crt_trgb(255, 255, 255, 255) : ft_crt_trgb(255, 128, 128, 128);
 		while (y < SCREENH)
-			data->colorBuffer[i][y++] = ft_crt_trgb(255, 139, 69, 19);
+			data->colorBuffer[i][y++] = ft_crt_trgb(255, 62, 64, 64);
 		i++;
 	}
 }
