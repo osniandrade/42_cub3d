@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:33:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/07 13:44:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int		ft_key_release(int keycode, t_data *data)
 }
 
 // draws a pixel to the image buffer
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	ft_print_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 	if (data->tile.pos.y <= data->height && data->tile.pos.x <= data->width)
@@ -147,7 +147,7 @@ int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 
 	while(!(i_pos.x == f_pos.x && i_pos.y == f_pos.y))
 	{
-		my_mlx_pixel_put(data, i_pos.x, i_pos.y, color);
+		ft_print_pixel(data, i_pos.x, i_pos.y, color);
 		e2 = err;
 		if (e2 > -dx)
 		{
@@ -197,7 +197,7 @@ int		ft_draw_player(t_data *data, int color)
 }
 
 // checks if image is in drawable area, uses "step" as increment
-int		ft_invalidarea(t_data *data, float x, float y)
+int		ft_invalid_area(t_data *data, float x, float y)
 {
 	if (x < 0 || x > SCREENW || y < 0  || y > SCREENH)
 		return (TRUE);
@@ -207,7 +207,7 @@ int		ft_invalidarea(t_data *data, float x, float y)
 }
 
 // normalize angle
-float	ft_normalizeangle(float angle) 
+float	ft_normalize_angle(float angle) 
 {
 	angle = remainder(angle, PI * 2);
 	if (angle < 0) 
@@ -227,13 +227,13 @@ int		ft_move_player(t_data *data)
 	float	playerSin;
 
 	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
-	data->player.rotationAngle = ft_normalizeangle(data->player.rotationAngle);
+	data->player.rotationAngle = ft_normalize_angle(data->player.rotationAngle);
 	movestep = data->player.walkDirection * data->player.walkSpeed;
 	playerCos = cos(data->player.rotationAngle) * movestep;
 	playerSin = sin(data->player.rotationAngle) * movestep;
 	newPlayerX = data->player.playerspr.pos.x + playerCos;
 	newPlayerY = data->player.playerspr.pos.y + playerSin;
-	if (!(ft_invalidarea(data, newPlayerX, newPlayerY)))
+	if (!(ft_invalid_area(data, newPlayerX, newPlayerY)))
 	{
 		data->player.playerspr.pos.x = newPlayerX;
 		data->player.playerspr.pos.y = newPlayerY;
@@ -275,7 +275,7 @@ int		ft_render_player(t_data *data)
 }
 
 // renders all rays from rays array on screen
-int		ft_renderray(t_data *data)
+int		ft_render_ray(t_data *data)
 {
 	int		ray;
 	int		color;
@@ -299,14 +299,14 @@ int		ft_renderray(t_data *data)
 int		ft_draw(t_data *data)
 {
 	ft_render_map(data);
-	ft_renderray(data);
+	ft_render_ray(data);
 	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
 
 // gets player moving direction and speed
-int		ft_playerdirection(t_data *data)
+int		ft_player_direction(t_data *data)
 {
 	if (data->left == TRUE)
 		data->player.turnDirection = -MOVESPEED;
@@ -326,7 +326,7 @@ int		ft_playerdirection(t_data *data)
 // moves the image in the window
 int		ft_update(t_data *data)
 {
-	ft_playerdirection(data);
+	ft_player_direction(data);
 
 	// test purposes only
 	//printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
@@ -340,7 +340,7 @@ int		ft_update(t_data *data)
 }
 
 // loops until a wall is found - 0 for horizontal check and 1 for vertical check
-int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
+int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
 {
 	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= SCREENW && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= SCREENH)
 	{
@@ -350,7 +350,7 @@ int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, i
 			toCheck.x += (raytemp->face_left ? -1 : 0);
 		else
 			toCheck.y += (raytemp->face_up ? -1 : 0);
-		if (ft_invalidarea(data, toCheck.x, toCheck.y))
+		if (ft_invalid_area(data, toCheck.x, toCheck.y))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
 			raytemp->wallhit.y = raytemp->nextTouch.y;
@@ -393,7 +393,7 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	raytemp->nextTouch.y = intercept.y;
 
 	// increment xstep and ystep until we find a wall
-	ft_findwall(data, raytemp, toCheck, step, 0);
+	ft_find_wall(data, raytemp, toCheck, step, 0);
 	
 	return (TRUE);
 }
@@ -425,7 +425,7 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	raytemp->nextTouch.y = intercept.y;
 
 	// increment xstep and ystep until we find a wall
-	ft_findwall(data, raytemp, toCheck, step, 1);
+	ft_find_wall(data, raytemp, toCheck, step, 1);
 	
 	return (TRUE);
 }
@@ -456,7 +456,7 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 }
 
 // copies the values from raytemp to actual ray struct array position
-int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
+int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
 	data->rays[stripId].distance = raytemp->distance;
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
@@ -476,7 +476,7 @@ int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 }
 
 // function responsible for casting each ray
-int		ft_raycast(t_data *data, float rayAngle, int stripId)
+int		ft_cast_ray(t_data *data, float rayAngle, int stripId)
 {
 	t_rays	raytemp_h;
 	t_rays	raytemp_v;
@@ -484,7 +484,7 @@ int		ft_raycast(t_data *data, float rayAngle, int stripId)
 	t_coord step;
 	t_coord	distance;
 
-	rayAngle = ft_normalizeangle(rayAngle);
+	rayAngle = ft_normalize_angle(rayAngle);
 
 	ft_init_raytemp(&raytemp_h, rayAngle);
 	ft_init_raytemp(&raytemp_v, rayAngle);
@@ -496,9 +496,9 @@ int		ft_raycast(t_data *data, float rayAngle, int stripId)
 	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __INT_MAX__;
 
 	if (distance.y < distance.x)
-		ft_fillray(data, &raytemp_v, 1, stripId);
+		ft_fill_ray(data, &raytemp_v, 1, stripId);
 	else
-		ft_fillray(data, &raytemp_h, 0, stripId);
+		ft_fill_ray(data, &raytemp_h, 0, stripId);
 	data->rays[stripId].angle = rayAngle;
 	return (TRUE);
 }
@@ -513,9 +513,9 @@ int		ft_cast_all_rays(t_data *data)
 	rayAngle = data->player.rotationAngle - (FOV / 2);
 	while (stripId < NUM_RAYS)
 	{
-		ft_raycast(data, rayAngle, stripId);
+		ft_cast_ray(data, rayAngle, stripId);
 		rayAngle += FOV / NUM_RAYS;
-		rayAngle = ft_normalizeangle(rayAngle);
+		rayAngle = ft_normalize_angle(rayAngle);
 		stripId++;
 	}
 	return (TRUE);

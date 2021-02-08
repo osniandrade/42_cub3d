@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:31:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/07 13:44:28 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,26 +105,30 @@ typedef struct	s_data
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
+void	ft_init_player(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	ft_print_pixel(t_data *data, int x, int y, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color);
 int		ft_draw_rect(t_data *data, int h, int w, int color);
 int		ft_draw_player(t_data *data, int color);
+int		ft_invalid_area(t_data *data, float x, float y);
+float	ft_normalize_angle(float angle);
+int		ft_move_player(t_data *data);
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
+int		ft_render_ray(t_data *data);
 int		ft_draw(t_data *data);
-int		ft_playerdirection(t_data *data);
-int		ft_renderray(t_data *data);
-int		ft_invalidarea(t_data *data, float x, float y);
-float	ft_normalizeangle(float angle);
+int		ft_player_direction(t_data *data);
 int		ft_update(t_data *data);
-int		ft_findwall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert);
+int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert);
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
 int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
-int		ft_fillray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
-int		ft_raycast(t_data *data, float rayAngle, int stripId);
+int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
+float	ft_distance(t_data *data, t_rays *raytemp);
+int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
+int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
 
 int		ft_crt_trgb(int t, int r, int g, int b);
@@ -132,6 +136,7 @@ int		ft_get_t(int trgb);
 int		ft_get_r(int trgb);
 int		ft_get_g(int trgb);
 int		ft_get_b(int trgb);
+int		ft_mapstats(int *map);
 int		ft_maparray(int argc, char **argv);
 
 int		ft_test_line_draw(t_data *data);
