@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/08 16:58:52 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/08 17:11:41 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -572,6 +572,7 @@ void	ft_gen_3d_proj(t_data *data)
 	i = 0;
 	while (i < NUM_RAYS)
 	{
+		y = 0;
 		c_distance = data->rays[i].distance * cos(data->rays[i].angle - data->player.rotationAngle);
 		dist_proj_plane = (SCREENW / 2) / tan(FOV / 2);
 		proj_wall_h = (TILE_SIZE / c_distance) * dist_proj_plane;
@@ -579,14 +580,12 @@ void	ft_gen_3d_proj(t_data *data)
 		column_top = column_top < 0 ? 0 : column_top;
 		column_bottom = (SCREENH / 2) + (proj_wall_h / 2);
 		column_bottom = column_bottom > SCREENH ? SCREENH : column_bottom;
-		y = column_top;
+		while (y < column_top)
+			data->colorBuffer[i][y++] = ft_crt_trgb(255, 16, 16, 255);
 		while (y < column_bottom)
-		{
-			//data->colorBuffer[(SCREENW * y) + i] = data->rays[i].verticalhit ? 0xFFFFFFFF : 0xFFCCCCCC;
-			data->colorBuffer[i][y] = ft_crt_trgb(255,255,255,255);
-			y++;
-		}
-		y = 0;
+			data->colorBuffer[i][y++] = ft_crt_trgb(255, 255, 255, 255);
+		while (y < SCREENH)
+			data->colorBuffer[i][y++] = ft_crt_trgb(255, 139, 69, 19);
 		i++;
 	}
 }
