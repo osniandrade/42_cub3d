@@ -53,6 +53,8 @@ Uint32* colorBuffer = NULL;
 
 SDL_Texture* colorBufferTexture;
 
+Uint32* wallTexture = NULL;
+
 int initializeWindow() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         fprintf(stderr, "Error initializing SDL.\n");
@@ -109,6 +111,14 @@ void setup() {
         WINDOW_WIDTH,
         WINDOW_HEIGHT
     );
+
+    // create a texture with a pattern of blue and black lines
+    wallTexture = (Uint32*) malloc(sizeof(Uint32) * (Uint32)TEXTURE_WIDTH * (Uint32)TEXTURE_HEIGHT);
+    for (int x = 0; x < TEXTURE_WIDTH; x++) {
+        for (int y = 0; y < TEXTURE_HEIGHT; y++) {
+            wallTexture[(TEXTURE_WIDTH * y) + x] = (x % 8 && y % 8) ? 0xFF0000FF : 0xFF000000;
+        }
+    }
 }
 
 int mapHasWallAt(float x, float y) {
@@ -398,8 +408,30 @@ void generate3DProjection() {
         wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
 
         // render wall column from wallTopPixel to wallBottomPixel
+        for (int y = 0; y < wallTopPixel; y++) {
+            colorBuffer[(WINDOW_WIDTH * y) + i] = 0xFF333333;
+        }
+
+        int textureOffsetX;
+        //TODO: calculate textureOffsetX
+        if (rays[i].wasHitVertical) {
+            textureOffsetX = (int)rays[i].wallHitY % TILE_SIZE;
+        } else {
+            textureOffsetX = (int)rays[i].wallHitX % TILE_SIZE;
+        }
+
         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
-            colorBuffer[(WINDOW_WIDTH * y) + i] = rays[i].wasHitVertical ? 0xFFFFFFFF : 0xFFCCCCCC;
+            // calculate textureOffsetY
+            int distanceFromTop = (y + (wallStripHeight / 2) - (WINDOW_HEIGHT / 2));
+            int textureOffsetY = distanceFromTop * ((float)TEXTURE_HEIGHT / wallStripHeight);
+
+            // set the color of the wall based on the color from the texture
+            Uint32 texelColor = wallTexture[(TEXTURE_WIDTH * textureOffsetY) + textureOffsetX];
+            colorBuffer[(WINDOW_WIDTH * y) + i] = texelColor;
+        }
+
+        for (int y = wallBottomPixel; y < wallBottomPixel; y++) {
+            colorBuffer[(WINDOW_WIDTH * y) + i] = 0xFF777777;
         }
     }
 }
