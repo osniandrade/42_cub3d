@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/08 16:58:54 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/10 17:14:38 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
+#define TEXTURE_COUNT	1
 
 // keycodes
 #define UP				65362
@@ -30,6 +31,8 @@
 #define PI				3.14159265
 
 #define TILE_SIZE		32
+#define	TEXTURE_W		32
+#define TEXTURE_H		32
 #define MAP_ROWS		13
 #define MAP_COLS		20
 #define MAP_SCALE		0.25  // only values lower than 1.0
@@ -92,6 +95,11 @@ typedef struct s_rays
 	t_img	rayspr;
 }			t_rays;
 
+typedef struct s_texture
+{
+	int		colorArray[TEXTURE_H][TEXTURE_W];
+}			t_texture;
+
 typedef struct	s_data
 {
 	void			*mlx;
@@ -100,10 +108,23 @@ typedef struct	s_data
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	int				colorBuffer[SCREENW][SCREENH];
+	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
 }					t_data;
+
+typedef struct	s_3dproj
+{
+	int				column_top;
+	int				column_bottom;
+	int				strip_h;
+	int				i;
+	int				y;
+	float			c_distance;
+	float			dist_proj_plane;
+	float			proj_wall_h;
+}					t_3dproj;
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
@@ -134,7 +155,8 @@ int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
 int		ft_edit_colorbuffer(t_data *data, int print);
-void	ft_gen_3d_proj(t_data *data);
+int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
+void	ft_gen_3d_proj(t_data *data, int tex_ind);
 
 int		ft_crt_trgb(int t, int r, int g, int b);
 int		ft_get_t(int trgb);
@@ -146,3 +168,4 @@ int		ft_maparray(int argc, char **argv);
 
 int		ft_test_line_draw(t_data *data);
 int     ft_test_collision(t_data *data);
+int		ft_texture_gen(t_data *data, int pos);

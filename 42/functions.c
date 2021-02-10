@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/08 17:24:13 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/10 17:14:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_init_win(data);
 	ft_init_img(data);
 	ft_init_player(data);
+	ft_texture_gen(data, 0);
 }
 
 // finishes the program
@@ -305,9 +306,9 @@ int		ft_draw(t_data *data)
 {
 	
 	ft_edit_colorbuffer(data, 1);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_player(data);
+	//ft_render_map(data);
+	//ft_render_ray(data);
+	//ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -335,16 +336,10 @@ int		ft_update(t_data *data)
 {
 	
 	ft_player_direction(data);
-
-	// test purposes only
-	// printf("x = %f, y = %f\n", data->player.playerspr.pos.x, data->player.playerspr.pos.y);
-	// printf("angle = %f\n", data->player.rotationAngle);
-	// ft_test_collision(data);
-	
 	ft_cast_all_rays(data);
 	ft_move_player(data);
 	ft_edit_colorbuffer(data, 0);
-	ft_gen_3d_proj(data);
+	ft_gen_3d_proj(data, 0);
 
 	return (TRUE);
 }
@@ -383,28 +378,17 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-
-	// find y of closest horz grid intersection
 	intercept.y = floor(data->player.playerspr.pos.y / TILE_SIZE) * TILE_SIZE;
 	intercept.y += raytemp->face_down ? TILE_SIZE : 0;
-
-	// find x of closest horz grid intersection
 	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
-
-	// calculate increment xstep and ystep
 	step.y = TILE_SIZE;
 	step.y *= raytemp->face_up ? -1 : 1;
-
 	step.x = TILE_SIZE / tan(rayAngle);
 	step.x *= (raytemp->face_left && step.x > 0) ? -1 : 1;
 	step.x *= (raytemp->face_right && step.x < 0) ? -1 : 1;
-
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
-
-	// increment xstep and ystep until we find a wall
 	ft_find_wall(data, raytemp, toCheck, step, 0);
-	
 	return (TRUE);
 }
 
@@ -415,28 +399,17 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-
-	// find y of closest vert grid intersection
 	intercept.x = floor(data->player.playerspr.pos.x / TILE_SIZE) * TILE_SIZE;
 	intercept.x += raytemp->face_right ? TILE_SIZE : 0;
-
-	// find x of closest vert grid intersection
 	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
-
-	// calculate increment xstep and ystep
 	step.x = TILE_SIZE;
 	step.x *= raytemp->face_left ? -1 : 1;
-
 	step.y = TILE_SIZE * tan(rayAngle);
 	step.y *= (raytemp->face_up && step.y > 0) ? -1 : 1;
 	step.y *= (raytemp->face_down && step.y < 0) ? -1 : 1;
-
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
-
-	// increment xstep and ystep until we find a wall
 	ft_find_wall(data, raytemp, toCheck, step, 1);
-	
 	return (TRUE);
 }
 
@@ -461,14 +434,12 @@ float	ft_distance(t_data *data, t_rays *raytemp)
 	coordx *= coordx;
 	coordy = raytemp->wallhit.y - data->player.playerspr.pos.y;
 	coordy *= coordy;
-	
 	return sqrt(coordx + coordy);
 }
 
 // copies the values from raytemp to actual ray struct array position
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
-	//data->rays[stripId].distance = raytemp->distance;
 	data->rays[stripId].distance = ft_distance(data, raytemp);
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
@@ -496,16 +467,12 @@ int		ft_cast_ray(t_data *data, float rayAngle, int stripId)
 	t_coord	distance;
 
 	rayAngle = ft_normalize_angle(rayAngle);
-
 	ft_init_raytemp(&raytemp_h, rayAngle);
 	ft_init_raytemp(&raytemp_v, rayAngle);
-
 	ft_h_intersection(data, &raytemp_h, intercept, step, rayAngle);
 	ft_v_intersection(data, &raytemp_v, intercept, step, rayAngle);
-	
 	distance.x = raytemp_h.foundwall ? ft_distance(data, &raytemp_h) : __FLT_MAX__;
 	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __FLT_MAX__;
-
 	if (distance.y < distance.x)
 		ft_fill_ray(data, &raytemp_v, 1, stripId);
 	else
@@ -558,34 +525,48 @@ int		ft_edit_colorbuffer(t_data *data, int print)
 	return (TRUE);
 }
 
-// generates the 3D projection using raycasting
-void	ft_gen_3d_proj(t_data *data)
+int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 {
-	int		i;
-	int		y;
-	int		column_top;
-	int		column_bottom;
-	float	c_distance;
-	float	dist_proj_plane;
-	float	proj_wall_h;
+	int		textOffsetY;
+	int		textOffsetX;
+	int		distanceFromTop;
 
-	i = 0;
-	while (i < NUM_RAYS)
+	if (data->rays[projection->i].verticalhit)
+		textOffsetX = (int)data->rays[projection->i].wallhit.y % TILE_SIZE;
+	else
+		textOffsetX = (int)data->rays[projection->i].wallhit.x % TILE_SIZE;
+	while (projection->y < projection->column_bottom)
 	{
-		y = 0;
-		c_distance = data->rays[i].distance * cos(data->rays[i].angle - data->player.rotationAngle);
-		dist_proj_plane = (SCREENW / 2) / tan(FOV / 2);
-		proj_wall_h = (TILE_SIZE / c_distance) * dist_proj_plane;
-		column_top = (SCREENH / 2) - (floor(proj_wall_h) / 2);
-		column_top = column_top < 0 ? 0 : column_top;
-		column_bottom = (SCREENH / 2) + (proj_wall_h / 2);
-		column_bottom = column_bottom > SCREENH ? SCREENH : column_bottom;
-		while (y < column_top)
-			data->colorBuffer[i][y++] = ft_crt_trgb(255, 192, 192, 192);
-		while (y < column_bottom)
-			data->colorBuffer[i][y++] = data->rays[i].verticalhit ? ft_crt_trgb(255, 255, 255, 255) : ft_crt_trgb(255, 128, 128, 128);
-		while (y < SCREENH)
-			data->colorBuffer[i][y++] = ft_crt_trgb(255, 62, 64, 64);
-		i++;
+		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
+		textOffsetY = distanceFromTop * ((float)TEXTURE_H / projection->strip_h);
+		data->colorBuffer[projection->i][projection->y] = data->texture[tex_ind].colorArray[textOffsetX][textOffsetY];
+		projection->y++;
+	}
+	return (TRUE);
+}
+
+// generates the 3D projection using raycasting
+void	ft_gen_3d_proj(t_data *data, int tex_ind)
+{
+	t_3dproj	projection;
+
+	projection.i = 0;
+	while (projection.i < NUM_RAYS)
+	{
+		projection.y = 0;
+		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
+		projection.dist_proj_plane = (SCREENW / 2) / tan(FOV / 2);
+		projection.proj_wall_h = (TILE_SIZE / projection.c_distance) * projection.dist_proj_plane;
+		projection.strip_h = (int)projection.proj_wall_h;
+		projection.column_top = (SCREENH / 2) - (floor(projection.proj_wall_h) / 2);
+		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
+		projection.column_bottom = (SCREENH / 2) + (projection.proj_wall_h / 2);
+		projection.column_bottom = projection.column_bottom > SCREENH ? SCREENH : projection.column_bottom;
+		while (projection.y < projection.column_top)
+			data->colorBuffer[projection.i][projection.y++] = ft_crt_trgb(255, 192, 192, 192);
+		ft_project_texture(data, &projection, tex_ind);		
+		while (projection.y < SCREENH)
+			data->colorBuffer[projection.i][projection.y++] = ft_crt_trgb(255, 62, 64, 64);
+		projection.i++;
 	}
 }

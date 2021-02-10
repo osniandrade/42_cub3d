@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:40:32 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/10 16:43:48 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int		ft_test_line_draw(t_data *data)
 	return (TRUE);
 }
 
+// moves player to test collision with walls
 int     ft_test_collision(t_data *data)
 {
     if (!(ft_invalid_area(data, data->player.playerspr.pos.x, data->player.playerspr.pos.y)))
@@ -73,4 +74,19 @@ int     ft_test_collision(t_data *data)
 		data->player.turnDirection = +MOVESPEED;
     
     return (TRUE);
+}
+
+// generates texture for walls
+int		ft_texture_gen(t_data *data, int pos)
+{
+	for (int x = 0; x < TEXTURE_W; x++)
+	{
+		for (int y = 0; y < TEXTURE_H; y++)
+		{
+			if (x % 4 && y % 4)
+				data->texture[pos].colorArray[x][y] = ft_crt_trgb(255, 0, 0, 0);
+			else
+				data->texture[pos].colorArray[x][y] = ft_crt_trgb(255, 0, 128, 0);
+		}
+	}
 }
