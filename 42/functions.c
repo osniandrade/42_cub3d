@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/10 17:14:30 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/10 17:30:10 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	ft_init_player(t_data *data)
 void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
-	ft_edit_colorbuffer(data, 0);
+	ft_edit_colorbuffer(data, TEXTURE_INDEX);
 	ft_init_win(data);
 	ft_init_img(data);
 	ft_init_player(data);

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/10 17:14:38 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/10 17:30:08 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@
 
 #define NUM_RAYS		SCREENW
 #define FOV				(60 * (PI / 180))
+
+// text purposes
+#define	TEXTURE_INDEX	0
 
 #include <mlx.h>
 #include <stdlib.h>
