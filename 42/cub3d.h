@@ -6,16 +6,16 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/10 17:30:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/11 11:46:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define TRUE			1
 #define FALSE			0
 
-#define GAMESPEED		0.2  // only values lower than 1.0
-#define INIT_WALKSPD	3 * GAMESPEED
-#define INIT_TURNSPD	4.5 * GAMESPEED
+#define GAMESPEED		0.3  // only values lower than 1.0
+#define INIT_WALKSPD	10 * GAMESPEED
+#define INIT_TURNSPD	6 * GAMESPEED
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
@@ -30,9 +30,9 @@
 
 #define PI				3.14159265
 
-#define TILE_SIZE		32
-#define	TEXTURE_W		32
-#define TEXTURE_H		32
+#define TILE_SIZE		64
+#define	TEXTURE_W		64
+#define TEXTURE_H		64
 #define MAP_ROWS		13
 #define MAP_COLS		20
 #define MAP_SCALE		0.25  // only values lower than 1.0

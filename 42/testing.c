@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/10 16:43:48 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/11 11:47:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int		ft_texture_gen(t_data *data, int pos)
 	{
 		for (int y = 0; y < TEXTURE_H; y++)
 		{
-			if (x % 4 && y % 4)
+			if (x % 8 && y % 8)
 				data->texture[pos].colorArray[x][y] = ft_crt_trgb(255, 0, 0, 0);
 			else
 				data->texture[pos].colorArray[x][y] = ft_crt_trgb(255, 0, 128, 0);

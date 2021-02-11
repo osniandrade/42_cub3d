@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/10 17:30:10 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/11 11:44:59 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,9 +306,9 @@ int		ft_draw(t_data *data)
 {
 	
 	ft_edit_colorbuffer(data, 1);
-	//ft_render_map(data);
-	//ft_render_ray(data);
-	//ft_render_player(data);
+	ft_render_map(data);
+	ft_render_ray(data);
+	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -525,6 +525,7 @@ int		ft_edit_colorbuffer(t_data *data, int print)
 	return (TRUE);
 }
 
+// projects the wall textures to each strip of each wall
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 {
 	int		textOffsetY;
