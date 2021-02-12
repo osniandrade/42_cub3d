@@ -6,20 +6,20 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/11 11:46:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/12 15:28:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define TRUE			1
 #define FALSE			0
 
-#define GAMESPEED		0.3  // only values lower than 1.0
+#define GAMESPEED		0.5  // only values lower than 1.0
 #define INIT_WALKSPD	10 * GAMESPEED
 #define INIT_TURNSPD	6 * GAMESPEED
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-#define TEXTURE_COUNT	1
+#define TEXTURE_COUNT	2
 
 // keycodes
 #define UP				65362
@@ -110,7 +110,7 @@ typedef struct	s_data
 	int				width, height;
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
-	int				colorBuffer[SCREENW][SCREENH];
+	uint32_t		*colorBuffer[TEXTURE_COUNT];
 	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
@@ -172,3 +172,4 @@ int		ft_maparray(int argc, char **argv);
 int		ft_test_line_draw(t_data *data);
 int     ft_test_collision(t_data *data);
 int		ft_texture_gen(t_data *data, int pos);
+
