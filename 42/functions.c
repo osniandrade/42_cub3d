@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/12 15:36:36 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/15 15:18:32 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	ft_init_player(t_data *data)
 void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
-	data->colorBuffer[0] = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
+	data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
 	ft_edit_colorbuffer(data, TEXTURE_INDEX);
 	ft_init_win(data);
 	ft_init_img(data);
@@ -97,7 +97,8 @@ void	ft_setup(t_data *data, int argc, char **argv)
 // finishes the program
 void	ft_destroy(t_data *data)
 {
-	free(data->colorBuffer[0]);
+	free(data->colorBuffer);
+	free(data->textures[0]);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }
@@ -306,7 +307,6 @@ int		ft_render_ray(t_data *data)
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
-	
 	ft_edit_colorbuffer(data, 1);
 	ft_render_map(data);
 	ft_render_ray(data);
@@ -336,13 +336,11 @@ int		ft_player_direction(t_data *data)
 // moves the image in the window
 int		ft_update(t_data *data)
 {
-	
 	ft_player_direction(data);
 	ft_cast_all_rays(data);
 	ft_move_player(data);
 	ft_edit_colorbuffer(data, 0);
 	ft_gen_3d_proj(data, 0);
-
 	return (TRUE);
 }
 
@@ -516,9 +514,9 @@ int		ft_edit_colorbuffer(t_data *data, int print)
 		while (y < SCREENH)
 		{
 			if (print == 0)
-				data->colorBuffer[0][(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
+				data->colorBuffer[(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
 			if (print == 1)
-				ft_print_pixel(data, x, y, data->colorBuffer[0][(SCREENW * y) + x]);
+				ft_print_pixel(data, x, y, data->colorBuffer[(SCREENW * y) + x]);
 			y++;
 		}
 		y = 0;
@@ -533,6 +531,7 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	int		textOffsetY;
 	int		textOffsetX;
 	int		distanceFromTop;
+	uint32_t test;
 
 	if (data->rays[projection->i].verticalhit)
 		textOffsetX = (int)data->rays[projection->i].wallhit.y % TILE_SIZE;
@@ -542,7 +541,9 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
 		textOffsetY = distanceFromTop * ((float)TEXTURE_H / projection->strip_h);
-		data->colorBuffer[0][(SCREENW * projection->y) + projection->i] = data->texture[tex_ind].colorArray[textOffsetX][textOffsetY];
+		//data->colorBuffer[(SCREENW * projection->y) + projection->i] = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
+		test = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
+		data->colorBuffer[(SCREENW * projection->y) + projection->i] = test;
 		projection->y++;
 	}
 	return (TRUE);
@@ -566,10 +567,10 @@ void	ft_gen_3d_proj(t_data *data, int tex_ind)
 		projection.column_bottom = (SCREENH / 2) + (projection.proj_wall_h / 2);
 		projection.column_bottom = projection.column_bottom > SCREENH ? SCREENH : projection.column_bottom;
 		while (projection.y < projection.column_top)
-			data->colorBuffer[0][(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
+			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
 		ft_project_texture(data, &projection, tex_ind);		
 		while (projection.y < SCREENH)
-			data->colorBuffer[0][(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
+			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
 		projection.i++;
 	}
 }

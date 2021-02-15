@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/15 11:09:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/15 14:00:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,6 @@ typedef struct s_rays
 	t_img	rayspr;
 }			t_rays;
 
-typedef struct s_texture
-{
-	int		colorArray[TEXTURE_H][TEXTURE_W];
-}			t_texture;
-
 typedef struct	s_data
 {
 	void			*mlx;
@@ -110,8 +105,8 @@ typedef struct	s_data
 	int				width, height;
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
-	uint32_t		*colorBuffer[TEXTURE_COUNT];
-	t_texture		texture[TEXTURE_COUNT];
+	uint32_t		*colorBuffer;
+	uint32_t		*textures[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
