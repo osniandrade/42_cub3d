@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/12 15:28:36 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/15 11:00:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 // text purposes
 #define	TEXTURE_INDEX	0
 
-#include <mlx.h>
+#include "minilibx-linux/mlx.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdint.h>
