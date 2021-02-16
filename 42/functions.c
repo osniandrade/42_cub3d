@@ -51,7 +51,7 @@ int		ft_init_win(t_data *data)
 	data->mlx = mlx_init();
 	data->width = SCREENW;
 	data->height = SCREENH;
-	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "RED SQUARE");
+	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "A MAZE IN");
 	data->maptable = &map;
 	return (TRUE);
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/15 14:00:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/16 15:13:14 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,11 @@ int		ft_edit_colorbuffer(t_data *data, int print);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data, int tex_ind);
 
-int		ft_crt_trgb(int t, int r, int g, int b);
-int		ft_get_t(int trgb);
-int		ft_get_r(int trgb);
-int		ft_get_g(int trgb);
-int		ft_get_b(int trgb);
+uint32_t		ft_crt_trgb(int t, int r, int g, int b);
+uint32_t		ft_get_t(int trgb);
+uint32_t		ft_get_r(int trgb);
+uint32_t		ft_get_g(int trgb);
+uint32_t		ft_get_b(int trgb);
 int		ft_mapstats(int *map);
 int		ft_maparray(int argc, char **argv);
 
