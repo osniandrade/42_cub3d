@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/15 15:18:32 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/16 15:54:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,9 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_init_img(data);
 	ft_init_player(data);
 	ft_texture_gen(data, 0);
+	ft_texture_gen(data, 1);
+	ft_texture_gen(data, 2);
+	ft_texture_gen(data, 3);
 }
 
 // finishes the program
@@ -99,6 +102,9 @@ void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
 	free(data->textures[0]);
+	free(data->textures[1]);
+	free(data->textures[2]);
+	free(data->textures[3]);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }
@@ -308,9 +314,9 @@ int		ft_render_ray(t_data *data)
 int		ft_draw(t_data *data)
 {
 	ft_edit_colorbuffer(data, 1);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_player(data);
+	//ft_render_map(data);
+	//ft_render_ray(data);
+	//ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -541,9 +547,7 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
 		textOffsetY = distanceFromTop * ((float)TEXTURE_H / projection->strip_h);
-		//data->colorBuffer[(SCREENW * projection->y) + projection->i] = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
-		test = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
-		data->colorBuffer[(SCREENW * projection->y) + projection->i] = test;
+		data->colorBuffer[(SCREENW * projection->y) + projection->i] = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
 		projection->y++;
 	}
 	return (TRUE);
@@ -568,7 +572,16 @@ void	ft_gen_3d_proj(t_data *data, int tex_ind)
 		projection.column_bottom = projection.column_bottom > SCREENH ? SCREENH : projection.column_bottom;
 		while (projection.y < projection.column_top)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
-		ft_project_texture(data, &projection, tex_ind);		
+		if (data->rays[projection.i].verticalhit)
+			if (data->rays[projection.i].face_left)
+				ft_project_texture(data, &projection, 0);
+			else
+				ft_project_texture(data, &projection, 1);
+		else
+			if (data->rays[projection.i].face_up)
+				ft_project_texture(data, &projection, 2);
+			else
+				ft_project_texture(data, &projection, 3);
 		while (projection.y < SCREENH)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
 		projection.i++;

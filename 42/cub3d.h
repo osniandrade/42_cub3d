@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/16 15:13:14 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/16 15:39:41 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-#define TEXTURE_COUNT	2
+#define TEXTURE_COUNT	4
 
 // keycodes
 #define UP				65362

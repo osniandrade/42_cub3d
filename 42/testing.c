@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/16 15:12:12 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/16 15:52:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,25 @@ int     ft_test_collision(t_data *data)
 // generates texture for walls
 int		ft_texture_gen(t_data *data, int pos)
 {
-  data->textures[pos] = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
+	int walltexture;
+
+	if (pos == 0)
+		walltexture = 16;
+	if (pos == 1)
+		walltexture = 32;
+	if (pos == 2)
+		walltexture = 64;
+	if (pos == 3)
+		walltexture = 96;
+  	data->textures[pos] = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
 	for (int x = 0; x < TEXTURE_W; x++)
 	{
 		for (int y = 0; y < TEXTURE_H; y++)
 		{
 			if (x % 8 && y % 8)
-				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
+				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, walltexture * pos, walltexture, walltexture);
 			else
-				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, 0, 128, 0);
+				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
 		}
 	}
   return (TRUE);
