@@ -6,7 +6,7 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/02/15 14:29:33 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/02/17 14:39:28 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,9 @@ debug:
 
 run:
 	./$(OUTPUT) $(MAPFILE)
+
+test:
+	gcc -g $(MLXHEADER) teste.c $(MLXLIB) $(MLXFLAGS) -o $(OUTPUT)
 
 clean:
 	rm *.out

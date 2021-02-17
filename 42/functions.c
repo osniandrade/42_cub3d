@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/16 15:54:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/17 17:03:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,28 @@ void	ft_init_img(t_data *data)
 	data->tile = imagem;
 }
 
+// loads xpm texture file into code
+void	ft_load_xpm(t_data *data)
+{
+	int i = 0;
+	char *path = "./moldystonewall.xpm";
+
+	data->texture[0].instance.img = mlx_xpm_file_to_image(
+		data->mlx, 
+		path, 
+		&data->texture[0].width, 
+		&data->texture[0].height
+	);
+	data->texture[0].instance.addr = mlx_get_data_addr(
+		data->texture[0].instance.img, 
+		&(data->texture[0].instance.bits_per_pixel), 
+		&(data->texture[0].instance.line_length), 
+		&(data->texture[0].instance.endian)
+	);
+	data->texture[0].buffer = malloc(sizeof(char) * data->texture[0].width * data->texture[0].height);
+	data->texture[0].buffer = (uint32_t *) data->texture[0].instance.addr;
+}
+
 // initializes player data
 void	ft_init_player(t_data *data)
 {
@@ -90,21 +112,19 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_edit_colorbuffer(data, TEXTURE_INDEX);
 	ft_init_win(data);
 	ft_init_img(data);
+	ft_load_xpm(data);
 	ft_init_player(data);
-	ft_texture_gen(data, 0);
-	ft_texture_gen(data, 1);
-	ft_texture_gen(data, 2);
-	ft_texture_gen(data, 3);
+	// ft_texture_gen(data, 0);
+	// ft_texture_gen(data, 1);
+	// ft_texture_gen(data, 2);
+	// ft_texture_gen(data, 3);
 }
 
 // finishes the program
 void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
-	free(data->textures[0]);
-	free(data->textures[1]);
-	free(data->textures[2]);
-	free(data->textures[3]);
+	free(data->texture[0].buffer);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }
@@ -547,7 +567,7 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
 		textOffsetY = distanceFromTop * ((float)TEXTURE_H / projection->strip_h);
-		data->colorBuffer[(SCREENW * projection->y) + projection->i] = data->textures[tex_ind][(SCREENW * textOffsetY) + textOffsetX];
+		data->colorBuffer[(SCREENW * projection->y) + projection->i] = (uint32_t)data->texture[tex_ind].buffer[(data->texture[tex_ind].width * textOffsetY) + textOffsetX];
 		projection->y++;
 	}
 	return (TRUE);
@@ -572,16 +592,19 @@ void	ft_gen_3d_proj(t_data *data, int tex_ind)
 		projection.column_bottom = projection.column_bottom > SCREENH ? SCREENH : projection.column_bottom;
 		while (projection.y < projection.column_top)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
-		if (data->rays[projection.i].verticalhit)
-			if (data->rays[projection.i].face_left)
-				ft_project_texture(data, &projection, 0);
-			else
-				ft_project_texture(data, &projection, 1);
-		else
-			if (data->rays[projection.i].face_up)
-				ft_project_texture(data, &projection, 2);
-			else
-				ft_project_texture(data, &projection, 3);
+		
+		// if (data->rays[projection.i].verticalhit)
+		// 	if (data->rays[projection.i].face_left)
+		// 		ft_project_texture(data, &projection, 0);
+		// 	else
+		// 		ft_project_texture(data, &projection, 1);
+		// else
+		// 	if (data->rays[projection.i].face_up)
+		// 		ft_project_texture(data, &projection, 2);
+		// 	else
+		// 		ft_project_texture(data, &projection, 3);
+		ft_project_texture(data, &projection, 0);
+
 		while (projection.y < SCREENH)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
 		projection.i++;

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/16 15:39:41 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/17 14:08:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-#define TEXTURE_COUNT	4
+#define TEXTURE_COUNT	1
 
 // keycodes
 #define UP				65362
@@ -71,6 +71,14 @@ typedef struct s_img
 	t_coord	pos;
 }			t_img;
 
+typedef struct s_texture
+{
+	t_img		instance;
+	int			width;
+	int			height;
+	uint32_t*	buffer;
+}				t_texture;
+
 typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
@@ -107,6 +115,7 @@ typedef struct	s_data
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	uint32_t		*colorBuffer;
 	uint32_t		*textures[TEXTURE_COUNT];
+	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
@@ -126,6 +135,7 @@ typedef struct	s_3dproj
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
+void	ft_load_xpm(t_data *data);
 void	ft_init_player(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
 void	ft_destroy(t_data *data);
