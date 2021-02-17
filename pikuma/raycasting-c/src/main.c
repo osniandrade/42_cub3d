@@ -40,7 +40,7 @@ const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},
     {1, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 5},
-    {1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 5},
+    {1, 0, 0, 5, 0, 0, 0, 0, 0, 9, 0, 0, 1, 0, 0, 0, 0, 0, 0, 5},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 5},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5}
 };
@@ -81,6 +81,7 @@ int initializeWindow() {
 }
 
 void destroyWindow() {
+    freeWallTextures();
     free(colorBuffer);
     SDL_DestroyTexture(colorBufferTexture);
     SDL_DestroyRenderer(renderer);
@@ -105,21 +106,14 @@ void setup() {
     // create an SDL_Texture to display the color buffer
     colorBufferTexture = SDL_CreateTexture(
         renderer,
-        SDL_PIXELFORMAT_ARGB8888,
+        SDL_PIXELFORMAT_RGBA32,
         SDL_TEXTUREACCESS_STREAMING,
         WINDOW_WIDTH,
         WINDOW_HEIGHT
     );
 
-    // load textures from textures.h
-    textures[0] = (uint32_t*) REDBRICK_TEXTURE;
-    textures[1] = (uint32_t*) PURPLESTONE_TEXTURE;
-    textures[2] = (uint32_t*) MOSSYSTONE_TEXTURE;
-    textures[3] = (uint32_t*) GRAYSTONE_TEXTURE;
-    textures[4] = (uint32_t*) COLORSTONE_TEXTURE;
-    textures[5] = (uint32_t*) BLUESTONE_TEXTURE;
-    textures[6] = (uint32_t*) WOOD_TEXTURE;
-    textures[7] = (uint32_t*) EAGLE_TEXTURE;
+    // asks uPNG library to decode all PNG files and loads the wallTextures to hold our colorbuffer
+    loadWallTextures();
 }
 
 int mapHasWallAt(float x, float y) {
@@ -430,7 +424,7 @@ void generate3DProjection() {
             int textureOffsetY = distanceFromTop * ((float)TEXTURE_HEIGHT / wallStripHeight);
 
             // set the color of the wall based on the color from the texture
-            uint32_t texelColor = textures[texNum][(TEXTURE_WIDTH * textureOffsetY) + textureOffsetX];
+            uint32_t texelColor = wallTextures[texNum].texture_buffer[(TEXTURE_WIDTH * textureOffsetY) + textureOffsetX];
             colorBuffer[(WINDOW_WIDTH * y) + i] = texelColor;
         }
 
