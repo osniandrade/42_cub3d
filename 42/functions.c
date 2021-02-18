@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/17 17:03:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 14:02:17 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,12 @@ int map[MAP_ROWS][MAP_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-// int map[MAP_ROWS][MAP_COLS] = {
-//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-// };
+static char* texpath[TEXTURE_COUNT] = {
+	"./img/stonewall.xpm",
+	"./img/moldystonewall.xpm",
+	"./img/labwall.xpm",
+	"./img/bunkerwall.xpm"
+};
 
 // initializes the main struct variables
 int		ft_init_win(t_data *data)
@@ -70,26 +61,41 @@ void	ft_init_img(t_data *data)
 	data->tile = imagem;
 }
 
+// loads texture paths into data struct
+void	ft_load_texture_paths(t_data *data)
+{
+	int i = 0;
+
+	while (i < TEXTURE_COUNT)
+	{
+		data->texturepaths[i] = texpath[i];
+		i++;
+	}
+}
+
 // loads xpm texture file into code
 void	ft_load_xpm(t_data *data)
 {
 	int i = 0;
-	char *path = "./moldystonewall.xpm";
 
-	data->texture[0].instance.img = mlx_xpm_file_to_image(
-		data->mlx, 
-		path, 
-		&data->texture[0].width, 
-		&data->texture[0].height
-	);
-	data->texture[0].instance.addr = mlx_get_data_addr(
-		data->texture[0].instance.img, 
-		&(data->texture[0].instance.bits_per_pixel), 
-		&(data->texture[0].instance.line_length), 
-		&(data->texture[0].instance.endian)
-	);
-	data->texture[0].buffer = malloc(sizeof(char) * data->texture[0].width * data->texture[0].height);
-	data->texture[0].buffer = (uint32_t *) data->texture[0].instance.addr;
+	while (i < TEXTURE_COUNT)
+	{
+		data->texture[i].instance.img = mlx_xpm_file_to_image(
+			data->mlx, 
+			data->texturepaths[i], 
+			&data->texture[i].width, 
+			&data->texture[i].height
+		);
+		data->texture[i].instance.addr = mlx_get_data_addr(
+			data->texture[i].instance.img, 
+			&(data->texture[i].instance.bits_per_pixel), 
+			&(data->texture[i].instance.line_length), 
+			&(data->texture[i].instance.endian)
+		);
+		data->texture[i].buffer = malloc(sizeof(char) * data->texture[0].width * data->texture[0].height);
+		data->texture[i].buffer = (uint32_t *) data->texture[0].instance.addr;
+		i++;
+	}
 }
 
 // initializes player data
@@ -112,19 +118,28 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_edit_colorbuffer(data, TEXTURE_INDEX);
 	ft_init_win(data);
 	ft_init_img(data);
+	ft_load_texture_paths(data);
 	ft_load_xpm(data);
 	ft_init_player(data);
-	// ft_texture_gen(data, 0);
-	// ft_texture_gen(data, 1);
-	// ft_texture_gen(data, 2);
-	// ft_texture_gen(data, 3);
+}
+
+// frees texture memory allocations
+void	ft_free_textures(t_data *data)
+{
+	int i = 0;
+
+	while (i < TEXTURE_COUNT)
+	{
+		free(data->texture[i].buffer);
+		i++;
+	}
 }
 
 // finishes the program
 void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
-	free(data->texture[0].buffer);
+	ft_free_textures(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }

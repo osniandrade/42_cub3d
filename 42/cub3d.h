@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/17 14:08:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 14:04:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-#define TEXTURE_COUNT	1
+#define TEXTURE_COUNT	4
 
 // keycodes
 #define UP				65362
@@ -113,8 +113,8 @@ typedef struct	s_data
 	int				width, height;
 	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
+	char			*texturepaths[TEXTURE_COUNT];
 	uint32_t		*colorBuffer;
-	uint32_t		*textures[TEXTURE_COUNT];
 	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
@@ -135,9 +135,11 @@ typedef struct	s_3dproj
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
+void	ft_load_texture_paths(t_data *data);
 void	ft_load_xpm(t_data *data);
 void	ft_init_player(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
+void	ft_free_textures(t_data *data);
 void	ft_destroy(t_data *data);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
@@ -176,5 +178,5 @@ int		ft_maparray(int argc, char **argv);
 
 int		ft_test_line_draw(t_data *data);
 int     ft_test_collision(t_data *data);
-int		ft_texture_gen(t_data *data, int pos);
+//int		ft_texture_gen(t_data *data, int pos);
 
