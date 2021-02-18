@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 17:28:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 17:32:24 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
 int		ft_edit_colorbuffer(t_data *data, int print);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
-void	ft_gen_3d_proj(t_data *data, int tex_ind);
+void	ft_gen_3d_proj(t_data *data);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);

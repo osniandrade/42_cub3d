@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 16:52:54 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 17:35:55 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,7 @@ int		ft_move_player(t_data *data)
 		data->player.playerspr.pos.x = newPlayerX;
 		data->player.playerspr.pos.y = newPlayerY;
 	}
+	return (TRUE);
 }
 
 // renders map
@@ -323,6 +324,7 @@ int		ft_render_map(t_data *data)
 		j = 0;
 		i++;
 	}
+	return (TRUE);
 }
 
 // renders player sprite on screen
@@ -353,6 +355,7 @@ int		ft_render_ray(t_data *data)
 		ft_draw_line(data, i_pos, f_pos, color);
 		ray++;
 	}
+	return (TRUE);
 }
 
 // draws elements in the window
@@ -391,7 +394,7 @@ int		ft_update(t_data *data)
 	ft_cast_all_rays(data);
 	ft_move_player(data);
 	ft_edit_colorbuffer(data, 0);
-	ft_gen_3d_proj(data, 0);
+	ft_gen_3d_proj(data);
 	return (TRUE);
 }
 
@@ -420,6 +423,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			raytemp->nextTouch.y += step.y;
 		}
 	}
+	return (TRUE);
 }
 
 // calculates horizontal ray intersection on the grid
@@ -582,7 +586,6 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	int		textOffsetY;
 	int		textOffsetX;
 	int		distanceFromTop;
-	uint32_t test;
 
 	if (data->rays[projection->i].verticalhit)
 		textOffsetX = (int)data->rays[projection->i].wallhit.y % TILE_SIZE;
@@ -599,7 +602,7 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 }
 
 // generates the 3D projection using raycasting
-void	ft_gen_3d_proj(t_data *data, int tex_ind)
+void	ft_gen_3d_proj(t_data *data)
 {
 	t_3dproj	projection;
 

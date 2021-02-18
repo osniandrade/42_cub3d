@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/16 15:12:51 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 17:34:32 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		ft_mapstats(int *map)
 	//mapwidth
 	//mapheight
 	//isvalidmap
+	return (TRUE);
 }
 
 // reads map into an array
