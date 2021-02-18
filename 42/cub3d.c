@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/08 12:11:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 16:17:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 // main loop - draws and moves the image
 int		main_loop(t_data *data)
 {
-	
 	ft_update(data);
 	ft_draw(data);
 	return (TRUE);

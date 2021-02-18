@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 14:02:17 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 16:52:54 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int		ft_init_win(t_data *data)
 	data->width = SCREENW;
 	data->height = SCREENH;
 	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "A MAZE IN");
-	data->maptable = &map;
 	return (TRUE);
 }
 
@@ -92,8 +91,7 @@ void	ft_load_xpm(t_data *data)
 			&(data->texture[i].instance.line_length), 
 			&(data->texture[i].instance.endian)
 		);
-		data->texture[i].buffer = malloc(sizeof(char) * data->texture[0].width * data->texture[0].height);
-		data->texture[i].buffer = (uint32_t *) data->texture[0].instance.addr;
+		data->texture[i].buffer = (uint32_t *) data->texture[i].instance.addr;
 		i++;
 	}
 }
@@ -110,6 +108,13 @@ void	ft_init_player(t_data *data)
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
 
+// loads map into data structure
+int		ft_loadmap(t_data *data)
+{
+	data->maptable = &map;
+	return (TRUE);
+}
+
 // initializes the setup for the main loop
 void	ft_setup(t_data *data, int argc, char **argv)
 {
@@ -120,17 +125,19 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_init_img(data);
 	ft_load_texture_paths(data);
 	ft_load_xpm(data);
+	ft_loadmap(data);
 	ft_init_player(data);
 }
 
 // frees texture memory allocations
-void	ft_free_textures(t_data *data)
+void	ft_destroy_images(t_data *data)
 {
 	int i = 0;
 
+	mlx_destroy_image(data->mlx, data->tile.img);
 	while (i < TEXTURE_COUNT)
 	{
-		free(data->texture[i].buffer);
+		mlx_destroy_image(data->mlx, data->texture[i].instance.img);
 		i++;
 	}
 }
@@ -139,7 +146,7 @@ void	ft_free_textures(t_data *data)
 void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
-	ft_free_textures(data);
+	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }
@@ -188,9 +195,9 @@ void	ft_print_pixel(t_data *data, int x, int y, int color)
 // draws a line from i_pos to f_pos in color (Bresenham's algorithm)
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 {
-	int dx = abs(f_pos.x - i_pos.x);
+	int dx = abs((int)f_pos.x - (int)i_pos.x);
 	int sx = i_pos.x < f_pos.x ? 1 : -1;
-	int dy = abs(f_pos.y - i_pos.y);
+	int dy = abs((int)f_pos.y - (int)i_pos.y);
 	int sy = i_pos.y < f_pos.y ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2;
 	int e2;
@@ -253,7 +260,10 @@ int		ft_invalid_area(t_data *data, float x, float y)
 		return (TRUE);
 	int mapgridx = floor(x / TILE_SIZE);
 	int mapgridy = floor(y / TILE_SIZE);
-	return (map[mapgridy][mapgridx] != 0);
+	if (map[mapgridy][mapgridx] == 0)
+		return (FALSE);
+	else
+		return (TRUE);
 }
 
 // normalize angle
@@ -608,17 +618,16 @@ void	ft_gen_3d_proj(t_data *data, int tex_ind)
 		while (projection.y < projection.column_top)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
 		
-		// if (data->rays[projection.i].verticalhit)
-		// 	if (data->rays[projection.i].face_left)
-		// 		ft_project_texture(data, &projection, 0);
-		// 	else
-		// 		ft_project_texture(data, &projection, 1);
-		// else
-		// 	if (data->rays[projection.i].face_up)
-		// 		ft_project_texture(data, &projection, 2);
-		// 	else
-		// 		ft_project_texture(data, &projection, 3);
-		ft_project_texture(data, &projection, 0);
+		if (data->rays[projection.i].verticalhit)
+			if (data->rays[projection.i].face_left)
+				ft_project_texture(data, &projection, 0);
+			else
+				ft_project_texture(data, &projection, 1);
+		else
+			if (data->rays[projection.i].face_up)
+				ft_project_texture(data, &projection, 2);
+			else
+				ft_project_texture(data, &projection, 3);
 
 		while (projection.y < SCREENH)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
