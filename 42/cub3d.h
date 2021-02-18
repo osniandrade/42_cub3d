@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 16:49:52 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/18 17:28:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define FALSE			0
 
 #define GAMESPEED		0.5  // only values lower than 1.0
-#define INIT_WALKSPD	10 * GAMESPEED
+#define INIT_WALKSPD	16 * GAMESPEED
 #define INIT_TURNSPD	6 * GAMESPEED
 #define MOVESPEED		1
 #define KEYPRESS		2
