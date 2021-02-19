@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 16:12:33 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 16:32:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -480,22 +480,23 @@ int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 }
 
 // calculates the distance between two coordinates x and y
-float	ft_distance(t_data *data, t_rays *raytemp)
+float	ft_distance(t_coord coord_a, t_coord coord_b)
 {
 	float coordx;
 	float coordy;
+	t_coord rslt;
 
-	coordx = raytemp->wallhit.x - data->player.playerspr.pos.x;
-	coordx *= coordx;
-	coordy = raytemp->wallhit.y - data->player.playerspr.pos.y;
-	coordy *= coordy;
-	return sqrt(coordx + coordy);
+	rslt.x = coord_b.x - coord_a.x;
+	rslt.x *= rslt.x;
+	rslt.y = coord_b.y - coord_a.y;
+	rslt.y *= rslt.y;
+	return sqrt(rslt.x + rslt.y);
 }
 
 // copies the values from raytemp to actual ray struct array position
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 {
-	data->rays[stripId].distance = ft_distance(data, raytemp);
+	data->rays[stripId].distance = ft_distance(data->player.playerspr.pos, raytemp->wallhit);
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
@@ -526,8 +527,8 @@ int		ft_cast_ray(t_data *data, float rayAngle, int stripId)
 	ft_init_raytemp(&raytemp_v, rayAngle);
 	ft_h_intersection(data, &raytemp_h, intercept, step, rayAngle);
 	ft_v_intersection(data, &raytemp_v, intercept, step, rayAngle);
-	distance.x = raytemp_h.foundwall ? ft_distance(data, &raytemp_h) : __FLT_MAX__;
-	distance.y = raytemp_v.foundwall ? ft_distance(data, &raytemp_v) : __FLT_MAX__;
+	distance.x = raytemp_h.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_h.wallhit) : __FLT_MAX__;
+	distance.y = raytemp_v.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_v.wallhit) : __FLT_MAX__;
 	if (distance.y < distance.x)
 		ft_fill_ray(data, &raytemp_v, 1, stripId);
 	else
@@ -638,10 +639,15 @@ void	ft_gen_3d_proj(t_data *data)
 	}
 }
 
-// // calculates each sprite distance from player
+// calculates each sprite distance from player
 // void	ft_sprite_dist(t_data *data)
 // {
-
+// 	int i = 0;
+	
+// 	while (i < SPRITE_COUNT)
+// 	{
+// 		data->sprite[i].distance = ft_distance()
+// 	}
 // }
 
 // // handles sprites
@@ -649,7 +655,7 @@ void	ft_gen_3d_proj(t_data *data)
 // {
 // 	int		i = 0;
 
-// 	ft_sprite_dist(data);
+// 	ft_sprite_dist(data, i);
 // 	ft_sort_sprites(data);
 // 	while (i < SPRITE_COUNT)
 // 	{

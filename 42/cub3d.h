@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 16:12:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 16:32:59 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,15 @@ typedef struct s_texture
 	uint32_t*	buffer;
 }				t_texture;
 
-// typedef struct s_sprite
-// {
-	
-// 	t_coord		pos;
-// }
+typedef struct s_sprite
+{
+	float		distance;
+	float		angle;
+	float		angle_dif;
+	t_texture	texture;
+	t_sizedata	size;
+	t_coord		pos;
+}				t_sprite;
 typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
@@ -126,6 +130,7 @@ typedef struct	s_data
 	void			*mlx_win;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	char			*texturepaths[TEXTURE_COUNT];
+	t_sprite		sprite[SPRITE_COUNT];
 	t_dir			dir;
 	t_sizedata		size;
 	uint32_t		*colorBuffer;
@@ -174,7 +179,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
 int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
-float	ft_distance(t_data *data, t_rays *raytemp);
+float	ft_distance(t_coord coord_a, t_coord coord_b);
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
