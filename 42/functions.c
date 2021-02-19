@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 09:55:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 16:12:33 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static char* texpath[TEXTURE_COUNT] = {
 int		ft_init_win(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->width = SCREENW;
-	data->height = SCREENH;
-	data->mlx_win = mlx_new_window(data->mlx, data->width, data->height, "A MAZE IN");
+	data->size.w = SCREENW;
+	data->size.h = SCREENH;
+	data->mlx_win = mlx_new_window(data->mlx, data->size.w, data->size.h, "A MAZE IN");
 	return (TRUE);
 }
 
@@ -82,8 +82,8 @@ void	ft_load_xpm(t_data *data)
 		data->texture[i].instance.img = mlx_xpm_file_to_image(
 			data->mlx, 
 			data->texturepaths[i], 
-			&data->texture[i].width, 
-			&data->texture[i].height
+			&data->texture[i].size.w, 
+			&data->texture[i].size.h
 		);
 		data->texture[i].instance.addr = mlx_get_data_addr(
 			data->texture[i].instance.img, 
@@ -120,7 +120,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
 	data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
-	ft_edit_colorbuffer(data, TEXTURE_INDEX);
+	ft_edit_colorbuffer(data, 0);
 	ft_init_win(data);
 	ft_init_img(data);
 	ft_load_texture_paths(data);
@@ -157,13 +157,13 @@ int		ft_key_press(int keycode, t_data *data)
 	if (keycode == ESC)
 		ft_destroy(data);
 	if (keycode == LEFT)
-		data->left = TRUE;
+		data->dir.l = TRUE;
 	if (keycode == RIGHT)
-		data->right = TRUE;
+		data->dir.r = TRUE;
 	if (keycode == UP)
-		data->up = TRUE;
+		data->dir.u = TRUE;
 	if (keycode == DOWN)
-		data->down = TRUE;
+		data->dir.d = TRUE;
 	return (TRUE);
 }
 
@@ -171,13 +171,13 @@ int		ft_key_press(int keycode, t_data *data)
 int		ft_key_release(int keycode, t_data *data)
 {
 	if (keycode == LEFT)
-		data->left = FALSE;
+		data->dir.l = FALSE;
 	if (keycode == RIGHT)
-		data->right = FALSE;
+		data->dir.r = FALSE;
 	if (keycode == UP)
-		data->up = FALSE;
+		data->dir.u = FALSE;
 	if (keycode == DOWN)
-		data->down = FALSE;
+		data->dir.d = FALSE;
 	return (TRUE);
 }
 
@@ -185,7 +185,7 @@ int		ft_key_release(int keycode, t_data *data)
 void	ft_print_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
-	if (data->tile.pos.y <= data->height && data->tile.pos.x <= data->width)
+	if (data->tile.pos.y <= data->size.h && data->tile.pos.x <= data->size.w)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
 		*(unsigned int *)dst = color;
@@ -372,17 +372,17 @@ int		ft_draw(t_data *data)
 // gets player moving direction and speed
 int		ft_player_direction(t_data *data)
 {
-	if (data->left == TRUE)
+	if (data->dir.l == TRUE)
 		data->player.turnDirection = -MOVESPEED;
-	if (data->right == TRUE)
+	if (data->dir.r == TRUE)
 		data->player.turnDirection = +MOVESPEED;
-	if (data->up == TRUE)
+	if (data->dir.u == TRUE)
 		data->player.walkDirection = +MOVESPEED;
-	if (data->down == TRUE)
+	if (data->dir.d == TRUE)
 		data->player.walkDirection = -MOVESPEED;
-	if (data->up == FALSE && data->down == FALSE)
+	if (data->dir.u == FALSE && data->dir.d == FALSE)
 		data->player.walkDirection = 0;
-	if (data->left == FALSE && data->right == FALSE)
+	if (data->dir.l == FALSE && data->dir.r == FALSE)
 		data->player.turnDirection = 0;
 	return (TRUE);
 }
@@ -406,9 +406,9 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
 		if (is_vert)
-			toCheck.x += (raytemp->face_left ? -1 : 0);
+			toCheck.x += (raytemp->face.l ? -1 : 0);
 		else
-			toCheck.y += (raytemp->face_up ? -1 : 0);
+			toCheck.y += (raytemp->face.u ? -1 : 0);
 		if (ft_invalid_area(data, toCheck.x, toCheck.y))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
@@ -434,13 +434,13 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
 	intercept.y = floor(data->player.playerspr.pos.y / TILE_SIZE) * TILE_SIZE;
-	intercept.y += raytemp->face_down ? TILE_SIZE : 0;
+	intercept.y += raytemp->face.d ? TILE_SIZE : 0;
 	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
 	step.y = TILE_SIZE;
-	step.y *= raytemp->face_up ? -1 : 1;
+	step.y *= raytemp->face.u ? -1 : 1;
 	step.x = TILE_SIZE / tan(rayAngle);
-	step.x *= (raytemp->face_left && step.x > 0) ? -1 : 1;
-	step.x *= (raytemp->face_right && step.x < 0) ? -1 : 1;
+	step.x *= (raytemp->face.l && step.x > 0) ? -1 : 1;
+	step.x *= (raytemp->face.r && step.x < 0) ? -1 : 1;
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
 	ft_find_wall(data, raytemp, toCheck, step, 0);
@@ -455,13 +455,13 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
 	intercept.x = floor(data->player.playerspr.pos.x / TILE_SIZE) * TILE_SIZE;
-	intercept.x += raytemp->face_right ? TILE_SIZE : 0;
+	intercept.x += raytemp->face.r ? TILE_SIZE : 0;
 	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
 	step.x = TILE_SIZE;
-	step.x *= raytemp->face_left ? -1 : 1;
+	step.x *= raytemp->face.l ? -1 : 1;
 	step.y = TILE_SIZE * tan(rayAngle);
-	step.y *= (raytemp->face_up && step.y > 0) ? -1 : 1;
-	step.y *= (raytemp->face_down && step.y < 0) ? -1 : 1;
+	step.y *= (raytemp->face.u && step.y > 0) ? -1 : 1;
+	step.y *= (raytemp->face.d && step.y < 0) ? -1 : 1;
 	raytemp->nextTouch.x = intercept.x;
 	raytemp->nextTouch.y = intercept.y;
 	ft_find_wall(data, raytemp, toCheck, step, 1);
@@ -472,10 +472,10 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 {
 	*raytemp = (t_rays) {0};  // fill the struct with zeroes
-	raytemp->face_down = rayAngle > 0 && rayAngle < PI;
-	raytemp->face_up = !(raytemp->face_down);
-	raytemp->face_right = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
-	raytemp->face_left = !(raytemp->face_right);
+	raytemp->face.d = rayAngle > 0 && rayAngle < PI;
+	raytemp->face.u = !(raytemp->face.d);
+	raytemp->face.r = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
+	raytemp->face.l = !(raytemp->face.r);
 	return (TRUE);
 }
 
@@ -499,10 +499,10 @@ int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId)
 	data->rays[stripId].wallhit.x = raytemp->wallhit.x;
 	data->rays[stripId].wallhit.y = raytemp->wallhit.y;
 	data->rays[stripId].wallHitContent = raytemp->wallHitContent;
-	data->rays[stripId].face_up = raytemp->face_up;
-	data->rays[stripId].face_down = raytemp->face_down;
-	data->rays[stripId].face_left = raytemp->face_left;
-	data->rays[stripId].face_right = raytemp->face_right;
+	data->rays[stripId].face.u = raytemp->face.u;
+	data->rays[stripId].face.d = raytemp->face.d;
+	data->rays[stripId].face.l = raytemp->face.l;
+	data->rays[stripId].face.r = raytemp->face.r;
 	data->rays[stripId].foundwall = raytemp->foundwall;
 	data->rays[stripId].wallcontent = raytemp->wallcontent;
 	if (is_vert)
@@ -595,8 +595,8 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	while (projection->y < projection->column_bottom)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
-		textOffsetY = distanceFromTop * ((float)data->texture[tex_ind].height / projection->strip_h);
-		data->colorBuffer[(SCREENW * projection->y) + projection->i] = (uint32_t)data->texture[tex_ind].buffer[(data->texture[tex_ind].width * textOffsetY) + textOffsetX];
+		textOffsetY = distanceFromTop * ((float)data->texture[tex_ind].size.h / projection->strip_h);
+		data->colorBuffer[(SCREENW * projection->y) + projection->i] = (uint32_t)data->texture[tex_ind].buffer[(data->texture[tex_ind].size.w * textOffsetY) + textOffsetX];
 		projection->y++;
 	}
 	return (TRUE);
@@ -622,12 +622,12 @@ void	ft_gen_3d_proj(t_data *data)
 			data->colorBuffer[(SCREENW * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
 		
 		if (data->rays[projection.i].verticalhit)
-			if (data->rays[projection.i].face_left)
+			if (data->rays[projection.i].face.l)
 				ft_project_texture(data, &projection, 0);
 			else
 				ft_project_texture(data, &projection, 1);
 		else
-			if (data->rays[projection.i].face_up)
+			if (data->rays[projection.i].face.u)
 				ft_project_texture(data, &projection, 2);
 			else
 				ft_project_texture(data, &projection, 3);
@@ -637,3 +637,23 @@ void	ft_gen_3d_proj(t_data *data)
 		projection.i++;
 	}
 }
+
+// // calculates each sprite distance from player
+// void	ft_sprite_dist(t_data *data)
+// {
+
+// }
+
+// // handles sprites
+// void	ft_sprites(t_data *data)
+// {
+// 	int		i = 0;
+
+// 	ft_sprite_dist(data);
+// 	ft_sort_sprites(data);
+// 	while (i < SPRITE_COUNT)
+// 	{
+// 		ft_update_sprite(data, i);
+// 		i++;
+// 	}
+// }

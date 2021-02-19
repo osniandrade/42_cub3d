@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 09:53:16 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 16:12:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 #define FALSE			0
 
 #define GAMESPEED		0.5  // only values lower than 1.0
-#define INIT_WALKSPD	16 * GAMESPEED
-#define INIT_TURNSPD	6 * GAMESPEED
+#define INIT_WALKSPD	(16 * GAMESPEED)
+#define INIT_TURNSPD	(6 * GAMESPEED)
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
 #define TEXTURE_COUNT	4
+#define SPRITE_COUNT	1
 
 // keycodes
 #define UP				65362
@@ -36,7 +37,7 @@
 #define MAP_ROWS		13
 #define MAP_COLS		20
 #define MAP_SCALE		0.25  // only values lower than 1.0
-#define PLAYERSIZE		(TILE_SIZE / 2) * MAP_SCALE
+#define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
 
 #define SCREENW			(MAP_COLS * TILE_SIZE)
 #define SCREENH			(MAP_ROWS * TILE_SIZE)
@@ -44,9 +45,6 @@
 #define NUM_RAYS		SCREENW
 #define FOV				(60 * (PI / 180))
 #define DIST_PROJ_PLANE ((SCREENW / 2) / tan(FOV / 2))
-
-// text purposes
-#define	TEXTURE_INDEX	0
 
 #include "minilibx/mlx.h"
 #include <stdlib.h>
@@ -57,9 +55,23 @@
 
 typedef struct s_coord
 {
-	float x;
-	float y;
-}		t_coord;
+	float	x;
+	float	y;
+}			t_coord;
+
+typedef struct s_sizedata
+{
+	int		h;
+	int		w;
+}			t_sizedata;
+
+typedef struct s_dir
+{
+	int		u;
+	int		d;
+	int		l;
+	int		r;
+}			t_dir;
 
 typedef struct s_img
 {
@@ -75,11 +87,15 @@ typedef struct s_img
 typedef struct s_texture
 {
 	t_img		instance;
-	int			width;
-	int			height;
+	t_sizedata	size;
 	uint32_t*	buffer;
 }				t_texture;
 
+// typedef struct s_sprite
+// {
+	
+// 	t_coord		pos;
+// }
 typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
@@ -95,13 +111,10 @@ typedef struct s_rays
 	float	angle;
 	float	distance;
 	int		verticalhit;
-	int		face_up;
-	int		face_down;
-	int		face_left;
-	int		face_right;
 	int		wallHitContent;
 	int		foundwall;
 	int		wallcontent;
+	t_dir	face;
 	t_coord	wallhit;
 	t_coord	nextTouch;
 	t_img	rayspr;
@@ -111,10 +124,10 @@ typedef struct	s_data
 {
 	void			*mlx;
 	void			*mlx_win;
-	int				width, height;
-	int				up, down, left, right;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	char			*texturepaths[TEXTURE_COUNT];
+	t_dir			dir;
+	t_sizedata		size;
 	uint32_t		*colorBuffer;
 	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
