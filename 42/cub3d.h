@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 16:32:59 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:47:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_sprite
 	float		distance;
 	float		angle;
 	float		angle_dif;
+	int			fact;
 	t_texture	texture;
 	t_sizedata	size;
 	t_coord		pos;
@@ -186,6 +187,10 @@ int		ft_cast_all_rays(t_data *data);
 int		ft_edit_colorbuffer(t_data *data, int print);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
+void	ft_draw_sprite(t_data *data, int i);
+void	ft_update_sprite(t_data *data, int i);
+void	ft_sprite_dist(t_data *data);
+void	ft_sprites(t_data *data);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);

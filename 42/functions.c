@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 16:32:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:46:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -482,8 +482,6 @@ int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 // calculates the distance between two coordinates x and y
 float	ft_distance(t_coord coord_a, t_coord coord_b)
 {
-	float coordx;
-	float coordy;
 	t_coord rslt;
 
 	rslt.x = coord_b.x - coord_a.x;
@@ -639,27 +637,75 @@ void	ft_gen_3d_proj(t_data *data)
 	}
 }
 
+// sorts sprites order by distance from player
+void	ft_sort_sprites(t_data *data)
+{
+	t_sprite	temp;
+	int			i;
+
+	i = SPRITE_COUNT - 1;
+	while (i > 0)
+	{
+		if (data->sprite[i].distance > data->sprite[i - 1].distance)
+		{
+			temp = data->sprite[i];
+			data->sprite[i] = data->sprite[i - 1];
+			data->sprite[i - 1] = temp;
+			i = SPRITE_COUNT - 1;
+		}
+		else
+			i--;
+	}
+}
+
+// draws the sprite on screen
+void	ft_draw_sprite(t_data *data, int i)
+{
+	// TODO
+}
+
+// calculates sprite size and position on screen
+void	ft_update_sprite(t_data *data, int i)
+{
+	data->sprite[i].angle = atan2(
+		(data->sprite[i].pos.y - data->player.playerspr.pos.y),
+		(data->sprite[i].pos.y - data->player.playerspr.pos.y)
+	);
+	data->sprite[i].angle_dif = (data->player.rotationAngle - data->sprite[i].angle);
+	data->sprite[i].angle_dif = ft_normalize_angle(data->sprite[i].angle_dif);
+	data->sprite[i].angle_dif = fabs(data->sprite[i].angle_dif);
+	data->sprite[i].distance *= (cos(data->sprite[i].angle_dif));
+	if (data->sprite[i].angle_dif < (FOV / 2 + 0.5))
+	{
+		data->sprite[i].size.h = (TILE_SIZE * DIST_PROJ_PLANE / data->sprite[i].distance);
+		data->sprite[i].size.w = (data->sprite[i].size.h * data->sprite[i].texture.size.w / data->sprite[i].texture.size.h);
+		data->sprite[i].fact = tan(data->sprite[i].angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
+		ft_draw_sprite(data, i);
+	}
+}
+
 // calculates each sprite distance from player
-// void	ft_sprite_dist(t_data *data)
-// {
-// 	int i = 0;
+void	ft_sprite_dist(t_data *data)
+{
+	int i = 0;
 	
-// 	while (i < SPRITE_COUNT)
-// 	{
-// 		data->sprite[i].distance = ft_distance()
-// 	}
-// }
+	while (i < SPRITE_COUNT)
+	{
+		data->sprite[i].distance = ft_distance(data->player.playerspr.pos, data->sprite[i].pos);
+		i++;
+	}
+}
 
-// // handles sprites
-// void	ft_sprites(t_data *data)
-// {
-// 	int		i = 0;
+// handles sprites
+void	ft_sprites(t_data *data)
+{
+	int		i = 0;
 
-// 	ft_sprite_dist(data, i);
-// 	ft_sort_sprites(data);
-// 	while (i < SPRITE_COUNT)
-// 	{
-// 		ft_update_sprite(data, i);
-// 		i++;
-// 	}
-// }
+	ft_sprite_dist(data);
+	ft_sort_sprites(data);
+	while (i < SPRITE_COUNT)
+	{
+		ft_update_sprite(data, i);
+		i++;
+	}
+}
