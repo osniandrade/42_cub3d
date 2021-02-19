@@ -6,9 +6,11 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 17:32:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 09:53:16 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <math.h>
 
 #define TRUE			1
 #define FALSE			0
@@ -31,8 +33,6 @@
 #define PI				3.14159265
 
 #define TILE_SIZE		64
-#define	TEXTURE_W		64
-#define TEXTURE_H		64
 #define MAP_ROWS		13
 #define MAP_COLS		20
 #define MAP_SCALE		0.25  // only values lower than 1.0
@@ -43,6 +43,7 @@
 
 #define NUM_RAYS		SCREENW
 #define FOV				(60 * (PI / 180))
+#define DIST_PROJ_PLANE ((SCREENW / 2) / tan(FOV / 2))
 
 // text purposes
 #define	TEXTURE_INDEX	0
@@ -129,7 +130,6 @@ typedef struct	s_3dproj
 	int				i;
 	int				y;
 	float			c_distance;
-	float			dist_proj_plane;
 	float			proj_wall_h;
 }					t_3dproj;
 

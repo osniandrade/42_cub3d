@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 17:35:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/19 09:55:01 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,7 +543,8 @@ int		ft_cast_all_rays(t_data *data)
 	int		stripId;
 
 	stripId = 0;
-	rayAngle = data->player.rotationAngle - (FOV / 2);
+	//rayAngle = data->player.rotationAngle - (FOV / 2);
+	rayAngle = data->player.rotationAngle + atan((stripId - (NUM_RAYS / 2)) / DIST_PROJ_PLANE);
 	while (stripId < NUM_RAYS)
 	{
 		ft_cast_ray(data, rayAngle, stripId);
@@ -594,7 +595,7 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	while (projection->y < projection->column_bottom)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (SCREENH / 2));
-		textOffsetY = distanceFromTop * ((float)TEXTURE_H / projection->strip_h);
+		textOffsetY = distanceFromTop * ((float)data->texture[tex_ind].height / projection->strip_h);
 		data->colorBuffer[(SCREENW * projection->y) + projection->i] = (uint32_t)data->texture[tex_ind].buffer[(data->texture[tex_ind].width * textOffsetY) + textOffsetX];
 		projection->y++;
 	}
@@ -611,8 +612,7 @@ void	ft_gen_3d_proj(t_data *data)
 	{
 		projection.y = 0;
 		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
-		projection.dist_proj_plane = (SCREENW / 2) / tan(FOV / 2);
-		projection.proj_wall_h = (TILE_SIZE / projection.c_distance) * projection.dist_proj_plane;
+		projection.proj_wall_h = (TILE_SIZE / projection.c_distance) * DIST_PROJ_PLANE;
 		projection.strip_h = (int)projection.proj_wall_h;
 		projection.column_top = (SCREENH / 2) - (floor(projection.proj_wall_h) / 2);
 		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
