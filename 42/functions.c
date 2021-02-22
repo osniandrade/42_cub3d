@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/22 11:34:23 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/22 11:55:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
 	data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
-	ft_edit_colorbuffer(data, 0);
+	ft_print_colorbuffer(data, 0);
 	ft_init_win(data);
 	ft_init_img(data);
 	ft_load_file_paths(data->texturepaths, texpath, TEXTURE_COUNT);
@@ -396,7 +396,8 @@ int		ft_render_ray(t_data *data)
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
-	ft_edit_colorbuffer(data, 1);
+	ft_print_colorbuffer(data, 1);
+	ft_draw_sprite(data);
 	//ft_render_map(data);
 	//ft_render_ray(data);
 	//ft_render_player(data);
@@ -428,7 +429,8 @@ int		ft_update(t_data *data)
 	ft_player_direction(data);
 	ft_cast_all_rays(data);
 	ft_move_player(data);
-	ft_edit_colorbuffer(data, 0);
+	ft_print_colorbuffer(data, 0);
+	ft_sprites_update(data);
 	ft_gen_3d_proj(data);
 	return (TRUE);
 }
@@ -592,7 +594,7 @@ int		ft_cast_all_rays(t_data *data)
 // renders the color buffer and fills it with color in parameter
 // print = 0 makes color buffer black
 // print = 1 prints the color buffer on screen
-int		ft_edit_colorbuffer(t_data *data, int print)
+int		ft_print_colorbuffer(t_data *data, int print)
 {
 	int x;
 	int y;
@@ -694,58 +696,67 @@ void	ft_sort_sprites(t_data *data)
 }
 
 // draws the sprite on screen
-void	ft_draw_sprite(t_data *data, int i)
+void	ft_draw_sprite(t_data *data)
 {
 	t_coord		t;
 	t_coord		in;
 	t_coord		c;
 	uint32_t	cor;
 	int			ray_sprite;
+	int			i = 0;
 
-	in.x = data->sprite->fact - (data->sprite[i].size.w / 2);
-	in.y = (SCREENH / 2) - (data->sprite[i].size.h / 2);
-	c.x = 0;
-	while (c.x < data->sprite[i].size.w)
+	while ((i < SPRITE_COUNT) && (data->sprite[i].angle_dif < (FOV / 2 + 0.5)))
 	{
-		c.y = 0;
-		t.x = c.x * data->sprite[i].texture.size.w / data->sprite[i].size.w;
-		ray_sprite = (in.x + c.x);
-		while (c.y < data->sprite[i].size.h)
+		in.x = data->sprite->fact - (data->sprite[i].size.w / 2);
+		in.y = (SCREENH / 2) - (data->sprite[i].size.h / 2);
+		c.x = 0;
+		while (c.x < data->sprite[i].size.w)
 		{
-			t.y = c.y * data->sprite[i].texture.size.h / data->sprite[i].size.h;
-			if (!(ft_invalid_area(data, (in.x + c.x), (in.y + c.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
+			c.y = 0;
+			t.x = c.x * data->sprite[i].texture.size.w / data->sprite[i].size.w;
+			ray_sprite = (in.x + c.x);
+			while (c.y < data->sprite[i].size.h)
 			{
-				cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)((t.y * data->sprite[i].texture.size.w) + t.x) * 4);
-				if (cor != 0)
-					ft_print_pixel(data, (in.x + c.x), (in.y + c.y), cor);
+				t.y = c.y * data->sprite[i].texture.size.h / data->sprite[i].size.h;
+				if (!(ft_invalid_area(data, (in.x + c.x), (in.y + c.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
+				{
+					cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)((t.y * data->sprite[i].texture.size.w) + t.x) * 4);
+					if (cor != 0)
+						ft_print_pixel(data, (in.x + c.x), (in.y + c.y), cor);
+				}
+				c.y++;
 			}
-			c.y++;
+			c.x++;
 		}
-		c.x++;
 	}
 }
 
 // calculates sprite size and position on screen
-void	ft_update_sprite(t_data *data, int i)
+void	ft_update_sprite(t_data *data)
 {
 	t_sprite sprite;
+	int i = 0;
 
-	sprite = data->sprite[i];
-	sprite.angle = atan2(
-		(sprite.pos.y - data->player.playerspr.pos.y),
-		(sprite.pos.y - data->player.playerspr.pos.y)
-	);
-	sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
-	sprite.angle_dif = ft_normalize_angle(sprite.angle_dif);
-	sprite.angle_dif = fabs(sprite.angle_dif);
-	sprite.distance *= (cos(sprite.angle_dif));
-	if (sprite.angle_dif < (FOV / 2 + 0.5))
+	while (i < SPRITE_COUNT)
 	{
-		sprite.size.h = (TILE_SIZE * DIST_PROJ_PLANE / sprite.distance);
-		sprite.size.w = (sprite.size.h * sprite.texture.size.w / sprite.texture.size.h);
-		sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
+		sprite = data->sprite[i];
+		sprite.angle = atan2(
+			(sprite.pos.y - data->player.playerspr.pos.y),
+			(sprite.pos.y - data->player.playerspr.pos.y)
+		);
+		sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
+		sprite.angle_dif = ft_normalize_angle(sprite.angle_dif);
+		sprite.angle_dif = fabs(sprite.angle_dif);
+		sprite.distance *= (cos(sprite.angle_dif));
+		if (sprite.angle_dif < (FOV / 2 + 0.5))
+		{
+			sprite.size.h = (TILE_SIZE * DIST_PROJ_PLANE / sprite.distance);
+			sprite.size.w = (sprite.size.h * sprite.texture.size.w / sprite.texture.size.h);
+			sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
+		}
+		data->sprite[i] = sprite;
+		i++;
 	}
-	data->sprite[i] = sprite;
 }
 
 // calculates each sprite distance from player
@@ -761,17 +772,10 @@ void	ft_sprite_dist(t_data *data)
 }
 
 // handles sprites
-void	ft_sprites(t_data *data)
+void	ft_sprites_update(t_data *data)
 {
-	int		i = 0;
-
 	ft_sprite_dist(data);
 	ft_sort_sprites(data);
-	while (i < SPRITE_COUNT)
-	{
-		ft_update_sprite(data, i);
-		if (data->sprite[i].angle_dif < (FOV / 2 + 0.5))
-			ft_draw_sprite(data, i);
-		i++;
-	}
+	ft_update_sprite(data);
+	
 }

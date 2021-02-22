@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/22 11:32:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/22 11:55:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,13 +187,13 @@ float	ft_distance(t_coord coord_a, t_coord coord_b);
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
-int		ft_edit_colorbuffer(t_data *data, int print);
+int		ft_print_colorbuffer(t_data *data, int print);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
-void	ft_draw_sprite(t_data *data, int i);
-void	ft_update_sprite(t_data *data, int i);
+void	ft_draw_sprite(t_data *data);
+void	ft_update_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
-void	ft_sprites(t_data *data);
+void	ft_sprites_update(t_data *data);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
