@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 17:46:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/22 11:34:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,17 @@ int map[MAP_ROWS][MAP_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
+// textures paths (TEMPORARY)
 static char* texpath[TEXTURE_COUNT] = {
 	"./img/stonewall.xpm",
 	"./img/moldystonewall.xpm",
 	"./img/labwall.xpm",
 	"./img/bunkerwall.xpm"
+};
+
+// sprites paths (TEMPORARY)
+static char* sprpath[SPRITE_COUNT] = {
+	"./img/guard.xpm"
 };
 
 // initializes the main struct variables
@@ -60,20 +66,17 @@ void	ft_init_img(t_data *data)
 	data->tile = imagem;
 }
 
-// loads texture paths into data struct
-void	ft_load_texture_paths(t_data *data)
+// loads sprite paths from file to struct
+void	ft_load_file_paths(char **dstpath, char **srcpath, int i)
 {
-	int i = 0;
-
-	while (i < TEXTURE_COUNT)
+	while (--i >= 0)
 	{
-		data->texturepaths[i] = texpath[i];
-		i++;
+		dstpath[i] = srcpath[i];
 	}
 }
 
 // loads xpm texture file into code
-void	ft_load_xpm(t_data *data)
+void	ft_load_xpm_texture(t_data *data)
 {
 	int i = 0;
 
@@ -92,6 +95,30 @@ void	ft_load_xpm(t_data *data)
 			&(data->texture[i].instance.endian)
 		);
 		data->texture[i].buffer = (uint32_t *) data->texture[i].instance.addr;
+		i++;
+	}
+}
+
+// loads sprite textures from array to a new image
+void	ft_load_xpm_sprite(t_data *data)
+{
+	int i = 0;
+
+	while (i < SPRITE_COUNT)
+	{
+		data->sprite[i].texture.instance.img = mlx_xpm_file_to_image(
+			data->mlx,
+			data->spritepaths[i],
+			&data->sprite[i].texture.size.w,
+			&data->sprite[i].texture.size.h
+		);
+		data->sprite[i].texture.instance.addr = mlx_get_data_addr(
+			data->sprite[i].texture.instance.img,
+			&(data->sprite[i].texture.instance.bits_per_pixel),
+			&(data->sprite[i].texture.instance.line_length),
+			&(data->sprite[i].texture.instance.endian)
+		);
+		data->sprite[i].texture.buffer = (uint32_t *) data->sprite[i].texture.instance.addr;
 		i++;
 	}
 }
@@ -123,8 +150,10 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_edit_colorbuffer(data, 0);
 	ft_init_win(data);
 	ft_init_img(data);
-	ft_load_texture_paths(data);
-	ft_load_xpm(data);
+	ft_load_file_paths(data->texturepaths, texpath, TEXTURE_COUNT);
+	ft_load_file_paths(data->spritepaths, sprpath, SPRITE_COUNT);
+	ft_load_xpm_texture(data);
+	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
 	ft_init_player(data);
 }
@@ -138,6 +167,12 @@ void	ft_destroy_images(t_data *data)
 	while (i < TEXTURE_COUNT)
 	{
 		mlx_destroy_image(data->mlx, data->texture[i].instance.img);
+		i++;
+	}
+	i = 0;
+	while (i < SPRITE_COUNT)
+	{
+		mlx_destroy_image(data->mlx, data->sprite[i].texture.instance.img);
 		i++;
 	}
 }
@@ -661,27 +696,56 @@ void	ft_sort_sprites(t_data *data)
 // draws the sprite on screen
 void	ft_draw_sprite(t_data *data, int i)
 {
-	// TODO
+	t_coord		t;
+	t_coord		in;
+	t_coord		c;
+	uint32_t	cor;
+	int			ray_sprite;
+
+	in.x = data->sprite->fact - (data->sprite[i].size.w / 2);
+	in.y = (SCREENH / 2) - (data->sprite[i].size.h / 2);
+	c.x = 0;
+	while (c.x < data->sprite[i].size.w)
+	{
+		c.y = 0;
+		t.x = c.x * data->sprite[i].texture.size.w / data->sprite[i].size.w;
+		ray_sprite = (in.x + c.x);
+		while (c.y < data->sprite[i].size.h)
+		{
+			t.y = c.y * data->sprite[i].texture.size.h / data->sprite[i].size.h;
+			if (!(ft_invalid_area(data, (in.x + c.x), (in.y + c.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
+			{
+				cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)((t.y * data->sprite[i].texture.size.w) + t.x) * 4);
+				if (cor != 0)
+					ft_print_pixel(data, (in.x + c.x), (in.y + c.y), cor);
+			}
+			c.y++;
+		}
+		c.x++;
+	}
 }
 
 // calculates sprite size and position on screen
 void	ft_update_sprite(t_data *data, int i)
 {
-	data->sprite[i].angle = atan2(
-		(data->sprite[i].pos.y - data->player.playerspr.pos.y),
-		(data->sprite[i].pos.y - data->player.playerspr.pos.y)
+	t_sprite sprite;
+
+	sprite = data->sprite[i];
+	sprite.angle = atan2(
+		(sprite.pos.y - data->player.playerspr.pos.y),
+		(sprite.pos.y - data->player.playerspr.pos.y)
 	);
-	data->sprite[i].angle_dif = (data->player.rotationAngle - data->sprite[i].angle);
-	data->sprite[i].angle_dif = ft_normalize_angle(data->sprite[i].angle_dif);
-	data->sprite[i].angle_dif = fabs(data->sprite[i].angle_dif);
-	data->sprite[i].distance *= (cos(data->sprite[i].angle_dif));
-	if (data->sprite[i].angle_dif < (FOV / 2 + 0.5))
+	sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
+	sprite.angle_dif = ft_normalize_angle(sprite.angle_dif);
+	sprite.angle_dif = fabs(sprite.angle_dif);
+	sprite.distance *= (cos(sprite.angle_dif));
+	if (sprite.angle_dif < (FOV / 2 + 0.5))
 	{
-		data->sprite[i].size.h = (TILE_SIZE * DIST_PROJ_PLANE / data->sprite[i].distance);
-		data->sprite[i].size.w = (data->sprite[i].size.h * data->sprite[i].texture.size.w / data->sprite[i].texture.size.h);
-		data->sprite[i].fact = tan(data->sprite[i].angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
-		ft_draw_sprite(data, i);
+		sprite.size.h = (TILE_SIZE * DIST_PROJ_PLANE / sprite.distance);
+		sprite.size.w = (sprite.size.h * sprite.texture.size.w / sprite.texture.size.h);
+		sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
 	}
+	data->sprite[i] = sprite;
 }
 
 // calculates each sprite distance from player
@@ -706,6 +770,8 @@ void	ft_sprites(t_data *data)
 	while (i < SPRITE_COUNT)
 	{
 		ft_update_sprite(data, i);
+		if (data->sprite[i].angle_dif < (FOV / 2 + 0.5))
+			ft_draw_sprite(data, i);
 		i++;
 	}
 }

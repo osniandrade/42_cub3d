@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/19 17:47:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/22 11:32:57 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ typedef struct	s_data
 	void			*mlx_win;
 	int				(*maptable)[MAP_ROWS][MAP_COLS];
 	char			*texturepaths[TEXTURE_COUNT];
+	char			*spritepaths[SPRITE_COUNT];
 	t_sprite		sprite[SPRITE_COUNT];
 	t_dir			dir;
 	t_sizedata		size;
@@ -155,7 +156,9 @@ typedef struct	s_3dproj
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
 void	ft_load_texture_paths(t_data *data);
-void	ft_load_xpm(t_data *data);
+void	ft_load_file_paths(char **dstpath, char **srcpath, int i);
+void	ft_load_xpm_texture(t_data *data);
+void	ft_load_xpm_sprite(t_data *data);
 void	ft_init_player(t_data *data);
 int		ft_loadmap(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
