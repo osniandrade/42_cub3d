@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/25 09:49:35 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/25 11:21:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,16 @@ int		ft_loadmap(t_data *data)
 	return (TRUE);
 }
 
+// initializes sprite structs with zero
+int		ft_init_struct(t_data *data)
+{
+	int i = 0;
+
+	while (i < SPRITE_COUNT)
+		data->sprite[i++] = (t_sprite) {0};  // fill the struct with zeroes
+	return (TRUE);
+}
+
 // initializes the setup for the main loop
 void	ft_setup(t_data *data, int argc, char **argv)
 {
@@ -150,6 +160,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_print_colorbuffer(data, 0);
 	ft_init_win(data);
 	ft_init_img(data);
+	ft_init_struct(data);
 	ft_load_file_paths(data->texturepaths, texpath, TEXTURE_COUNT);
 	ft_load_file_paths(data->spritepaths, sprpath, SPRITE_COUNT);
 	ft_load_xpm_texture(data);
@@ -301,10 +312,10 @@ int		ft_invalid_area(t_data *data, float x, float y)
 		return (TRUE);
 	int mapgridx = floor(x / TILE_SIZE);
 	int mapgridy = floor(y / TILE_SIZE);
-	if (map[mapgridy][mapgridx] == 0)
-		return (FALSE);
-	else
+	if (map[mapgridy][mapgridx] != 0)
 		return (TRUE);
+	else
+		return (FALSE);
 }
 
 // normalize angle
@@ -444,6 +455,8 @@ int		ft_update(t_data *data)
 // loops until a wall is found - 0 for horizontal check and 1 for vertical check
 int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
 {
+	int		mapcontent;
+
 	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= SCREENW && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= SCREENH)
 	{
 		toCheck.x = raytemp->nextTouch.x;
@@ -452,11 +465,12 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.x += (raytemp->face.l ? -1 : 0);
 		else
 			toCheck.y += (raytemp->face.u ? -1 : 0);
-		if (ft_invalid_area(data, toCheck.x, toCheck.y))
+		mapcontent = map[(int)floor(toCheck.y / TILE_SIZE)][(int)floor(toCheck.x / TILE_SIZE)];
+		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
 			raytemp->wallhit.y = raytemp->nextTouch.y;
-			raytemp->wallcontent = map[(int)floor(toCheck.y / TILE_SIZE)][(int)floor(toCheck.x / TILE_SIZE)];
+			raytemp->wallcontent = mapcontent;
 			raytemp->foundwall = TRUE;
 			break;
 		}
@@ -763,6 +777,7 @@ void	ft_draw_sprite(t_data *data)
 			}
 			c.x++;
 		}
+		i++;
 	}
 }
 
@@ -800,7 +815,6 @@ void	ft_sprite_dist(t_data *data)
 	
 	while (i < SPRITE_COUNT)
 	{
-		data->sprite[i] = (t_sprite) {0};  // fill the struct with zeroes
 		data->sprite[i].distance = ft_distance(data->player.playerspr.pos, data->sprite[i].pos);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/25 09:49:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/25 11:02:10 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
 void	ft_init_player(t_data *data);
 int		ft_loadmap(t_data *data);
+int		ft_init_struct(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
 void	ft_destroy_images(t_data *data);
 void	ft_destroy(t_data *data);
