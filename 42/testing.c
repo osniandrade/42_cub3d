@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 17:35:10 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/23 08:12:41 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,24 @@ int     ft_test_collision(t_data *data)
 // 		walltexture = 64;
 // 	if (pos == 3)
 // 		walltexture = 96;
-//   	data->textures[pos] = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
-// 	for (int x = 0; x < TEXTURE_W; x++)
+//   	data->texture[pos].buffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)SCREENW * (uint32_t)SCREENH);
+// 	data->texture[pos].size.h = 64;
+// 	data->texture[pos].size.w = 64;
+// 	data->texture[pos].instance.
+// 	for (int x = 0; x < 64; x++)
 // 	{
-// 		for (int y = 0; y < TEXTURE_H; y++)
+// 		for (int y = 0; y < 64; y++)
 // 		{
 // 			if (x % 8 && y % 8)
-// 				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, walltexture * pos, walltexture, walltexture);
+// 				data->texture[pos].buffer[(SCREENW * y) + x] = ft_crt_trgb(255, walltexture * pos, walltexture, walltexture);
 // 			else
-// 				data->textures[pos][(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
+// 				data->texture[pos].buffer[(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
 // 		}
 // 	}
-//   return (TRUE);
+// 	return (TRUE);
+// }
+
+// int		ft_sprite_gen(t_data *data, int pos)
+// {
+// 	data->sprite[pos].texture.buffer
 // }

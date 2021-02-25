@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/22 11:55:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/25 09:49:15 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,10 @@ typedef struct s_texture
 
 typedef struct s_sprite
 {
-	float		distance;
-	float		angle;
-	float		angle_dif;
-	int			fact;
+	float		distance;	// distance from player
+	float		angle;		// angle in radians
+	float		angle_dif;	// angle difference in comparison with player
+	int			fact;		// 
 	t_texture	texture;
 	t_sizedata	size;
 	t_coord		pos;
@@ -105,24 +105,23 @@ typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
     int		walkDirection;  // -1 for back, +1 for front
-    float	rotationAngle;
-    float	walkSpeed;
-    float	turnSpeed;
-	t_img	playerspr;
+    float	rotationAngle;	// rotation angle info (in radians)
+    float	walkSpeed;		// walk speed multiplier
+    float	turnSpeed;		// turn speed multiplier
+	t_img	playerspr;		// player sprite info (for minimap)
 }			t_playerdata;
 
 typedef struct s_rays
 {
-	float	angle;
-	float	distance;
-	int		verticalhit;
-	int		wallHitContent;
-	int		foundwall;
-	int		wallcontent;
-	t_dir	face;
-	t_coord	wallhit;
-	t_coord	nextTouch;
-	t_img	rayspr;
+	float	angle;			// ray angle in radians
+	float	distance;		// distance from wall
+	int		verticalhit;	// hit on wall was vertical
+	int		foundwall;		// if ray found a wall
+	int		wallcontent;	// content of wall found by ray
+	t_dir	face;			// direction ray is facing
+	t_coord	wallhit;		// coordinates of wall hit
+	t_coord	nextTouch;		// second intersection of ray with wall
+	t_img	rayspr;			// ray sprite info (for minimap)
 }			t_rays;
 
 typedef struct	s_data
@@ -144,13 +143,13 @@ typedef struct	s_data
 
 typedef struct	s_3dproj
 {
-	int				column_top;
-	int				column_bottom;
-	int				strip_h;
+	int				column_top;		// y coord of the top of the pixel column in 3d projection
+	int				column_bottom;	// y coord of the bottom of pixel column
+	int				strip_h;		// heigth of the pixel column
 	int				i;
 	int				y;
-	float			c_distance;
-	float			proj_wall_h;
+	float			c_distance;		// distance from player
+	float			proj_wall_h;	// heigth of the pojected wall in pixels
 }					t_3dproj;
 
 int		ft_init_win(t_data *data);
@@ -190,6 +189,8 @@ int		ft_cast_all_rays(t_data *data);
 int		ft_print_colorbuffer(t_data *data, int print);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
+int		ft_find_sprite(t_data *data);
+void	ft_sort_sprites(t_data *data);
 void	ft_draw_sprite(t_data *data);
 void	ft_update_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
@@ -205,5 +206,5 @@ int		ft_maparray(int argc, char **argv);
 
 int		ft_test_line_draw(t_data *data);
 int     ft_test_collision(t_data *data);
-//int		ft_texture_gen(t_data *data, int pos);
+// int		ft_texture_gen(t_data *data, int pos);
 
