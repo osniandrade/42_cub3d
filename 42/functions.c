@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/25 11:21:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/25 14:17:17 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -752,7 +752,7 @@ void	ft_draw_sprite(t_data *data)
 	int			ray_sprite;
 	int			i = 0;
 
-	while ((i < SPRITE_COUNT) && (data->sprite[i].angle_dif < (FOV / 2 + 0.5)))
+	while ((i < SPRITE_COUNT) && (data->sprite[i].angle_dif < (FOV / 2)))
 	{
 		initial.x = data->sprite->fact - (data->sprite[i].size.w / 2);
 		initial.y = (SCREENH / 2) - (data->sprite[i].size.h / 2);
@@ -760,17 +760,18 @@ void	ft_draw_sprite(t_data *data)
 		while (c.x < data->sprite[i].size.w)
 		{
 			c.y = 0;
-			transform.x = c.x * data->sprite[i].texture.size.w / data->sprite[i].size.w;
+			transform.x = (c.x * data->sprite[i].texture.size.w) / data->sprite[i].size.w;
 			ray_sprite = (initial.x + c.x);
 			while (c.y < data->sprite[i].size.h)
 			{
 				transform.y = c.y * data->sprite[i].texture.size.h / data->sprite[i].size.h;
 				if (!(ft_invalid_area(data, (initial.x + c.x), (initial.y + c.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
 				{
-					cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)(transform.y * data->sprite[i].texture.size.w) + (int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel));
-					if (cor != 0)
+					//cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)(transform.y * data->sprite[i].texture.size.w) + (int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel));
+					cor = data->sprite[i].texture.buffer[(int)(data->sprite[i].texture.size.w * transform.y) + (uint32_t)(transform.x)]; //(int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel)];
+					if (cor != ft_crt_trgb(0,0,0,0))
 					{
-						ft_print_pixel(data, (initial.x + c.x), (initial.y + c.y), cor);
+						ft_print_pixel(data, floor(initial.x + c.x), floor(initial.y + c.y), cor);
 					}
 				}
 				c.y++;
@@ -797,10 +798,10 @@ void	ft_update_sprite(t_data *data)
 		sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
 		sprite.angle_dif = fabs(ft_normalize_angle(sprite.angle_dif));
 		sprite.distance *= (cos(sprite.angle_dif));
-		if (sprite.angle_dif < (FOV / 2 + 0.5))
+		if (sprite.angle_dif < (FOV / 2))
 		{
-			sprite.size.h = (TILE_SIZE * DIST_PROJ_PLANE / sprite.distance);
-			sprite.size.w = (sprite.size.h * sprite.texture.size.w / sprite.texture.size.h);
+			sprite.size.h = (TILE_SIZE * (DIST_PROJ_PLANE / sprite.distance));
+			sprite.size.w = (sprite.size.h * (sprite.texture.size.w / sprite.texture.size.h));
 			sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
 		}
 		data->sprite[i] = sprite;
