@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/25 11:02:10 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/01 14:58:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,8 @@ int		ft_key_release(int keycode, t_data *data);
 void	ft_print_pixel(t_data *data, int x, int y, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color);
 int		ft_draw_rect(t_data *data, int h, int w, int color);
-int		ft_draw_player(t_data *data, int color);
-int		ft_invalid_area(t_data *data, float x, float y);
+int		ft_invalid_screen_area(t_data *data, float x, float y);
+int		ft_invalid_map_position(t_data *data, float x, float y);
 float	ft_normalize_angle(float angle);
 int		ft_move_player(t_data *data);
 int		ft_render_map(t_data *data);

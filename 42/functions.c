@@ -6,11 +6,15 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/25 14:17:17 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/01 14:59:49 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+/*******************************************************************************
+ * TEMPORARY
+ *******************************************************************************/
 
 // map matrix (TEMPORARY)
 int map[MAP_ROWS][MAP_COLS] = {
@@ -39,8 +43,12 @@ static char* texpath[TEXTURE_COUNT] = {
 
 // sprites paths (TEMPORARY)
 static char* sprpath[SPRITE_COUNT] = {
-	"./img/guard.xpm"
+	"./img/armor.xpm"
 };
+
+/*******************************************************************************
+ * INITIALIZATION
+ *******************************************************************************/
 
 // initializes the main struct variables
 int		ft_init_win(t_data *data)
@@ -65,6 +73,44 @@ void	ft_init_img(t_data *data)
 	imagem.s = 50;
 	data->tile = imagem;
 }
+
+// initializes player data
+void	ft_init_player(t_data *data)
+{
+	data->player.playerspr.pos.x = (SCREENW / 2);
+	data->player.playerspr.pos.y = (SCREENH / 2);
+	data->player.turnDirection = 0;
+	data->player.walkDirection = 0;
+	data->player.rotationAngle = PI / 2;
+	data->player.walkSpeed = INIT_WALKSPD;
+	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
+}
+
+// initializes sprite structs with zero
+int		ft_init_struct(t_data *data)
+{
+	int i = 0;
+
+	while (i < SPRITE_COUNT)
+		data->sprite[i++] = (t_sprite) {0};  // fill the struct with zeroes
+	return (TRUE);
+}
+
+// initializes raytemp struct with basic values
+int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
+{
+	*raytemp = (t_rays) {0};  // fill the struct with zeroes
+	raytemp->face.d = rayAngle > 0 && rayAngle < PI;
+	raytemp->face.u = !(raytemp->face.d);
+	raytemp->face.r = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
+	raytemp->face.l = !(raytemp->face.r);
+	return (TRUE);
+}
+
+
+/*******************************************************************************
+ * LOADING
+ *******************************************************************************/
 
 // loads sprite paths from file to struct
 void	ft_load_file_paths(char **dstpath, char **srcpath, int i)
@@ -123,18 +169,6 @@ void	ft_load_xpm_sprite(t_data *data)
 	}
 }
 
-// initializes player data
-void	ft_init_player(t_data *data)
-{
-	data->player.playerspr.pos.x = (SCREENW / 2);
-	data->player.playerspr.pos.y = (SCREENH / 2);
-	data->player.turnDirection = 0;
-	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI / 2;
-	data->player.walkSpeed = INIT_WALKSPD;
-	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
-}
-
 // loads map into data structure
 int		ft_loadmap(t_data *data)
 {
@@ -142,15 +176,10 @@ int		ft_loadmap(t_data *data)
 	return (TRUE);
 }
 
-// initializes sprite structs with zero
-int		ft_init_struct(t_data *data)
-{
-	int i = 0;
 
-	while (i < SPRITE_COUNT)
-		data->sprite[i++] = (t_sprite) {0};  // fill the struct with zeroes
-	return (TRUE);
-}
+/*******************************************************************************
+ * MAIN LOOP
+ *******************************************************************************/
 
 // initializes the setup for the main loop
 void	ft_setup(t_data *data, int argc, char **argv)
@@ -164,15 +193,34 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_file_paths(data->texturepaths, texpath, TEXTURE_COUNT);
 	ft_load_file_paths(data->spritepaths, sprpath, SPRITE_COUNT);
 	ft_load_xpm_texture(data);
-	// ft_texture_gen(data, 0);
-	// ft_texture_gen(data, 1);
-	// ft_texture_gen(data, 2);
-	// ft_texture_gen(data, 3);
 	ft_load_xpm_sprite(data);
-	// ft_texture_gen(data, 4);
 	ft_loadmap(data);
 	ft_find_sprite(data);
 	ft_init_player(data);
+}
+
+// draws elements in the window
+int		ft_draw(t_data *data)
+{
+	ft_print_colorbuffer(data, 1);
+	//ft_draw_sprite(data);
+	ft_render_map(data);
+	ft_render_ray(data);
+	ft_render_player(data);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
+	return (TRUE);
+}
+
+// moves the image in the window
+int		ft_update(t_data *data)
+{
+	ft_player_direction(data);
+	ft_cast_all_rays(data);
+	ft_move_player(data);
+	ft_print_colorbuffer(data, 0);
+	//ft_sprites_update(data);
+	ft_gen_3d_proj(data);
+	return (TRUE);
 }
 
 // frees texture memory allocations
@@ -203,6 +251,11 @@ void	ft_destroy(t_data *data)
 	exit(0);
 }
 
+
+/*******************************************************************************
+ * KEYBOARD INTERACTIONS
+ *******************************************************************************/
+
 // changes key status to pressed and destroys window if pressed ESC
 int		ft_key_press(int keycode, t_data *data)
 {
@@ -232,6 +285,11 @@ int		ft_key_release(int keycode, t_data *data)
 		data->dir.d = FALSE;
 	return (TRUE);
 }
+
+
+/*******************************************************************************
+ * BASIC GRAPHIC FUNCTIONS
+ *******************************************************************************/
 
 // draws a pixel to the image buffer
 void	ft_print_pixel(t_data *data, int x, int y, int color)
@@ -290,33 +348,10 @@ int		ft_draw_rect(t_data *data, int h, int w, int color)
 	return (TRUE);
 }
 
-// draws the player on minimap
-int		ft_draw_player(t_data *data, int color)
-{
-	t_coord i_pos, f_pos;
 
-	i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
-	i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
-	f_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE);
-	f_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE);
-
-	ft_draw_line(data, i_pos, f_pos, color);
-
-	return (TRUE);
-}
-
-// checks if image is in drawable area, uses "step" as increment
-int		ft_invalid_area(t_data *data, float x, float y)
-{
-	if (x < 0 || x > SCREENW || y < 0  || y > SCREENH)
-		return (TRUE);
-	int mapgridx = floor(x / TILE_SIZE);
-	int mapgridy = floor(y / TILE_SIZE);
-	if (map[mapgridy][mapgridx] != 0)
-		return (TRUE);
-	else
-		return (FALSE);
-}
+/*******************************************************************************
+ * HELPER FUNCTIONS
+ *******************************************************************************/
 
 // normalize angle
 float	ft_normalize_angle(float angle) 
@@ -329,29 +364,47 @@ float	ft_normalize_angle(float angle)
 	return (angle);
 }
 
-// updates player positions and directions
-int		ft_move_player(t_data *data)
+// calculates the distance between two coordinates x and y
+float	ft_distance(t_coord coord_a, t_coord coord_b)
 {
-	float	movestep;
-	float	newPlayerX;
-	float	newPlayerY;
-	float	playerCos;
-	float	playerSin;
+	t_coord rslt;
 
-	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
-	data->player.rotationAngle = ft_normalize_angle(data->player.rotationAngle);
-	movestep = data->player.walkDirection * data->player.walkSpeed;
-	playerCos = cos(data->player.rotationAngle) * movestep;
-	playerSin = sin(data->player.rotationAngle) * movestep;
-	newPlayerX = data->player.playerspr.pos.x + playerCos;
-	newPlayerY = data->player.playerspr.pos.y + playerSin;
-	if (!(ft_invalid_area(data, newPlayerX, newPlayerY)))
+	rslt.x = coord_b.x - coord_a.x;
+	rslt.x *= rslt.x;
+	rslt.y = coord_b.y - coord_a.y;
+	rslt.y *= rslt.y;
+	return sqrt(rslt.x + rslt.y);
+}
+
+// renders the color buffer and fills it with color in parameter
+// print = 0 makes color buffer black
+// print = 1 prints the color buffer on screen
+int		ft_print_colorbuffer(t_data *data, int print)
+{
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	while (x < SCREENW)
 	{
-		data->player.playerspr.pos.x = newPlayerX;
-		data->player.playerspr.pos.y = newPlayerY;
+		while (y < SCREENH)
+		{
+			if (print == 0)
+				data->colorBuffer[(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
+			if (print == 1)
+				ft_print_pixel(data, x, y, data->colorBuffer[(SCREENW * y) + x]);
+			y++;
+		}
+		y = 0;
+		x++;
 	}
 	return (TRUE);
 }
+
+/*******************************************************************************
+ * DRAWING FUNCTIONS
+ *******************************************************************************/
 
 // renders map
 int		ft_render_map(t_data *data)
@@ -382,7 +435,13 @@ int		ft_render_map(t_data *data)
 // renders player sprite on screen
 int		ft_render_player(t_data *data)
 {
-	ft_draw_player(data, ft_crt_trgb(0, 255, 0, 255));
+	t_coord i_pos, f_pos;
+
+	i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
+	i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
+	f_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE);
+	f_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE);
+	ft_draw_line(data, i_pos, f_pos, ft_crt_trgb(0, 255, 0, 255));
 	data->player.walkDirection = 0;
 	data->player.turnDirection = 0;
 	return (TRUE);
@@ -410,15 +469,69 @@ int		ft_render_ray(t_data *data)
 	return (TRUE);
 }
 
-// draws elements in the window
-int		ft_draw(t_data *data)
+
+/*******************************************************************************
+ * TESTING FUNCTIONS
+ *******************************************************************************/
+
+// checks if image is in drawable area, uses "step" as increment
+int		ft_invalid_screen_area(t_data *data, float x, float y)
 {
-	ft_print_colorbuffer(data, 1);
-	ft_draw_sprite(data);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_player(data);
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
+	if (x < 0 || x > SCREENW || y < 0  || y > SCREENH)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+// checks if screen position is valid
+int		ft_invalid_map_position(t_data *data, float x, float y)
+{
+	int mapgridx = floor(x / TILE_SIZE);
+	int mapgridy = floor(y / TILE_SIZE);
+	
+	if (map[mapgridy][mapgridx] != 0)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+// checks both screen and map position
+int		ft_invalid_area(t_data *data, float x, float y)
+{
+	if (ft_invalid_screen_area(data, x, y))
+		return (TRUE);
+	if (ft_invalid_map_position(data, x, y))
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+
+/*******************************************************************************
+ * MOVEMENT FUNCTIONS
+ *******************************************************************************/
+
+// updates player positions and directions
+int		ft_move_player(t_data *data)
+{
+	float	movestep;
+	float	newPlayerX;
+	float	newPlayerY;
+	float	playerCos;
+	float	playerSin;
+
+	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
+	data->player.rotationAngle = ft_normalize_angle(data->player.rotationAngle);
+	movestep = data->player.walkDirection * data->player.walkSpeed;
+	playerCos = cos(data->player.rotationAngle) * movestep;
+	playerSin = sin(data->player.rotationAngle) * movestep;
+	newPlayerX = data->player.playerspr.pos.x + playerCos;
+	newPlayerY = data->player.playerspr.pos.y + playerSin;
+	if (!(ft_invalid_area(data, newPlayerX, newPlayerY)))
+	{
+		data->player.playerspr.pos.x = newPlayerX;
+		data->player.playerspr.pos.y = newPlayerY;
+	}
 	return (TRUE);
 }
 
@@ -437,18 +550,6 @@ int		ft_player_direction(t_data *data)
 		data->player.walkDirection = 0;
 	if (data->dir.l == FALSE && data->dir.r == FALSE)
 		data->player.turnDirection = 0;
-	return (TRUE);
-}
-
-// moves the image in the window
-int		ft_update(t_data *data)
-{
-	ft_player_direction(data);
-	ft_cast_all_rays(data);
-	ft_move_player(data);
-	ft_print_colorbuffer(data, 0);
-	ft_sprites_update(data);
-	ft_gen_3d_proj(data);
 	return (TRUE);
 }
 
@@ -482,6 +583,11 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 	}
 	return (TRUE);
 }
+
+
+/*******************************************************************************
+ * RAYCASTING FUNCTIONS
+ *******************************************************************************/
 
 // calculates horizontal ray intersection on the grid
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
@@ -523,29 +629,6 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 	raytemp->nextTouch.y = intercept.y;
 	ft_find_wall(data, raytemp, toCheck, step, 1);
 	return (TRUE);
-}
-
-// initializes raytemp struct with basic values
-int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
-{
-	*raytemp = (t_rays) {0};  // fill the struct with zeroes
-	raytemp->face.d = rayAngle > 0 && rayAngle < PI;
-	raytemp->face.u = !(raytemp->face.d);
-	raytemp->face.r = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
-	raytemp->face.l = !(raytemp->face.r);
-	return (TRUE);
-}
-
-// calculates the distance between two coordinates x and y
-float	ft_distance(t_coord coord_a, t_coord coord_b)
-{
-	t_coord rslt;
-
-	rslt.x = coord_b.x - coord_a.x;
-	rslt.x *= rslt.x;
-	rslt.y = coord_b.y - coord_a.y;
-	rslt.y *= rslt.y;
-	return sqrt(rslt.x + rslt.y);
 }
 
 // copies the values from raytemp to actual ray struct array position
@@ -609,32 +692,6 @@ int		ft_cast_all_rays(t_data *data)
 	return (TRUE);
 }
 
-// renders the color buffer and fills it with color in parameter
-// print = 0 makes color buffer black
-// print = 1 prints the color buffer on screen
-int		ft_print_colorbuffer(t_data *data, int print)
-{
-	int x;
-	int y;
-
-	x = 0;
-	y = 0;
-	while (x < SCREENW)
-	{
-		while (y < SCREENH)
-		{
-			if (print == 0)
-				data->colorBuffer[(SCREENW * y) + x] = ft_crt_trgb(255, 0, 0, 0);
-			if (print == 1)
-				ft_print_pixel(data, x, y, data->colorBuffer[(SCREENW * y) + x]);
-			y++;
-		}
-		y = 0;
-		x++;
-	}
-	return (TRUE);
-}
-
 // projects the wall textures to each strip of each wall
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 {
@@ -692,6 +749,10 @@ void	ft_gen_3d_proj(t_data *data)
 	}
 }
 
+/*******************************************************************************
+ * SPRITE FUNCTIONS
+ *******************************************************************************/
+
 // finds the sprite on the map
 int		ft_find_sprite(t_data *data)
 {
@@ -747,7 +808,7 @@ void	ft_draw_sprite(t_data *data)
 {
 	t_coord		transform;
 	t_coord		initial;
-	t_coord		c;
+	t_coord		count;
 	uint32_t	cor;
 	int			ray_sprite;
 	int			i = 0;
@@ -756,27 +817,27 @@ void	ft_draw_sprite(t_data *data)
 	{
 		initial.x = data->sprite->fact - (data->sprite[i].size.w / 2);
 		initial.y = (SCREENH / 2) - (data->sprite[i].size.h / 2);
-		c.x = 0;
-		while (c.x < data->sprite[i].size.w)
+		count.x = 0;
+		while (count.x < data->sprite[i].size.w)
 		{
-			c.y = 0;
-			transform.x = (c.x * data->sprite[i].texture.size.w) / data->sprite[i].size.w;
-			ray_sprite = (initial.x + c.x);
-			while (c.y < data->sprite[i].size.h)
+			count.y = 0;
+			transform.x = (count.x * data->sprite[i].texture.size.w) / data->sprite[i].size.w;
+			ray_sprite = initial.x + count.x;
+			while (count.y < data->sprite[i].size.h)
 			{
-				transform.y = c.y * data->sprite[i].texture.size.h / data->sprite[i].size.h;
-				if (!(ft_invalid_area(data, (initial.x + c.x), (initial.y + c.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
+				transform.y = (count.y * data->sprite[i].texture.size.h) / data->sprite[i].size.h;
+				if (!(ft_invalid_screen_area(data, (initial.x + count.x), (initial.y + count.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
 				{
-					//cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)(transform.y * data->sprite[i].texture.size.w) + (int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel));
-					cor = data->sprite[i].texture.buffer[(int)(data->sprite[i].texture.size.w * transform.y) + (uint32_t)(transform.x)]; //(int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel)];
-					if (cor != ft_crt_trgb(0,0,0,0))
+					// cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)(transform.y * data->sprite[i].texture.size.w) + (int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel));
+					cor = (uint32_t)data->sprite[i].texture.buffer[(int)(data->sprite[i].size.w * transform.y) + (int)(transform.x)];
+					if (cor != data->sprite[i].texture.buffer[0])
 					{
-						ft_print_pixel(data, floor(initial.x + c.x), floor(initial.y + c.y), cor);
+						ft_print_pixel(data, floor(initial.x + count.x), floor(initial.y + count.y), cor);
 					}
 				}
-				c.y++;
+				count.y++;
 			}
-			c.x++;
+			count.x++;
 		}
 		i++;
 	}
@@ -796,14 +857,11 @@ void	ft_update_sprite(t_data *data)
 			(sprite.pos.x - data->player.playerspr.pos.x)
 		);
 		sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
-		sprite.angle_dif = fabs(ft_normalize_angle(sprite.angle_dif));
-		sprite.distance *= (cos(sprite.angle_dif));
-		if (sprite.angle_dif < (FOV / 2))
-		{
-			sprite.size.h = (TILE_SIZE * (DIST_PROJ_PLANE / sprite.distance));
-			sprite.size.w = (sprite.size.h * (sprite.texture.size.w / sprite.texture.size.h));
-			sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
-		}
+		sprite.angle_dif = fabs(sprite.angle_dif);
+		sprite.distance *= cos(sprite.angle_dif);
+		sprite.size.h = (TILE_SIZE * (DIST_PROJ_PLANE / sprite.distance));
+		sprite.size.w = (sprite.size.h * (sprite.texture.size.w / sprite.texture.size.h));
+		sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (SCREENW / 2);
 		data->sprite[i] = sprite;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/23 08:12:41 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/02/26 11:50:06 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		ft_test_line_draw(t_data *data)
 // moves player to test collision with walls
 int     ft_test_collision(t_data *data)
 {
-    if (!(ft_invalid_area(data, data->player.playerspr.pos.x, data->player.playerspr.pos.y)))
+    if (!(ft_invalid_screen_area(data, data->player.playerspr.pos.x, data->player.playerspr.pos.y)))
 	{
 		data->player.walkDirection = +MOVESPEED;
 		data->player.turnDirection = +MOVESPEED;
