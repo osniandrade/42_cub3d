@@ -377,6 +377,8 @@ void render() {
     clearColorBuffer(0xFF000000);
 
     renderWallProjection();
+
+    drawRect(100, 200, 500, 300, 0xFFFFFFFF);
     
     // displays the minimap
     // renderMap();
