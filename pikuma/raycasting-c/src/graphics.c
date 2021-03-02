@@ -88,3 +88,23 @@ void drawRect(int x, int y, int width, int height, uint32_t color)
         }
     }
 }
+
+void drawLine(int x0, int y0, int x1, int y1, uint32_t color)
+{
+    int deltaX = (x1 - x0);
+    int deltaY = (y1 - y0);
+
+    int longestSideLength = (abs(deltaX) >= abs(deltaY)) ? abs(deltaX) : abs(deltaY);
+
+    float xIncrement = deltaX / (float)longestSideLength;
+    float yIncrement = deltaY / (float)longestSideLength;
+
+    float currentX = x0;
+    float currentY = y0;
+
+    for (int i = 0; i < longestSideLength; i++) {
+        drawPixel(round(currentX), round(currentY), color);
+        currentX += xIncrement;
+        currentY += yIncrement;
+    }
+}
