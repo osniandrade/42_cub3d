@@ -3,7 +3,8 @@
 #include <stdbool.h>
 #include <limits.h>
 #include <SDL2/SDL.h>
-#include "constants.h"
+#include "defs.h"
+#include "graphics.h"
 #include "textures.h"
 
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
@@ -42,53 +43,8 @@ struct Ray {
     int wallHitContent;
 } rays[NUM_RAYS];
 
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
 bool isGameRunning = false;
 int ticksLastFrame = 0;
-
-uint32_t* colorBuffer = NULL;
-SDL_Texture* colorBufferTexture;
-
-bool initializeWindow() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        fprintf(stderr, "Error initializing SDL.\n");
-        return false;
-    }
-    SDL_DisplayMode display_mode;
-    SDL_GetCurrentDisplayMode(0, &display_mode);
-    int fullScreenWidth = display_mode.w;
-    int fullScreenHeigth = display_mode.h;
-    window = SDL_CreateWindow(
-        NULL,
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        fullScreenWidth,
-        fullScreenHeigth,
-        SDL_WINDOW_BORDERLESS
-    );
-    if (!window) {
-        fprintf(stderr, "Error creating SDL window. \n");
-        return false;
-    }
-    renderer = SDL_CreateRenderer(window, -1, 0);  // -1 gets the default driver
-    if (!renderer) {
-        fprintf(stderr, "Error creating SDL renderer.\n");
-        return false;
-    }
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    
-    return true;
-}
-
-void destroyWindow() {
-    freeWallTextures();
-    free(colorBuffer);
-    SDL_DestroyTexture(colorBufferTexture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-}
 
 void setup() {
     player.x = WINDOW_WIDTH / 2;
@@ -100,18 +56,6 @@ void setup() {
     player.rotationAngle = PI / 2;
     player.walkSpeed = 80;
     player.turnSpeed = 45 * (PI / 180);
-
-    // allocate the total amount of bytes in memory to hold the colorBuffer
-    colorBuffer = (uint32_t*) malloc( sizeof(uint32_t) * (uint32_t)WINDOW_WIDTH * (uint32_t)WINDOW_HEIGHT);
-
-    // create an SDL_Texture to display the color buffer
-    colorBufferTexture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_RGBA32,
-        SDL_TEXTUREACCESS_STREAMING,
-        WINDOW_WIDTH,
-        WINDOW_HEIGHT
-    );
 
     // asks uPNG library to decode all PNG files and loads the wallTextures to hold our colorbuffer
     loadWallTextures();
@@ -140,22 +84,23 @@ void movePlayer(float deltaTime) {
 }
 
 void renderPlayer() {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_Rect playerRect = {
-        MINIMAP_SCALE_FACTOR * player.x,
-        MINIMAP_SCALE_FACTOR * player.y,
-        MINIMAP_SCALE_FACTOR * player.width,
-        MINIMAP_SCALE_FACTOR * player.height
-    };
-    SDL_RenderFillRect(renderer, &playerRect);
+    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // SDL_Rect playerRect = {
+    //     MINIMAP_SCALE_FACTOR * player.x,
+    //     MINIMAP_SCALE_FACTOR * player.y,
+    //     MINIMAP_SCALE_FACTOR * player.width,
+    //     MINIMAP_SCALE_FACTOR * player.height
+    // };
+    // SDL_RenderFillRect(renderer, &playerRect);
 
-    SDL_RenderDrawLine(
-        renderer,
-        MINIMAP_SCALE_FACTOR * player.x,
-        MINIMAP_SCALE_FACTOR * player.y,
-        MINIMAP_SCALE_FACTOR * player.x + cos(player.rotationAngle) * 40,
-        MINIMAP_SCALE_FACTOR * player.y + sin(player.rotationAngle) * 40
-    );
+    // SDL_RenderDrawLine(
+    //     renderer,
+    //     MINIMAP_SCALE_FACTOR * player.x,
+    //     MINIMAP_SCALE_FACTOR * player.y,
+    //     MINIMAP_SCALE_FACTOR * player.x + cos(player.rotationAngle) * 40,
+    //     MINIMAP_SCALE_FACTOR * player.y + sin(player.rotationAngle) * 40
+    // );
+
 }
 
 float normalizeAngle(float angle) {
@@ -298,35 +243,35 @@ void castAllRays() {
 }
 
 void renderMap() {
-    for (int i = 0; i < MAP_NUM_ROWS; i++) {
-        for (int j = 0; j < MAP_NUM_COLS; j++) {
-            int tileX = j * TILE_SIZE;
-            int tileY = i * TILE_SIZE;
-            int tileColor = map[i][j] != 0 ? 255 : 0;
+    // for (int i = 0; i < MAP_NUM_ROWS; i++) {
+    //     for (int j = 0; j < MAP_NUM_COLS; j++) {
+    //         int tileX = j * TILE_SIZE;
+    //         int tileY = i * TILE_SIZE;
+    //         int tileColor = map[i][j] != 0 ? 255 : 0;
 
-            SDL_SetRenderDrawColor(renderer, tileColor, tileColor, tileColor, 255);
-            SDL_Rect mapTileRect = {
-                tileX * MINIMAP_SCALE_FACTOR,
-                tileY * MINIMAP_SCALE_FACTOR,
-                TILE_SIZE * MINIMAP_SCALE_FACTOR,
-                TILE_SIZE * MINIMAP_SCALE_FACTOR
-            };
-            SDL_RenderFillRect(renderer, &mapTileRect);
-        }
-    }
+    //         SDL_SetRenderDrawColor(renderer, tileColor, tileColor, tileColor, 255);
+    //         SDL_Rect mapTileRect = {
+    //             tileX * MINIMAP_SCALE_FACTOR,
+    //             tileY * MINIMAP_SCALE_FACTOR,
+    //             TILE_SIZE * MINIMAP_SCALE_FACTOR,
+    //             TILE_SIZE * MINIMAP_SCALE_FACTOR
+    //         };
+    //         SDL_RenderFillRect(renderer, &mapTileRect);
+    //     }
+    // }
 }
 
 void renderRays() {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    for (int i = 0; i < NUM_RAYS; i++) {
-        SDL_RenderDrawLine(
-            renderer,
-            MINIMAP_SCALE_FACTOR * player.x,
-            MINIMAP_SCALE_FACTOR * player.y,
-            MINIMAP_SCALE_FACTOR * rays[i].wallHitX,
-            MINIMAP_SCALE_FACTOR * rays[i].wallHitY
-        );
-    }
+    // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    // for (int i = 0; i < NUM_RAYS; i++) {
+    //     SDL_RenderDrawLine(
+    //         renderer,
+    //         MINIMAP_SCALE_FACTOR * player.x,
+    //         MINIMAP_SCALE_FACTOR * player.y,
+    //         MINIMAP_SCALE_FACTOR * rays[i].wallHitX,
+    //         MINIMAP_SCALE_FACTOR * rays[i].wallHitY
+    //     );
+    // }
 }
 
 void processInput() {
@@ -381,7 +326,7 @@ void update() {
     castAllRays();
 }
 
-void generate3DProjection() {
+void renderWallProjection() {
     for (int x = 0; x < NUM_RAYS; x++) {
         float perpDistance = rays[x].distance * cos(rays[x].rayAngle - player.rotationAngle);
         float projectedWallHeight = (TILE_SIZE / perpDistance) * DIST_PROJ_PLANE;
@@ -396,7 +341,7 @@ void generate3DProjection() {
 
         // render wall column from wallTopPixel to wallBottomPixel
         for (int y = 0; y < wallTopPixel; y++) {
-            colorBuffer[(WINDOW_WIDTH * y) + x] = 0xFF333333;
+            drawPixel(x, y, 0xFF444444);
         }
 
         int textureOffsetX;
@@ -419,46 +364,31 @@ void generate3DProjection() {
 
             // set the color of the wall based on the color from the texture
             uint32_t texelColor = wallTextures[texNum].texture_buffer[(texture_width * textureOffsetY) + textureOffsetX];
-            colorBuffer[(WINDOW_WIDTH * y) + x] = texelColor;
+            drawPixel(x, y, texelColor);
         }
 
         for (int y = wallBottomPixel; y < wallBottomPixel; y++) {
-            colorBuffer[(WINDOW_WIDTH * y) + x] = 0xFF777777;
+            drawPixel(x, y, 0xFF888888);
         }
     }
 }
 
-void clearColorBuffer(uint32_t color) {
-    for (int i = 0; i < WINDOW_WIDTH * WINDOW_HEIGHT; i++) {
-        colorBuffer[i] = color;
-    }
-}
-
-void renderColorBuffer() {
-    SDL_UpdateTexture(
-        colorBufferTexture,
-        NULL,
-        colorBuffer,
-        (int)((uint32_t)WINDOW_WIDTH * sizeof(uint32_t))
-    );
-    SDL_RenderCopy(renderer, colorBufferTexture, NULL, NULL);
-}
-
 void render() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    generate3DProjection();
-
-    renderColorBuffer();
     clearColorBuffer(0xFF000000);
 
+    renderWallProjection();
+    
     // displays the minimap
-    renderMap();
-    renderRays();
-    renderPlayer();
+    // renderMap();
+    // renderRays();
+    // renderPlayer();
 
-    SDL_RenderPresent(renderer);
+    renderColorBuffer();
+}
+
+void releaseResources(void) {
+    freeWallTextures();
+    destroyWindow();
 }
 
 int main () {
@@ -472,7 +402,7 @@ int main () {
         render();
     }
 
-    destroyWindow;
+    releaseResources();
 
     return 0;
 }
