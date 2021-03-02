@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/01 14:58:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/02 11:08:52 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
 void	ft_init_player(t_data *data);
 int		ft_loadmap(t_data *data);
-int		ft_init_struct(t_data *data);
+int		ft_init_sprite_struct(t_data *data);
 void	ft_setup(t_data *data, int argc, char **argv);
 void	ft_destroy_images(t_data *data);
 void	ft_destroy(t_data *data);
@@ -187,7 +187,7 @@ float	ft_distance(t_coord coord_a, t_coord coord_b);
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
-int		ft_print_colorbuffer(t_data *data, int print);
+int		ft_print_colorbuffer(t_data *data);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
 int		ft_find_sprite(t_data *data);
@@ -196,6 +196,7 @@ void	ft_draw_sprite(t_data *data);
 void	ft_update_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
 void	ft_sprites_update(t_data *data);
+void	ft_update_colorbuffer(t_data *data, t_coord pos, int color);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);

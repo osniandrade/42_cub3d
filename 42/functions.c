@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/01 16:35:14 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/02 14:07:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_init_player(t_data *data)
 }
 
 // initializes sprite structs with zero
-int		ft_init_struct(t_data *data)
+int		ft_init_sprite_struct(t_data *data)
 {
 	int i = 0;
 
@@ -107,6 +107,21 @@ int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
 	return (TRUE);
 }
 
+// initializes the colorbuffer
+int		ft_clear_colorbuffer(t_data *data, int init)
+// init = 0  - skips memory allocation
+// init = 1  - allocates memory for buffer
+{
+	int i = 0;
+
+	if(init == 1)
+		data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)data->size.w * (uint32_t)data->size.h);
+	while(i < data->size.w * data->size.h)
+	{
+		data->colorBuffer[i++] = ft_crt_trgb(255, 0, 0, 0);
+	}
+	return (TRUE);
+}
 
 /*******************************************************************************
  * LOADING
@@ -186,10 +201,9 @@ void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
 	ft_init_win(data);
-	data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)data->size.w * (uint32_t)data->size.h);
-	ft_print_colorbuffer(data, 0);
+	ft_clear_colorbuffer(data, 1);
 	ft_init_img(data);
-	ft_init_struct(data);
+	ft_init_sprite_struct(data);
 	ft_load_file_paths(data->texturepaths, texpath, TEXTURE_COUNT);
 	ft_load_file_paths(data->spritepaths, sprpath, SPRITE_COUNT);
 	ft_load_xpm_texture(data);
@@ -202,7 +216,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
-	ft_print_colorbuffer(data, 1);
+	ft_print_colorbuffer(data);
 	//ft_draw_sprite(data);
 	ft_render_map(data);
 	ft_render_ray(data);
@@ -214,14 +228,19 @@ int		ft_draw(t_data *data)
 // moves the image in the window
 int		ft_update(t_data *data)
 {
+	ft_clear_colorbuffer(data, 0);
 	ft_player_direction(data);
 	ft_cast_all_rays(data);
 	ft_move_player(data);
-	ft_print_colorbuffer(data, 0);
 	//ft_sprites_update(data);
 	ft_gen_3d_proj(data);
 	return (TRUE);
 }
+
+
+/*******************************************************************************
+ * FINISH PROGRAM
+ *******************************************************************************/
 
 // frees texture memory allocations
 void	ft_destroy_images(t_data *data)
@@ -295,6 +314,7 @@ int		ft_key_release(int keycode, t_data *data)
 void	ft_print_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
+
 	if (data->tile.pos.y <= data->size.h && data->tile.pos.x <= data->size.w)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
@@ -348,6 +368,15 @@ int		ft_draw_rect(t_data *data, int h, int w, int color)
 	return (TRUE);
 }
 
+// changes a pixel color in the colorbuffer
+void	ft_update_colorbuffer(t_data *data, t_coord pos, int color)
+{
+	int x, y;
+
+	x = floor(pos.x);
+	y = floor(pos.y);
+	data->colorBuffer[(data->size.w * y) + x] = color;
+}
 
 /*******************************************************************************
  * HELPER FUNCTIONS
@@ -377,26 +406,20 @@ float	ft_distance(t_coord coord_a, t_coord coord_b)
 }
 
 // renders the color buffer and fills it with color in parameter
-// print = 0 makes color buffer black
-// print = 1 prints the color buffer on screen
-int		ft_print_colorbuffer(t_data *data, int print)
+int		ft_print_colorbuffer(t_data *data)
 {
 	int x;
 	int y;
 
 	x = 0;
-	y = 0;
 	while (x < data->size.w)
 	{
+		y = 0;
 		while (y < data->size.h)
 		{
-			if (print == 0)
-				data->colorBuffer[(data->size.w * y) + x] = ft_crt_trgb(255, 0, 0, 0);
-			if (print == 1)
-				ft_print_pixel(data, x, y, data->colorBuffer[(data->size.w * y) + x]);
+			ft_print_pixel(data, x, y, data->colorBuffer[(data->size.w * y) + x]);
 			y++;
 		}
-		y = 0;
 		x++;
 	}
 	return (TRUE);
