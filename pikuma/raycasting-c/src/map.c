@@ -35,7 +35,7 @@ int getMapAt(int i, int j)
     return map[i][j];
 }
 
-void renderMap()
+void renderMapGrid()
 {
     for (int i = 0; i < MAP_NUM_ROWS; i++) {
         for (int j = 0; j < MAP_NUM_COLS; j++) {

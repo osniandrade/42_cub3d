@@ -8,13 +8,14 @@
 #include "ray.h"
 #include "textures.h"
 #include "wall.h"
+#include "sprite.h"
 
 bool isGameRunning = false;
 int ticksLastFrame = 0;
 
 void setup() {
     // asks uPNG library to decode all PNG files and loads the wallTextures to hold our colorbuffer
-    loadWallTextures();
+    loadTextures();
 }
 
 void processInput() {
@@ -74,18 +75,21 @@ void update() {
 void render() {
     clearColorBuffer(0xFF000000);
 
+    // Render the walls and sprites
     renderWallProjection();
+    renderSpriteProjection();
     
-    // displays the minimap
-    renderMap();
-    renderRays();
-    renderPlayer();
+    // Render the minimap
+    renderMapGrid();
+    renderMapRays();
+    renderMapSprites();
+    renderMapPlayer();
 
     renderColorBuffer();
 }
 
 void releaseResources(void) {
-    freeWallTextures();
+    freeTextures();
     destroyWindow();
 }
 
