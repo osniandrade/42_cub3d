@@ -2,7 +2,9 @@
 #define RAY_H
 
 #include <stdbool.h>
+#include <limits.h>
 #include "defs.h"
+#include "graphics.h"
 #include "player.h"
 
 typedef struct {
@@ -16,7 +18,7 @@ typedef struct {
 
 extern rays_t rays[NUM_RAYS];
 
-float normalizeAngle(float angle);
+void normalizeAngle(float *angle);
 float distanceBetweenPoints(float x1, float y1, float x2, float y2);
 void castRay(float rayAngle, int stripId);
 void castAllRays(void);

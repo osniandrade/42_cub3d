@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <stdint.h>
 #include <math.h>
 
 #define PI 3.14159265
@@ -21,5 +22,7 @@
 
 #define FPS 30
 #define FRAME_TIME_LENGTH (1000 / FPS)
+
+typedef uint32_t color_t;
 
 #endif
