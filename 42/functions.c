@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 17:46:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/05 10:59:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int map[MAP_ROWS][MAP_COLS] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1},
     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
@@ -233,8 +233,6 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_loadmap(data);
 	ft_find_sprite(data);
 	ft_init_player(data);
-	// TESTING
-	ft_test_init_sprite(data);
 }
 
 // draws elements in the window
@@ -244,7 +242,6 @@ int		ft_draw(t_data *data)
 	//ft_draw_sprite(data);
 	ft_render_map(data);
 	ft_render_ray(data);
-	ft_render_minimap_sprite(data);
 	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
@@ -339,10 +336,8 @@ int		ft_key_release(int keycode, t_data *data)
 void	ft_print_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
-	x = round(x);
-	y = round(y);
 
-	if (y <= data->size.h && x <= data->size.w && x > 0 && y > 0)
+	if (data->tile.pos.y <= data->size.h && data->tile.pos.x <= data->size.w)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
 		*(unsigned int *)dst = color;
@@ -350,55 +345,48 @@ void	ft_print_pixel(t_data *data, int x, int y, int color)
 }
 
 // draws a line from i_pos to f_pos in color (Bresenham's algorithm)
-int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize)
+int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color)
 {
-	int i_x = round(i_pos.x);
-	int i_y = round(i_pos.y);
-	int f_x = round(f_pos.x);
-	int f_y = round(f_pos.y);	
-	int dx = abs((int)f_x - (int)i_x);
-	int sx = i_x < f_x ? 1 : -1;
-	int dy = abs((int)f_y - (int)i_y);
-	int sy = i_y < f_y ? 1 : -1;
+	int dx = abs((int)f_pos.x - (int)i_pos.x);
+	int sx = i_pos.x < f_pos.x ? 1 : -1;
+	int dy = abs((int)f_pos.y - (int)i_pos.y);
+	int sy = i_pos.y < f_pos.y ? 1 : -1;
 	int err = (dx > dy ? dx : -dy) / 2;
 	int e2;
 
-	while(!(i_x == f_x && i_y == f_y))
+	while(!(i_pos.x == f_pos.x && i_pos.y == f_pos.y))
 	{
-		if (resize)
-			ft_print_pixel(data, i_x * MAP_SCALE, i_y * MAP_SCALE, color);
-		else
-			ft_print_pixel(data, i_x, i_y, color);
+		ft_print_pixel(data, i_pos.x, i_pos.y, color);
 		e2 = err;
 		if (e2 > -dx)
 		{
 			err -= dy;
-			i_x += sx;
+			i_pos.x += sx;
 		}
 		if (e2 < dy)
 		{
 			err += dx;
-			i_y += sy;
+			i_pos.y += sy;
 		}
 	}
 	return (TRUE);
 }
 
 // draws a rectangle with defined height, width and color
-int		ft_draw_rect(t_data *data, t_coord pos, t_sizedata size, int color, int resize)
+int		ft_draw_rect(t_data *data, int h, int w, int color)
 {
 	t_coord	i_pos, f_pos;
 
-		i_pos.x = pos.x;
-		i_pos.y = pos.y;
-		f_pos.x = pos.x + size.w;
-		f_pos.y = pos.y;
-		while (i_pos.y <= pos.y + size.h)
-		{
-			ft_draw_line(data, i_pos, f_pos, color, resize);
-			i_pos.y++;
-			f_pos.y++;
-		}
+	i_pos.x = data->tile.pos.x;
+	i_pos.y = data->tile.pos.y;
+	f_pos.x = data->tile.pos.x + w;
+	f_pos.y = data->tile.pos.y;
+	while (i_pos.y <= data->tile.pos.y + h)
+	{
+		ft_draw_line(data, i_pos, f_pos, color);
+		i_pos.y++;
+		f_pos.y++;
+	}
 	return (TRUE);
 }
 
@@ -460,7 +448,7 @@ int		ft_print_colorbuffer(t_data *data)
 }
 
 /*******************************************************************************
- * MINIMAP DRAWING FUNCTIONS
+ * DRAWING FUNCTIONS
  *******************************************************************************/
 
 // renders map
@@ -474,10 +462,13 @@ int		ft_render_map(t_data *data)
 	{
 		while (j < MAP_COLS)
 		{
-			data->tile.pos.x = (j * data->tile.size.w);
-			data->tile.pos.y = (i * data->tile.size.w);
+			data->tile.pos.x = (j * data->tile.size.w) * MAP_SCALE;
+			data->tile.pos.y = (i * data->tile.size.w) * MAP_SCALE;
 			tileColor = (data->maptable[i][j] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
-			ft_draw_rect(data, data->tile.pos, data->tile.size, tileColor, 1);
+			ft_draw_rect(data, 
+					  data->tile.size.w * MAP_SCALE, 
+					  data->tile.size.w * MAP_SCALE, 
+					  tileColor);
 			j++;
 		}
 		j = 0;
@@ -489,11 +480,13 @@ int		ft_render_map(t_data *data)
 // renders player sprite on screen
 int		ft_render_player(t_data *data)
 {
-	t_coord  f_pos;
+	t_coord i_pos, f_pos;
 
-	f_pos.x = data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE;
-	f_pos.y = data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE;
-	ft_draw_line(data, data->player.playerspr.pos, f_pos, ft_crt_trgb(0, 255, 0, 255), 1);
+	i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
+	i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
+	f_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x + cos(data->player.rotationAngle) * PLAYERSIZE);
+	f_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y + sin(data->player.rotationAngle) * PLAYERSIZE);
+	ft_draw_line(data, i_pos, f_pos, ft_crt_trgb(0, 255, 0, 255));
 	data->player.walkDirection = 0;
 	data->player.turnDirection = 0;
 	return (TRUE);
@@ -504,35 +497,23 @@ int		ft_render_ray(t_data *data)
 {
 	int		ray;
 	int		color;
+	t_coord i_pos;
+	t_coord f_pos;
 
 	ray = 0;
 	color = ft_crt_trgb(255, 0, 0, 255);
 	while (ray < NUM_RAYS)
 	{
-		ft_draw_line(data, data->player.playerspr.pos, data->rays[ray].wallhit, color, 1);
+		i_pos.x = round(MAP_SCALE * data->player.playerspr.pos.x);
+		i_pos.y = round(MAP_SCALE * data->player.playerspr.pos.y);
+		f_pos.x = round(MAP_SCALE * data->rays[ray].wallhit.x);
+		f_pos.y = round(MAP_SCALE * data->rays[ray].wallhit.y);
+		ft_draw_line(data, i_pos, f_pos, color);
 		ray++;
 	}
 	return (TRUE);
 }
 
-// renders sprites in minimap
-int		ft_render_minimap_sprite(t_data *data)
-{
-	int i = 0;
-
-	while (i < SPRITE_COUNT)
-	{
-		ft_draw_rect(
-			data, 
-			data->sprite[i].pos, 
-			data->sprite[i].texture.size, 
-			ft_crt_trgb(0,0,255,0),
-			1
-		);
-		i++;
-	}
-	return (TRUE);
-}
 
 /*******************************************************************************
  * TESTING FUNCTIONS
