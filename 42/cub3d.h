@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 10:54:52 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/05 17:40:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,6 @@ typedef struct	s_3dproj
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
-// void	ft_load_texture_paths(t_data *data);
-// void	ft_load_texture_paths(char **dstpath, char **srcpath, int i);
 void	ft_load_file_paths(t_data *data);
 void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
@@ -166,8 +164,8 @@ void	ft_destroy(t_data *data);
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
 void	ft_print_pixel(t_data *data, int x, int y, int color);
-int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color);
-int		ft_draw_rect(t_data *data, int h, int w, int color);
+int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize);
+int		ft_draw_rect(t_data *data, t_coord pos, t_sizedata size, int color, int resize);
 int		ft_invalid_screen_area(t_data *data, float x, float y);
 int		ft_invalid_map_position(t_data *data, float x, float y);
 float	ft_normalize_angle(float angle);
@@ -175,6 +173,7 @@ int		ft_move_player(t_data *data);
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_render_ray(t_data *data);
+int		ft_render_minimap_sprite(t_data *data);
 int		ft_draw(t_data *data);
 int		ft_player_direction(t_data *data);
 int		ft_update(t_data *data);
@@ -205,7 +204,5 @@ uint32_t		ft_get_b(int trgb);
 int		ft_mapstats(int *map);
 int		ft_maparray(int argc, char **argv);
 
-int		ft_test_line_draw(t_data *data);
-int     ft_test_collision(t_data *data);
-// int		ft_texture_gen(t_data *data, int pos);
+int		ft_test_init_sprite(t_data *data);
 
