@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/02 11:08:52 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/05 10:49:22 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,21 +86,21 @@ typedef struct s_img
 
 typedef struct s_texture
 {
+	char		*path;
 	t_img		instance;
 	t_sizedata	size;
 	uint32_t*	buffer;
 }				t_texture;
 
+
 typedef struct s_sprite
 {
 	float		distance;	// distance from player
 	float		angle;		// angle in radians
-	float		angle_dif;	// angle difference in comparison with player
-	int			fact;		// 
-	t_texture	texture;
-	t_sizedata	size;
-	t_coord		pos;
+	t_texture	texture;	// sprite texture information
+	t_coord		pos;		// sprite position on screen
 }				t_sprite;
+
 typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
@@ -128,9 +128,7 @@ typedef struct	s_data
 {
 	void			*mlx;
 	void			*mlx_win;
-	int				(*maptable)[MAP_ROWS][MAP_COLS];
-	char			*texturepaths[TEXTURE_COUNT];
-	char			*spritepaths[SPRITE_COUNT];
+	int				maptable[MAP_ROWS][MAP_COLS];
 	t_sprite		sprite[SPRITE_COUNT];
 	t_dir			dir;
 	t_sizedata		size;
@@ -154,8 +152,9 @@ typedef struct	s_3dproj
 
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
-void	ft_load_texture_paths(t_data *data);
-void	ft_load_file_paths(char **dstpath, char **srcpath, int i);
+// void	ft_load_texture_paths(t_data *data);
+// void	ft_load_texture_paths(char **dstpath, char **srcpath, int i);
+void	ft_load_file_paths(t_data *data);
 void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
 void	ft_init_player(t_data *data);
