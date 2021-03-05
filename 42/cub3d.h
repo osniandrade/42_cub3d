@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 10:49:22 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/05 10:54:52 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ typedef struct s_dir
 
 typedef struct s_img
 {
-	int		s;  // size (in pixels)
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	t_coord	pos;
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+	t_sizedata		size;  // size (in pixels)
+	t_coord			pos;
 }			t_img;
 
 typedef struct s_texture

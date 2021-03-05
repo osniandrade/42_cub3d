@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 10:49:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/05 10:59:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void	ft_init_img(t_data *data)
 									&imagem.line_length, &imagem.endian);
 	imagem.pos.x = 0;
 	imagem.pos.y = 0;
-	imagem.s = 50;
+	imagem.size.w = TILE_SIZE;
+	imagem.size.h = TILE_SIZE;
 	data->tile = imagem;
 }
 
@@ -461,12 +462,12 @@ int		ft_render_map(t_data *data)
 	{
 		while (j < MAP_COLS)
 		{
-			data->tile.pos.x = (j * TILE_SIZE) * MAP_SCALE;
-			data->tile.pos.y = (i * TILE_SIZE) * MAP_SCALE;
+			data->tile.pos.x = (j * data->tile.size.w) * MAP_SCALE;
+			data->tile.pos.y = (i * data->tile.size.w) * MAP_SCALE;
 			tileColor = (data->maptable[i][j] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
 			ft_draw_rect(data, 
-					  TILE_SIZE * MAP_SCALE, 
-					  TILE_SIZE * MAP_SCALE, 
+					  data->tile.size.w * MAP_SCALE, 
+					  data->tile.size.w * MAP_SCALE, 
 					  tileColor);
 			j++;
 		}
@@ -530,8 +531,8 @@ int		ft_invalid_screen_area(t_data *data, float x, float y)
 // checks if screen position is valid
 int		ft_invalid_map_position(t_data *data, float x, float y)
 {
-	int mapgridx = floor(x / TILE_SIZE);
-	int mapgridy = floor(y / TILE_SIZE);
+	int mapgridx = floor(x / data->tile.size.w);
+	int mapgridy = floor(y / data->tile.size.w);
 	
 	if (data->maptable[mapgridy][mapgridx] != 0)
 		return (TRUE);
@@ -610,7 +611,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.x += (raytemp->face.l ? -1 : 0);
 		else
 			toCheck.y += (raytemp->face.u ? -1 : 0);
-		mapcontent = data->maptable[(int)floor(toCheck.y / TILE_SIZE)][(int)floor(toCheck.x / TILE_SIZE)];
+		mapcontent = data->maptable[(int)floor(toCheck.y / data->tile.size.w)][(int)floor(toCheck.x / data->tile.size.w)];
 		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
@@ -640,12 +641,12 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-	intercept.y = floor(data->player.playerspr.pos.y / TILE_SIZE) * TILE_SIZE;
-	intercept.y += raytemp->face.d ? TILE_SIZE : 0;
+	intercept.y = floor(data->player.playerspr.pos.y / data->tile.size.w) * data->tile.size.w;
+	intercept.y += raytemp->face.d ? data->tile.size.w : 0;
 	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
-	step.y = TILE_SIZE;
+	step.y = data->tile.size.w;
 	step.y *= raytemp->face.u ? -1 : 1;
-	step.x = TILE_SIZE / tan(rayAngle);
+	step.x = data->tile.size.w / tan(rayAngle);
 	step.x *= (raytemp->face.l && step.x > 0) ? -1 : 1;
 	step.x *= (raytemp->face.r && step.x < 0) ? -1 : 1;
 	raytemp->nextTouch.x = intercept.x;
@@ -661,12 +662,12 @@ int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-	intercept.x = floor(data->player.playerspr.pos.x / TILE_SIZE) * TILE_SIZE;
-	intercept.x += raytemp->face.r ? TILE_SIZE : 0;
+	intercept.x = floor(data->player.playerspr.pos.x / data->tile.size.w) * data->tile.size.w;
+	intercept.x += raytemp->face.r ? data->tile.size.w : 0;
 	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
-	step.x = TILE_SIZE;
+	step.x = data->tile.size.w;
 	step.x *= raytemp->face.l ? -1 : 1;
-	step.y = TILE_SIZE * tan(rayAngle);
+	step.y = data->tile.size.w * tan(rayAngle);
 	step.y *= (raytemp->face.u && step.y > 0) ? -1 : 1;
 	step.y *= (raytemp->face.d && step.y < 0) ? -1 : 1;
 	raytemp->nextTouch.x = intercept.x;
@@ -744,9 +745,9 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 	int		distanceFromTop;
 
 	if (data->rays[projection->i].verticalhit)
-		textOffsetX = (int)data->rays[projection->i].wallhit.y % TILE_SIZE;
+		textOffsetX = (int)data->rays[projection->i].wallhit.y % data->tile.size.w;
 	else
-		textOffsetX = (int)data->rays[projection->i].wallhit.x % TILE_SIZE;
+		textOffsetX = (int)data->rays[projection->i].wallhit.x % data->tile.size.w;
 	while (projection->y < projection->column_bottom)
 	{
 		distanceFromTop = (projection->y + (projection->strip_h / 2) - (data->size.h / 2));
@@ -767,7 +768,7 @@ void	ft_gen_3d_proj(t_data *data)
 	{
 		projection.y = 0;
 		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
-		projection.proj_wall_h = (TILE_SIZE / projection.c_distance) * DIST_PROJ_PLANE;
+		projection.proj_wall_h = (data->tile.size.w / projection.c_distance) * DIST_PROJ_PLANE;
 		projection.strip_h = (int)projection.proj_wall_h;
 		projection.column_top = (data->size.h / 2) - (floor(projection.proj_wall_h) / 2);
 		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
@@ -813,8 +814,8 @@ int		ft_find_sprite(t_data *data)
 	// 		{
 	// 			if (map[x][y] == 2)
 	// 			{
-	// 				data->sprite[i].pos.x = x * TILE_SIZE;
-	// 				data->sprite[i].pos.y = y * TILE_SIZE;
+	// 				data->sprite[i].pos.x = x * data->tile.size.w;
+	// 				data->sprite[i].pos.y = y * data->tile.size.w;
 	// 				return (TRUE);
 	// 			}
 	// 			y++;
@@ -903,7 +904,7 @@ void	ft_update_sprite(t_data *data)
 	// 	sprite.angle_dif = (data->player.rotationAngle - sprite.angle);
 	// 	sprite.angle_dif = fabs(sprite.angle_dif);
 	// 	sprite.distance *= cos(sprite.angle_dif);
-	// 	sprite.size.h = (TILE_SIZE * (DIST_PROJ_PLANE / sprite.distance));
+	// 	sprite.size.h = (data->tile.size.w * (DIST_PROJ_PLANE / sprite.distance));
 	// 	sprite.size.w = (sprite.size.h * (sprite.texture.size.w / sprite.texture.size.h));
 	// 	sprite.fact = tan(sprite.angle - data->player.rotationAngle) * DIST_PROJ_PLANE + (data->size.w / 2);
 	// 	data->sprite[i] = sprite;
