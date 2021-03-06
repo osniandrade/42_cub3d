@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 09:13:25 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 09:29:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,6 +435,15 @@ float	ft_normalize_angle2(float angle)
 	if (angle < -PI)
 		angle += PI * 2;
 	return (angle);
+}
+
+// gets the arc tangent of a sprite relative to player position
+float	ft_sprite_arctan(t_data *data, int i)
+{
+	return atan2(
+		data->sprite[i].pos.y - data->player.playerspr.pos.y,
+		data->sprite[i].pos.x - data->player.playerspr.pos.x
+	);
 }
 
 // calculates the distance between two coordinates x and y
@@ -875,15 +884,6 @@ void	ft_sort_sprites(t_data *data)
 	// 	else
 	// 		i--;
 	// }
-}
-
-// gets the arc tangent of a sprite relative to player position
-float	ft_sprite_arctan(t_data *data, int i)
-{
-	return atan2(
-		data->sprite[i].pos.y - data->player.playerspr.pos.y,
-		data->sprite[i].pos.x - data->player.playerspr.pos.x
-	);
 }
 
 // draws the sprite on screen
