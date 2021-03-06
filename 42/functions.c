@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 11:53:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 11:59:02 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -460,9 +460,13 @@ float	ft_normalize_angle2(float angle)
 // gets the arc tangent of a sprite relative to player position
 float	ft_sprite_arctan(t_data *data, int i)
 {
+	t_coord		sprite = data->sprites[i].pos;
+	t_coord		player = data->player.playerspr.pos;
+	t_sizedata	sprsize = data->sprites[i].texture.size;
+	
 	return atan2(
-		(data->sprites[i].pos.y + (data->sprites[i].texture.size.w / 2)) - data->player.playerspr.pos.y,
-		(data->sprites[i].pos.x + (data->sprites[i].texture.size.w / 2)) - data->player.playerspr.pos.x
+		(sprite.y + (sprsize.h / 2)) - player.y,
+		(sprite.x + (sprsize.w / 2)) - player.x
 	);
 }
 
