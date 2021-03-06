@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 09:29:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 10:33:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,6 +412,26 @@ void	ft_update_colorbuffer(t_data *data, t_coord pos, int color)
 	data->colorBuffer[(data->size.w * y) + x] = color;
 }
 
+// renders the color buffer and fills it with color in parameter
+int		ft_print_colorbuffer(t_data *data)
+{
+	int x;
+	int y;
+
+	x = 0;
+	while (x < data->size.w)
+	{
+		y = 0;
+		while (y < data->size.h)
+		{
+			ft_print_pixel(data, x, y, data->colorBuffer[(data->size.w * y) + x]);
+			y++;
+		}
+		x++;
+	}
+	return (TRUE);
+}
+
 /*******************************************************************************
  * HELPER FUNCTIONS
  *******************************************************************************/
@@ -456,26 +476,6 @@ float	ft_distance(t_coord coord_a, t_coord coord_b)
 	rslt.y = coord_b.y - coord_a.y;
 	rslt.y *= rslt.y;
 	return sqrt(rslt.x + rslt.y);
-}
-
-// renders the color buffer and fills it with color in parameter
-int		ft_print_colorbuffer(t_data *data)
-{
-	int x;
-	int y;
-
-	x = 0;
-	while (x < data->size.w)
-	{
-		y = 0;
-		while (y < data->size.h)
-		{
-			ft_print_pixel(data, x, y, data->colorBuffer[(data->size.w * y) + x]);
-			y++;
-		}
-		x++;
-	}
-	return (TRUE);
 }
 
 /*******************************************************************************
