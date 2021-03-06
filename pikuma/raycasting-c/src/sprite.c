@@ -13,11 +13,35 @@ void renderMapSprites(void){
             sprites[i].y * MINIMAP_SCALE_FACTOR, 
             2, 
             2, 
-            0xFF00FFFF);
+            (sprites[i].visible) ? 0xFF00FFFF : 0xFF444444
+        );
     }
 }
 
 void renderSpriteProjection(void) {
-    // TODO
+    sprite_t visibleSprites[NUM_SPRITES];
+    int numVisibleSprites = 0;
+
+    // find the sprites that are visible
+    for (int i = 0; i < NUM_SPRITES; i++) {
+        float angleSpritePlayer = player.rotationAngle - atan2(sprites[i].y - player.y, sprites[i].x - player.x);
+        
+        // make sure the angle is always between 0 and 180
+        if (angleSpritePlayer > PI)
+            angleSpritePlayer -= TWO_PI;
+        if (angleSpritePlayer < -PI)
+            angleSpritePlayer += TWO_PI;
+        angleSpritePlayer = fabs(angleSpritePlayer);
+
+        // if sprite angle is less than half the FOV plus a small error margin
+        if (angleSpritePlayer < (FOV_ANGLE / 2)) {
+            sprites[i].visible = true;
+            visibleSprites[numVisibleSprites] = sprites[i];
+            numVisibleSprites++;
+        } else {
+            sprites[i].visible = false;
+        }
+    }
+    // draw the projected sprites
 }
 

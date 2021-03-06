@@ -11,6 +11,7 @@ typedef struct {
     float y;
     float distance;
     float angle;
+    bool visible;
     int texture;
 } sprite_t;
 

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 17:46:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 09:13:25 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 int		ft_draw(t_data *data)
 {
 	ft_print_colorbuffer(data);
-	//ft_draw_sprite(data);
+	ft_draw_sprite(data);
 	ft_render_map(data);
 	ft_render_ray(data);
 	ft_render_minimap_sprite(data);
@@ -416,7 +416,7 @@ void	ft_update_colorbuffer(t_data *data, t_coord pos, int color)
  * HELPER FUNCTIONS
  *******************************************************************************/
 
-// normalize angle
+// normalize angle between 0 and 360
 float	ft_normalize_angle(float angle) 
 {
 	angle = remainder(angle, PI * 2);
@@ -424,6 +424,16 @@ float	ft_normalize_angle(float angle)
 	{
 		angle = (2 * PI) + angle;
 	}
+	return (angle);
+}
+
+// normalize angle between 0 and 180
+float	ft_normalize_angle2(float angle)
+{
+	if (angle > PI)
+		angle -= PI * 2;
+	if (angle < -PI)
+		angle += PI * 2;
 	return (angle);
 }
 
@@ -526,7 +536,7 @@ int		ft_render_minimap_sprite(t_data *data)
 			data, 
 			data->sprite[i].pos, 
 			data->sprite[i].texture.size, 
-			ft_crt_trgb(0,0,255,0),
+			(data->sprite[i].visible) ? ft_crt_trgb(0,0,255,0) : ft_crt_trgb(0,255,0,0),
 			1
 		);
 		i++;
@@ -867,44 +877,38 @@ void	ft_sort_sprites(t_data *data)
 	// }
 }
 
+// gets the arc tangent of a sprite relative to player position
+float	ft_sprite_arctan(t_data *data, int i)
+{
+	return atan2(
+		data->sprite[i].pos.y - data->player.playerspr.pos.y,
+		data->sprite[i].pos.x - data->player.playerspr.pos.x
+	);
+}
+
 // draws the sprite on screen
 void	ft_draw_sprite(t_data *data)
 {
-	// t_coord		transform;
-	// t_coord		initial;
-	// t_coord		count;
-	// uint32_t	cor;
-	// int			ray_sprite;
-	// int			i = 0;
+	int i;
+	float sprite_player_angle;
 
-	// while ((i < SPRITE_COUNT) && (data->sprite[i].angle_dif < (FOV / 2)))
-	// {
-	// 	initial.x = data->sprite->fact - (data->sprite[i].size.w / 2);
-	// 	initial.y = (data->size.h / 2) - (data->sprite[i].size.h / 2);
-	// 	count.x = 0;
-	// 	while (count.x < data->sprite[i].size.w)
-	// 	{
-	// 		count.y = 0;
-	// 		transform.x = (count.x * data->sprite[i].texture.size.w) / data->sprite[i].size.w;
-	// 		ray_sprite = initial.x + count.x;
-	// 		while (count.y < data->sprite[i].size.h)
-	// 		{
-	// 			transform.y = (count.y * data->sprite[i].texture.size.h) / data->sprite[i].size.h;
-	// 			if (!(ft_invalid_screen_area(data, (initial.x + count.x), (initial.y + count.y))) && data->sprite[i].distance < data->rays[ray_sprite].distance)
-	// 			{
-	// 				// cor = *(uint32_t*)(data->sprite[i].texture.instance.addr + (int)(transform.y * data->sprite[i].texture.size.w) + (int)(transform.x * data->sprite[i].texture.instance.bits_per_pixel));
-	// 				cor = (uint32_t)data->sprite[i].texture.buffer[(int)(data->sprite[i].size.w * transform.y) + (int)(transform.x)];
-	// 				if (cor != data->sprite[i].texture.buffer[0])
-	// 				{
-	// 					ft_print_pixel(data, floor(initial.x + count.x), floor(initial.y + count.y), cor);
-	// 				}
-	// 			}
-	// 			count.y++;
-	// 		}
-	// 		count.x++;
-	// 	}
-	// 	i++;
-	// }
+	i = 0;
+
+	while (i < SPRITE_COUNT)
+	{
+		sprite_player_angle = data->player.rotationAngle - ft_sprite_arctan(data, i);
+		sprite_player_angle = ft_normalize_angle2(sprite_player_angle);
+		sprite_player_angle = fabs(sprite_player_angle);
+		if (sprite_player_angle < (FOV / 2))
+		{
+			data->sprite[i].visible = 1;
+		}
+		else
+		{
+			data->sprite[i].visible = 0;
+		}
+		i++;
+	}
 }
 
 // calculates sprite size and position on screen

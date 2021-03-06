@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/05 17:40:36 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 08:53:13 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct s_sprite
 {
 	float		distance;	// distance from player
 	float		angle;		// angle in radians
+	int			visible;	// 1 if sprite is visible, 0 if not
 	t_texture	texture;	// sprite texture information
 	t_coord		pos;		// sprite position on screen
 }				t_sprite;
