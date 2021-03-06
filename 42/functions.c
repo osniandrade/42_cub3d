@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 11:59:02 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 13:13:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -933,6 +933,16 @@ void	ft_draw_sprite(t_data *data)
 {
 	int i;
 	int j;
+	int x;
+	int y;
+	float sprite_h;
+	float sprite_w;
+	float spr_top_y;
+	float spr_bottom_y;
+	float sprite_angle;
+	float spr_scr_pos_x;
+	float spr_left_x;
+	float spr_right_x;
 
 	i = 0;
 	j = 0;
@@ -940,7 +950,30 @@ void	ft_draw_sprite(t_data *data)
 	{
 		if (i == data->visible_sprites[j])
 		{
-			// do stuff
+			sprite_h = (data->tile.size.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
+			sprite_w = (data->tile.size.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
+			spr_top_y = (data->size.h / 2) - (sprite_h / 2);
+			spr_top_y = (spr_top_y < 0) ? 0 : spr_top_y;
+			spr_bottom_y = (data->size.h / 2) + (sprite_h / 2);
+			spr_bottom_y = (spr_bottom_y > data->size.h) ? data->size.h : spr_bottom_y;
+			sprite_angle = ft_sprite_arctan(data, i) - data->player.rotationAngle;
+			spr_scr_pos_x = tan(sprite_angle) * DIST_PROJ_PLANE;
+			spr_left_x = (data->size.w / 2) + spr_scr_pos_x;
+			spr_right_x = spr_left_x + sprite_w;
+			x = spr_left_x;
+			while (x < spr_right_x)
+			{
+				y = spr_top_y;
+				while (y < spr_bottom_y)
+				{
+					if (!(ft_invalid_screen_area(data, (float)x, (float)y)))
+					{
+						ft_print_pixel(data, x, y, ft_crt_trgb(255, 255, 255, 0));
+					}
+					y++;
+				}
+				x++;
+			}
 			j++;
 		}
 		i++;
