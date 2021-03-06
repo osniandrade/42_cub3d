@@ -61,7 +61,24 @@ void renderSpriteProjection(void) {
         float spriteBottomY = (WINDOW_HEIGHT / 2) + (spriteHeight / 2);
         spriteBottomY = (spriteBottomY > WINDOW_HEIGHT) ? WINDOW_HEIGHT : spriteBottomY;
 
-        // define where to draw the sprite in X
+        // Calculate the sprite X position in the projection plane
+        float spriteAngle = atan2(sprite.y - player.y, sprite.x - player.x) - player.rotationAngle;
+        float spriteScreenPosX = tan(spriteAngle) * DIST_PROJ_PLANE;
+
+        // SpriteLeftX
+        float spriteLeftX = (WINDOW_WIDTH / 2) + spriteScreenPosX;
+
+        // SpriteRightX
+        float spriteRightX = spriteLeftX + spriteWidth;
+
+        // Loop all the x and y values
+        for (int x = spriteLeftX; x < spriteRightX; x++) {
+            for (int y = spriteTopY; y < spriteBottomY; y++) {
+                if (x > 0 && x < WINDOW_WIDTH && y > 0 && y < WINDOW_HEIGHT) {
+                    drawPixel(x, y, 0xFFFF0000);
+                }
+            }
+        }
 
     }
 }
