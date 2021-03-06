@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 08:53:13 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 09:28:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,8 @@ void	ft_update_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
 void	ft_sprites_update(t_data *data);
 void	ft_update_colorbuffer(t_data *data, t_coord pos, int color);
+float	ft_sprite_arctan(t_data *data, int i);
+float	ft_normalize_angle2(float angle);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
