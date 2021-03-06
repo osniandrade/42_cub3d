@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 09:28:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 10:32:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,53 +151,67 @@ typedef struct	s_3dproj
 	float			proj_wall_h;	// heigth of the pojected wall in pixels
 }					t_3dproj;
 
+// INITIALIZATION
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
+void	ft_init_player(t_data *data);
+int		ft_init_sprite_struct(t_data *data);
+int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
+int		ft_clear_colorbuffer(t_data *data, int init);
+// LOADING
 void	ft_load_file_paths(t_data *data);
 void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
-void	ft_init_player(t_data *data);
 int		ft_loadmap(t_data *data);
-int		ft_init_sprite_struct(t_data *data);
+// MAIN LOOP
 void	ft_setup(t_data *data, int argc, char **argv);
+int		ft_draw(t_data *data);
+int		ft_update(t_data *data);
+// FINISH PROGRAM
 void	ft_destroy_images(t_data *data);
 void	ft_destroy(t_data *data);
+// KEYBOARD INTERACTIONS
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
+// BASIC GRAPHIC FUNCTIONS
 void	ft_print_pixel(t_data *data, int x, int y, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize);
 int		ft_draw_rect(t_data *data, t_coord pos, t_sizedata size, int color, int resize);
-int		ft_invalid_screen_area(t_data *data, float x, float y);
-int		ft_invalid_map_position(t_data *data, float x, float y);
+void	ft_update_colorbuffer(t_data *data, t_coord pos, int color);
+int		ft_print_colorbuffer(t_data *data);
+// HELPER FUNCTIONS
 float	ft_normalize_angle(float angle);
-int		ft_move_player(t_data *data);
+float	ft_normalize_angle2(float angle);
+float	ft_sprite_arctan(t_data *data, int i);
+float	ft_distance(t_coord coord_a, t_coord coord_b);
+// MINIMAP DRAWING FUNCTIONS
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
 int		ft_render_ray(t_data *data);
 int		ft_render_minimap_sprite(t_data *data);
-int		ft_draw(t_data *data);
+// TESTING FUNCTIONS
+int		ft_invalid_screen_area(t_data *data, float x, float y);
+int		ft_invalid_map_position(t_data *data, float x, float y);
+int		ft_invalid_area(t_data *data, float x, float y);
+// MOVEMENT FUNCTIONS
+int		ft_move_player(t_data *data);
 int		ft_player_direction(t_data *data);
-int		ft_update(t_data *data);
 int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert);
+// RAYCASTING FUNCTIONS
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
 int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle);
-int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
-float	ft_distance(t_coord coord_a, t_coord coord_b);
 int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
-int		ft_print_colorbuffer(t_data *data);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
+// SPRITE FUNCTIONS
 int		ft_find_sprite(t_data *data);
 void	ft_sort_sprites(t_data *data);
 void	ft_draw_sprite(t_data *data);
 void	ft_update_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
 void	ft_sprites_update(t_data *data);
-void	ft_update_colorbuffer(t_data *data, t_coord pos, int color);
-float	ft_sprite_arctan(t_data *data, int i);
-float	ft_normalize_angle2(float angle);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
