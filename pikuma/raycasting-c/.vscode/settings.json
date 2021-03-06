@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "cmath": "c",
-        "graphics.h": "c"
+        "graphics.h": "c",
+        "player.h": "c"
     }
 }

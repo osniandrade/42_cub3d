@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "map.h"
 #include "graphics.h"
+#include "utils.h"
 
 typedef struct {
     float x;

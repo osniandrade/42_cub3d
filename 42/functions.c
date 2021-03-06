@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 11:41:26 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 11:53:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -461,8 +461,8 @@ float	ft_normalize_angle2(float angle)
 float	ft_sprite_arctan(t_data *data, int i)
 {
 	return atan2(
-		data->sprites[i].pos.y - data->player.playerspr.pos.y,
-		data->sprites[i].pos.x - data->player.playerspr.pos.x
+		(data->sprites[i].pos.y + (data->sprites[i].texture.size.w / 2)) - data->player.playerspr.pos.y,
+		(data->sprites[i].pos.x + (data->sprites[i].texture.size.w / 2)) - data->player.playerspr.pos.x
 	);
 }
 
@@ -476,6 +476,15 @@ float	ft_distance(t_coord coord_a, t_coord coord_b)
 	rslt.y = coord_b.y - coord_a.y;
 	rslt.y *= rslt.y;
 	return sqrt(rslt.x + rslt.y);
+}
+
+// resets every position in the array to 0
+void	ft_reset_array(int *array, int i)
+{
+	while(i != 0)
+	{
+		array[i--] = 0;
+	}
 }
 
 /*******************************************************************************
@@ -529,7 +538,7 @@ int		ft_render_ray(t_data *data)
 	while (ray < NUM_RAYS)
 	{
 		ft_draw_line(data, data->player.playerspr.pos, data->rays[ray].wallhit, color, 1);
-		ray++;
+		ray += 50;
 	}
 	return (TRUE);
 }
@@ -912,15 +921,6 @@ void	ft_update_sprite(t_data *data)
 			data->sprites[i].visible = 0;
 		}
 		i++;
-	}
-}
-
-// resets every position in the array to 0
-void	ft_reset_array(int *array, int i)
-{
-	while(i != 0)
-	{
-		array[i--] = 0;
 	}
 }
 
