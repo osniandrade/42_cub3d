@@ -47,7 +47,22 @@ void renderSpriteProjection(void) {
     
     // rendering all visible sprites
     for (int i = 0; i < numVisibleSprites; i++) {
-        // draw the pixels of the sprite in the correct position in the screen
+        sprite_t sprite = visibleSprites[i];
+
+        // Calculate the sprite projected height (sprites are squared)
+        float spriteHeight = (TILE_SIZE / sprite.distance) * DIST_PROJ_PLANE;
+        float spriteWidth = spriteHeight;
+
+        // sprite top Y
+        float spriteTopY = (WINDOW_HEIGHT / 2) - (spriteHeight / 2);
+        spriteTopY = (spriteTopY < 0) ? 0 : spriteTopY;
+
+        // sprite bottom Y
+        float spriteBottomY = (WINDOW_HEIGHT / 2) + (spriteHeight / 2);
+        spriteBottomY = (spriteBottomY > WINDOW_HEIGHT) ? WINDOW_HEIGHT : spriteBottomY;
+
+        // define where to draw the sprite in X
+
     }
 }
 
