@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 10:32:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/06 11:42:29 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,13 @@ typedef struct	s_data
 {
 	void			*mlx;
 	void			*mlx_win;
+	int				visible_sprites[SPRITE_COUNT];
 	int				maptable[MAP_ROWS][MAP_COLS];
-	t_sprite		sprite[SPRITE_COUNT];
+	t_sprite		sprites[SPRITE_COUNT];
+	t_texture		textures[TEXTURE_COUNT];
 	t_dir			dir;
 	t_sizedata		size;
 	uint32_t		*colorBuffer;
-	t_texture		texture[TEXTURE_COUNT];
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
 	t_playerdata	player;
@@ -184,6 +185,7 @@ float	ft_normalize_angle(float angle);
 float	ft_normalize_angle2(float angle);
 float	ft_sprite_arctan(t_data *data, int i);
 float	ft_distance(t_coord coord_a, t_coord coord_b);
+void	ft_reset_array(int *array, int i);
 // MINIMAP DRAWING FUNCTIONS
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
@@ -208,8 +210,8 @@ void	ft_gen_3d_proj(t_data *data);
 // SPRITE FUNCTIONS
 int		ft_find_sprite(t_data *data);
 void	ft_sort_sprites(t_data *data);
-void	ft_draw_sprite(t_data *data);
 void	ft_update_sprite(t_data *data);
+void	ft_draw_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
 void	ft_sprites_update(t_data *data);
 
