@@ -36,12 +36,18 @@ void renderSpriteProjection(void) {
         // if sprite angle is less than half the FOV plus a small error margin
         if (angleSpritePlayer < (FOV_ANGLE / 2)) {
             sprites[i].visible = true;
+            sprites[i].angle = angleSpritePlayer;
+            sprites[i].distance = distanceBetweenPoints(sprites[i].x, sprites[i].y, player.x, player.y);
             visibleSprites[numVisibleSprites] = sprites[i];
             numVisibleSprites++;
         } else {
             sprites[i].visible = false;
         }
     }
-    // draw the projected sprites
+    
+    // rendering all visible sprites
+    for (int i = 0; i < numVisibleSprites; i++) {
+        // draw the pixels of the sprite in the correct position in the screen
+    }
 }
 

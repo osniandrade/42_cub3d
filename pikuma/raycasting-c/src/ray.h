@@ -6,6 +6,7 @@
 #include "defs.h"
 #include "graphics.h"
 #include "player.h"
+#include "utils.h"
 
 typedef struct {
     float rayAngle;
@@ -18,8 +19,6 @@ typedef struct {
 
 extern rays_t rays[NUM_RAYS];
 
-void normalizeAngle(float *angle);
-float distanceBetweenPoints(float x1, float y1, float x2, float y2);
 void castRay(float rayAngle, int stripId);
 void castAllRays(void);
 void renderMapRays(void);
