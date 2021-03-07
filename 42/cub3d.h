@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 11:42:29 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/07 10:15:34 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,8 +166,8 @@ void	ft_load_xpm_sprite(t_data *data);
 int		ft_loadmap(t_data *data);
 // MAIN LOOP
 void	ft_setup(t_data *data, int argc, char **argv);
-int		ft_draw(t_data *data);
 int		ft_update(t_data *data);
+int		ft_draw(t_data *data);
 // FINISH PROGRAM
 void	ft_destroy_images(t_data *data);
 void	ft_destroy(t_data *data);

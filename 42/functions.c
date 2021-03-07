@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/06 13:13:36 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/07 10:20:24 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	ft_init_player(t_data *data)
 	data->player.playerspr.pos.y = (data->size.h / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI / 2;
+	data->player.rotationAngle = PI; // / 2;
 	data->player.walkSpeed = INIT_WALKSPD;
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
@@ -237,6 +237,19 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_test_init_sprite(data);
 }
 
+// moves the image in the window
+int		ft_update(t_data *data)
+{
+	ft_clear_colorbuffer(data, 0);
+	ft_reset_array(data->visible_sprites, SPRITE_COUNT);
+	ft_update_sprite(data);
+	ft_player_direction(data);
+	ft_cast_all_rays(data);
+	ft_move_player(data);
+	ft_gen_3d_proj(data);
+	return (TRUE);
+}
+
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
@@ -249,19 +262,6 @@ int		ft_draw(t_data *data)
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
-
-// moves the image in the window
-int		ft_update(t_data *data)
-{
-	ft_clear_colorbuffer(data, 0);
-	ft_update_sprite(data);
-	ft_player_direction(data);
-	ft_cast_all_rays(data);
-	ft_move_player(data);
-	ft_gen_3d_proj(data);
-	return (TRUE);
-}
-
 
 /*******************************************************************************
  * FINISH PROGRAM
@@ -485,9 +485,9 @@ float	ft_distance(t_coord coord_a, t_coord coord_b)
 // resets every position in the array to 0
 void	ft_reset_array(int *array, int i)
 {
-	while(i != 0)
+	while(i >= 0)
 	{
-		array[i--] = 0;
+		array[i--] = 99999;
 	}
 }
 
@@ -950,8 +950,8 @@ void	ft_draw_sprite(t_data *data)
 	{
 		if (i == data->visible_sprites[j])
 		{
-			sprite_h = (data->tile.size.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
-			sprite_w = (data->tile.size.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
+			sprite_h = (data->sprites[i].texture.size.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
+			sprite_w = (data->sprites[i].texture.size.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
 			spr_top_y = (data->size.h / 2) - (sprite_h / 2);
 			spr_top_y = (spr_top_y < 0) ? 0 : spr_top_y;
 			spr_bottom_y = (data->size.h / 2) + (sprite_h / 2);
@@ -978,7 +978,6 @@ void	ft_draw_sprite(t_data *data)
 		}
 		i++;
 	}
-	ft_reset_array(data->visible_sprites, SPRITE_COUNT);
 }
 
 // calculates each sprite distance from player
