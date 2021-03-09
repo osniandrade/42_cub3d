@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/09 19:39:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:15:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -929,67 +929,63 @@ void	ft_update_sprite(t_data *data)
 	}
 }
 
+// calculates the initial values of the sprite projection
+void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i)
+{
+	sprite->texsize = data->sprites[i].texture.size;
+	sprite->h = (sprite->texsize.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
+	sprite->w = (sprite->texsize.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
+	sprite->top_y = (data->size.h / 2) - (sprite->h / 2);
+	sprite->top_y = (sprite->top_y < 0) ? 0 : sprite->top_y;
+	sprite->btm_y = (data->size.h / 2) + (sprite->h / 2);
+	sprite->btm_y = (sprite->btm_y > data->size.h) ? data->size.h : sprite->btm_y;
+	sprite->angle = ft_sprite_arctan(data, i) - data->player.rotationAngle;
+	sprite->scr_x = tan(sprite->angle) * DIST_PROJ_PLANE;
+	sprite->left_x = (data->size.w / 2) + sprite->scr_x - (sprite->w / 2);
+	sprite->right_x = sprite->left_x + sprite->w;
+	sprite->x = sprite->left_x;
+}
+
+// calculates the sprite projection and prints it on screen
+void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
+{
+	while (sprite->x < sprite->right_x)
+	{
+		sprite->texel_w = (sprite->texsize.w / sprite->w);
+		sprite->x_ofst = (sprite->x - sprite->left_x) * sprite->texel_w;
+		sprite->y = sprite->top_y;
+		while (sprite->y < sprite->btm_y)
+		{
+			if (!(ft_invalid_screen_area(data, (float)sprite->x, (float)sprite->y)))
+			{
+				sprite->dist_top = sprite->y + (sprite->h / 2) - (data->size.h / 2);
+				sprite->y_ofst = sprite->dist_top * (sprite->texsize.h / sprite->h);
+				sprite->buff = (uint32_t*)data->sprites[i].texture.buffer;
+				sprite->color = sprite->buff[(sprite->texsize.w * sprite->y_ofst) + sprite->x_ofst];
+				if (sprite->color != data->sprites[i].texture.buffer[0])
+					ft_print_pixel(data, sprite->x, sprite->y, sprite->color);
+			}
+			sprite->y++;
+		}
+		sprite->x++;
+	}
+}
+
 // calculates sprite size and position on screen
 void	ft_draw_sprite(t_data *data)
 {
 	int i;
 	int j;
-	int x;
-	int y;
-	int tex_offset_x;
-	int tex_offset_y;
-	int dist_from_top;
-	uint32_t *spr_tex_buf;
-	uint32_t texel_color;
-	float sprite_h;
-	float sprite_w;
-	float spr_top_y;
-	float spr_bottom_y;
-	float sprite_angle;
-	float spr_scr_pos_x;
-	float spr_left_x;
-	float spr_right_x;
-	float texel_w;
-
+	t_sprproj	sprite;
+	
 	i = 0;
 	j = 0;
 	while (i < SPRITE_COUNT)
 	{
 		if (i == data->visible_sprites[j])
 		{
-			sprite_h = (data->sprites[i].texture.size.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
-			sprite_w = (data->sprites[i].texture.size.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
-			spr_top_y = (data->size.h / 2) - (sprite_h / 2);
-			spr_top_y = (spr_top_y < 0) ? 0 : spr_top_y;
-			spr_bottom_y = (data->size.h / 2) + (sprite_h / 2);
-			spr_bottom_y = (spr_bottom_y > data->size.h) ? data->size.h : spr_bottom_y;
-			sprite_angle = ft_sprite_arctan(data, i) - data->player.rotationAngle;
-			spr_scr_pos_x = tan(sprite_angle) * DIST_PROJ_PLANE;
-			spr_left_x = (data->size.w / 2) + spr_scr_pos_x - (sprite_w / 2);
-			spr_right_x = spr_left_x + sprite_w;
-			x = spr_left_x;
-			while (x < spr_right_x)
-			{
-				texel_w = (data->sprites[i].texture.size.w / sprite_w);
-				tex_offset_x = (x - spr_left_x) * texel_w;
-				y = spr_top_y;
-				while (y < spr_bottom_y)
-				{
-					if (!(ft_invalid_screen_area(data, (float)x, (float)y)))
-					{
-						dist_from_top = y + (sprite_h / 2) - (data->size.h / 2);
-						tex_offset_y = dist_from_top * (data->sprites[i].texture.size.h / sprite_h);
-
-						spr_tex_buf = (uint32_t*)data->sprites[i].texture.buffer;
-						texel_color = spr_tex_buf[(data->sprites[i].texture.size.w * tex_offset_y) + tex_offset_x];
-
-						if (texel_color != data->sprites[i].texture.buffer[0])
-							ft_print_pixel(data, x, y, texel_color);
-					}
-					y++;
-				}
-				x++;
-			}
+			ft_set_sprite(data, &sprite, i);
+			ft_sprite_projection(data, &sprite, i);
 			j++;
 		}
 		i++;
@@ -1011,7 +1007,7 @@ void	ft_sprite_dist(t_data *data)
 // handles sprites
 void	ft_sprites_update(t_data *data)
 {
-	ft_sprite_dist(data);
-	ft_sort_sprites(data);
-	ft_draw_sprite(data);
+	// ft_sprite_dist(data);
+	// ft_sort_sprites(data);
+	// ft_draw_sprite(data);
 }

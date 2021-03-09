@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/07 10:15:34 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:06:14 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,27 @@ typedef struct	s_3dproj
 	float			proj_wall_h;	// heigth of the pojected wall in pixels
 }					t_3dproj;
 
+typedef struct	s_sprproj
+{
+	int				x;
+	int				y;
+	int				x_ofst;
+	int				y_ofst;
+	int				dist_top;
+	float			h;
+	float			w;
+	float			top_y;
+	float			btm_y;
+	float			angle;
+	float			scr_x;
+	float			left_x;
+	float			right_x;
+	float			texel_w;
+	uint32_t		*buff;
+	uint32_t		color;
+	t_sizedata		texsize;
+}					t_sprproj;
+
 // INITIALIZATION
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
@@ -211,6 +232,8 @@ void	ft_gen_3d_proj(t_data *data);
 int		ft_find_sprite(t_data *data);
 void	ft_sort_sprites(t_data *data);
 void	ft_update_sprite(t_data *data);
+void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i);
+void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i);
 void	ft_draw_sprite(t_data *data);
 void	ft_sprite_dist(t_data *data);
 void	ft_sprites_update(t_data *data);
