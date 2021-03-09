@@ -1,9 +1,11 @@
 #include "sprite.h"
 
-#define NUM_SPRITES 1
+#define NUM_SPRITES 3
 
 static sprite_t sprites[NUM_SPRITES] = {
-    {.x = 640, .y = 630, .texture = 9}  // barrel
+    {.x = 640, .y = 630, .texture = 9}, // barrel
+    {.x = 350, .y = 600, .texture = 11},// table
+    {.x = 300, .y = 400, .texture = 12} // guard
 };
 
 void renderMapSprites(void){
@@ -34,7 +36,8 @@ void renderSpriteProjection(void) {
         angleSpritePlayer = fabs(angleSpritePlayer);
 
         // if sprite angle is less than half the FOV plus a small error margin
-        if (angleSpritePlayer < (FOV_ANGLE / 2)) {
+        const float EPSILON = 0.2;
+        if (angleSpritePlayer < (FOV_ANGLE / 2) + EPSILON) {
             sprites[i].visible = true;
             sprites[i].angle = angleSpritePlayer;
             sprites[i].distance = distanceBetweenPoints(sprites[i].x, sprites[i].y, player.x, player.y);
@@ -66,16 +69,31 @@ void renderSpriteProjection(void) {
         float spriteScreenPosX = tan(spriteAngle) * DIST_PROJ_PLANE;
 
         // SpriteLeftX
-        float spriteLeftX = (WINDOW_WIDTH / 2) + spriteScreenPosX;
+        float spriteLeftX = (WINDOW_WIDTH / 2) + spriteScreenPosX - (spriteWidth / 2);
 
         // SpriteRightX
         float spriteRightX = spriteLeftX + spriteWidth;
 
+        // query width and heigth of texture
+        int textureWidth = upng_get_width(textures[sprite.texture]);
+        int textureHeight = upng_get_height(textures[sprite.texture]);
+
         // Loop all the x and y values
         for (int x = spriteLeftX; x < spriteRightX; x++) {
+            float texelWidth = (textureWidth / spriteWidth);
+            int textureOffsetX = (x - spriteLeftX) * texelWidth;
+            
             for (int y = spriteTopY; y < spriteBottomY; y++) {
                 if (x > 0 && x < WINDOW_WIDTH && y > 0 && y < WINDOW_HEIGHT) {
-                    drawPixel(x, y, 0xFFFF0000);
+                    int distanceFromTop = y + (spriteHeight / 2) - (WINDOW_HEIGHT / 2);
+                    int textureOffsetY = distanceFromTop * (textureHeight / spriteHeight);
+
+                    color_t* spriteTextureBuffer = (color_t*)upng_get_buffer(textures[sprite.texture]);
+                    color_t texelColor = spriteTextureBuffer[(textureWidth * textureOffsetY) + textureOffsetX];
+
+                    if (texelColor != 0xFFFF00FF) {
+                        drawPixel(x, y, texelColor);
+                    }
                 }
             }
         }
