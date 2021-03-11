@@ -1,11 +1,13 @@
 #include "sprite.h"
 
-#define NUM_SPRITES 3
+#define NUM_SPRITES 5
 
 static sprite_t sprites[NUM_SPRITES] = {
     {.x = 640, .y = 630, .texture = 9}, // barrel
+    {.x = 660, .y = 690, .texture = 9}, // barrel
     {.x = 350, .y = 600, .texture = 11},// table
-    {.x = 300, .y = 400, .texture = 12} // guard
+    {.x = 300, .y = 400, .texture = 12}, // guard
+    {.x = 900, .y = 100, .texture = 13} // armor
 };
 
 void renderMapSprites(void){
@@ -48,12 +50,26 @@ void renderSpriteProjection(void) {
         }
     }
     
+    // sort sprites by distance
+    for (int i = 0; i < numVisibleSprites - 1; i++) {
+        for (int j = i + 1; j < numVisibleSprites; j++) {
+            if (visibleSprites[i].distance < visibleSprites[j].distance) {
+                sprite_t temp = visibleSprites[i];
+                visibleSprites[i] = visibleSprites[j];
+                visibleSprites[j] = temp;
+            }
+        }
+    }
+
     // rendering all visible sprites
     for (int i = 0; i < numVisibleSprites; i++) {
         sprite_t sprite = visibleSprites[i];
 
+        // calculate the perpendicular distance of the sprite do avoid fisheye distortion
+        float perpDistance = sprite.distance * cos(sprite.angle);
+
         // Calculate the sprite projected height (sprites are squared)
-        float spriteHeight = (TILE_SIZE / sprite.distance) * DIST_PROJ_PLANE;
+        float spriteHeight = (TILE_SIZE / perpDistance) * DIST_PROJ_PLANE;
         float spriteWidth = spriteHeight;
 
         // sprite top Y
@@ -91,7 +107,7 @@ void renderSpriteProjection(void) {
                     color_t* spriteTextureBuffer = (color_t*)upng_get_buffer(textures[sprite.texture]);
                     color_t texelColor = spriteTextureBuffer[(textureWidth * textureOffsetY) + textureOffsetX];
 
-                    if (texelColor != 0xFFFF00FF) {
+                    if (sprite.distance < rays[x].distance &&  texelColor != 0xFFFF00FF) {
                         drawPixel(x, y, texelColor);
                     }
                 }

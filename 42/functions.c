@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/09 20:15:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/10 21:36:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int map[MAP_ROWS][MAP_COLS] = {
     {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+    {1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -54,9 +54,9 @@ static char* sprpath[SPRITE_COUNT] = {
 int		ft_init_win(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->size.w = SCREENW;
-	data->size.h = SCREENH;
-	data->mlx_win = mlx_new_window(data->mlx, data->size.w, data->size.h, "A MAZE IN");
+	data->screensize.w = SCREENW;
+	data->screensize.h = SCREENH;
+	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
 
@@ -65,7 +65,7 @@ void	ft_init_img(t_data *data)
 {
 	t_img	imagem;
 
-	imagem.img = mlx_new_image(data->mlx, data->size.w, data->size.h);
+	imagem.img = mlx_new_image(data->mlx, data->screensize.w, data->screensize.h);
 	imagem.addr = mlx_get_data_addr(imagem.img, &imagem.bits_per_pixel, 
 									&imagem.line_length, &imagem.endian);
 	imagem.pos.x = 0;
@@ -75,11 +75,18 @@ void	ft_init_img(t_data *data)
 	data->tile = imagem;
 }
 
+// initializes the map size
+void	ft_init_map_size(t_data *data)
+{
+	data->mapsize.h = MAP_ROWS;
+	data->mapsize.w = MAP_COLS;
+}
+
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.pos.x = (data->size.w / 2);
-	data->player.playerspr.pos.y = (data->size.h / 2);
+	data->player.playerspr.pos.x = (data->screensize.w / 2);
+	data->player.playerspr.pos.y = (data->screensize.h / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
 	data->player.rotationAngle = PI; // / 2;
@@ -116,8 +123,8 @@ int		ft_clear_colorbuffer(t_data *data, int init)
 	int i = 0;
 
 	if(init == 1)
-		data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)data->size.w * (uint32_t)data->size.h);
-	while(i < data->size.w * data->size.h)
+		data->colorBuffer = (uint32_t*) malloc(sizeof(uint32_t) * (uint32_t)data->screensize.w * (uint32_t)data->screensize.h);
+	while(i < data->screensize.w * data->screensize.h)
 	{
 		data->colorBuffer[i++] = ft_crt_trgb(255, 0, 0, 0);
 	}
@@ -200,10 +207,11 @@ int		ft_loadmap(t_data *data)
 	int i = 0;
 	int j = 0;
 
-	while (i < MAP_ROWS)
+	ft_init_map_size(data);
+	while (i < data->mapsize.h)
 	{
 		j = 0;
-		while (j < MAP_COLS)
+		while (j < data->mapsize.w)
 		{
 			data->maptable[i][j] = map[i][j];
 			j++;
@@ -231,10 +239,8 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_xpm_texture(data);
 	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
-	ft_find_sprite(data);
 	ft_init_player(data);
-	// TESTING
-	ft_test_init_sprite(data);
+	ft_find_sprite(data);
 }
 
 // moves the image in the window
@@ -342,7 +348,7 @@ void	ft_print_pixel(t_data *data, int x, int y, int color)
 	x = round(x);
 	y = round(y);
 
-	if (y <= data->size.h && x <= data->size.w && x > 0 && y > 0)
+	if (y <= data->screensize.h && x <= data->screensize.w && x > 0 && y > 0)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
 		*(unsigned int *)dst = color;
@@ -409,7 +415,7 @@ void	ft_update_colorbuffer(t_data *data, t_coord pos, int color)
 
 	x = floor(pos.x);
 	y = floor(pos.y);
-	data->colorBuffer[(data->size.w * y) + x] = color;
+	data->colorBuffer[(data->screensize.w * y) + x] = color;
 }
 
 // renders the color buffer and fills it with color in parameter
@@ -419,12 +425,12 @@ int		ft_print_colorbuffer(t_data *data)
 	int y;
 
 	x = 0;
-	while (x < data->size.w)
+	while (x < data->screensize.w)
 	{
 		y = 0;
-		while (y < data->size.h)
+		while (y < data->screensize.h)
 		{
-			ft_print_pixel(data, x, y, data->colorBuffer[(data->size.w * y) + x]);
+			ft_print_pixel(data, x, y, data->colorBuffer[(data->screensize.w * y) + x]);
 			y++;
 		}
 		x++;
@@ -504,9 +510,9 @@ int		ft_render_map(t_data *data)
 	int i = 0;
 	int j = 0;
 
-	while (i < MAP_ROWS)
+	while (i < data->mapsize.h)
 	{
-		while (j < MAP_COLS)
+		while (j < data->mapsize.w)
 		{
 			data->tile.pos.x = (j * data->tile.size.w);
 			data->tile.pos.y = (i * data->tile.size.w);
@@ -575,7 +581,7 @@ int		ft_render_minimap_sprite(t_data *data)
 // checks if image is in drawable area, uses "step" as increment
 int		ft_invalid_screen_area(t_data *data, float x, float y)
 {
-	if (x < 0 || x > data->size.w || y < 0  || y > data->size.h)
+	if (x < 0 || x > data->screensize.w || y < 0  || y > data->screensize.h)
 		return (TRUE);
 	else
 		return (FALSE);
@@ -656,7 +662,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 {
 	int		mapcontent;
 
-	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->size.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->size.h)
+	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->screensize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->screensize.h)
 	{
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
@@ -803,9 +809,9 @@ int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
 		textOffsetX = (int)data->rays[projection->i].wallhit.x % data->tile.size.w;
 	while (projection->y < projection->column_bottom)
 	{
-		distanceFromTop = (projection->y + (projection->strip_h / 2) - (data->size.h / 2));
+		distanceFromTop = (projection->y + (projection->strip_h / 2) - (data->screensize.h / 2));
 		textOffsetY = distanceFromTop * ((float)data->textures[tex_ind].size.h / projection->strip_h);
-		data->colorBuffer[(data->size.w * projection->y) + projection->i] = (uint32_t)data->textures[tex_ind].buffer[(data->textures[tex_ind].size.w * textOffsetY) + textOffsetX];
+		data->colorBuffer[(data->screensize.w * projection->y) + projection->i] = (uint32_t)data->textures[tex_ind].buffer[(data->textures[tex_ind].size.w * textOffsetY) + textOffsetX];
 		projection->y++;
 	}
 	return (TRUE);
@@ -823,12 +829,12 @@ void	ft_gen_3d_proj(t_data *data)
 		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
 		projection.proj_wall_h = (data->tile.size.w / projection.c_distance) * DIST_PROJ_PLANE;
 		projection.strip_h = (int)projection.proj_wall_h;
-		projection.column_top = (data->size.h / 2) - (floor(projection.proj_wall_h) / 2);
+		projection.column_top = (data->screensize.h / 2) - (floor(projection.proj_wall_h) / 2);
 		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
-		projection.column_bottom = (data->size.h / 2) + (projection.proj_wall_h / 2);
-		projection.column_bottom = projection.column_bottom > data->size.h ? data->size.h : projection.column_bottom;
+		projection.column_bottom = (data->screensize.h / 2) + (projection.proj_wall_h / 2);
+		projection.column_bottom = projection.column_bottom > data->screensize.h ? data->screensize.h : projection.column_bottom;
 		while (projection.y < projection.column_top)
-			data->colorBuffer[(data->size.w * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
+			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
 		
 		if (data->rays[projection.i].verticalhit)
 			if (data->rays[projection.i].face.l)
@@ -841,8 +847,8 @@ void	ft_gen_3d_proj(t_data *data)
 			else
 				ft_project_texture(data, &projection, 3);
 
-		while (projection.y < data->size.h)
-			data->colorBuffer[(data->size.w * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
+		while (projection.y < data->screensize.h)
+			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
 		projection.i++;
 	}
 }
@@ -850,56 +856,6 @@ void	ft_gen_3d_proj(t_data *data)
 /*******************************************************************************
  * SPRITE FUNCTIONS
  *******************************************************************************/
-
-// finds the sprite on the map
-int		ft_find_sprite(t_data *data)
-{
-	// int x = 0;
-	// int y;
-	// int i = 0;
-
-	// while (i < SPRITE_COUNT)
-	// {
-	// 	while (x < MAP_COLS)
-	// 	{
-	// 		y = 0;
-	// 		while (y < MAP_ROWS)
-	// 		{
-	// 			if (map[x][y] == 2)
-	// 			{
-	// 				data->sprite[i].pos.x = x * data->tile.size.w;
-	// 				data->sprite[i].pos.y = y * data->tile.size.w;
-	// 				return (TRUE);
-	// 			}
-	// 			y++;
-	// 		}
-	// 		x++;
-	// 	}
-	// 	i++;
-	// }
-	// return (FALSE);
-}
-
-// sorts sprites order by distance from player
-void	ft_sort_sprites(t_data *data)
-{
-	// t_sprite	temp;
-	// int			i;
-
-	// i = SPRITE_COUNT - 1;
-	// while (i > 0)
-	// {
-	// 	if (data->sprite[i].distance > data->sprite[i - 1].distance)
-	// 	{
-	// 		temp = data->sprite[i];
-	// 		data->sprite[i] = data->sprite[i - 1];
-	// 		data->sprite[i - 1] = temp;
-	// 		i = SPRITE_COUNT - 1;
-	// 	}
-	// 	else
-	// 		i--;
-	// }
-}
 
 // draws the sprite on screen
 void	ft_update_sprite(t_data *data)
@@ -935,13 +891,13 @@ void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i)
 	sprite->texsize = data->sprites[i].texture.size;
 	sprite->h = (sprite->texsize.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
 	sprite->w = (sprite->texsize.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
-	sprite->top_y = (data->size.h / 2) - (sprite->h / 2);
+	sprite->top_y = (data->screensize.h / 2) - (sprite->h / 2);
 	sprite->top_y = (sprite->top_y < 0) ? 0 : sprite->top_y;
-	sprite->btm_y = (data->size.h / 2) + (sprite->h / 2);
-	sprite->btm_y = (sprite->btm_y > data->size.h) ? data->size.h : sprite->btm_y;
+	sprite->btm_y = (data->screensize.h / 2) + (sprite->h / 2);
+	sprite->btm_y = (sprite->btm_y > data->screensize.h) ? data->screensize.h : sprite->btm_y;
 	sprite->angle = ft_sprite_arctan(data, i) - data->player.rotationAngle;
 	sprite->scr_x = tan(sprite->angle) * DIST_PROJ_PLANE;
-	sprite->left_x = (data->size.w / 2) + sprite->scr_x - (sprite->w / 2);
+	sprite->left_x = (data->screensize.w / 2) + sprite->scr_x - (sprite->w / 2);
 	sprite->right_x = sprite->left_x + sprite->w;
 	sprite->x = sprite->left_x;
 }
@@ -958,12 +914,13 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
 		{
 			if (!(ft_invalid_screen_area(data, (float)sprite->x, (float)sprite->y)))
 			{
-				sprite->dist_top = sprite->y + (sprite->h / 2) - (data->size.h / 2);
+				sprite->dist_top = sprite->y + (sprite->h / 2) - (data->screensize.h / 2);
 				sprite->y_ofst = sprite->dist_top * (sprite->texsize.h / sprite->h);
 				sprite->buff = (uint32_t*)data->sprites[i].texture.buffer;
 				sprite->color = sprite->buff[(sprite->texsize.w * sprite->y_ofst) + sprite->x_ofst];
 				if (sprite->color != data->sprites[i].texture.buffer[0])
-					ft_print_pixel(data, sprite->x, sprite->y, sprite->color);
+					if (data->sprites[i].distance < data->rays[sprite->x].distance)
+						ft_print_pixel(data, sprite->x, sprite->y, sprite->color);
 			}
 			sprite->y++;
 		}
@@ -992,22 +949,31 @@ void	ft_draw_sprite(t_data *data)
 	}
 }
 
-// calculates each sprite distance from player
-void	ft_sprite_dist(t_data *data)
+// finds the sprite on the map
+int		ft_find_sprite(t_data *data)
 {
-	// int i = 0;
-	
-	// while (i < SPRITE_COUNT)
-	// {
-	// 	data->sprite[i].distance = ft_distance(data->player.playerspr.pos, data->sprite[i].pos);
-	// 	i++;
-	// }
-}
+	int x = 0;
+	int y;
+	int i = 0;
 
-// handles sprites
-void	ft_sprites_update(t_data *data)
-{
-	// ft_sprite_dist(data);
-	// ft_sort_sprites(data);
-	// ft_draw_sprite(data);
+	while (i < SPRITE_COUNT)
+	{
+		while (x < data->mapsize.h)
+		{
+			y = 0;
+			while (y < data->mapsize.w)
+			{
+				if (data->maptable[y][x] == 2)
+				{
+					data->sprites[i].pos.x = x * data->tile.size.h;
+					data->sprites[i].pos.y = y * data->tile.size.w;
+					return (TRUE);
+				}
+				y++;
+			}
+			x++;
+		}
+		i++;
+	}
+	return (FALSE);
 }

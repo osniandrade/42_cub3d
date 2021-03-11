@@ -6,6 +6,7 @@
 #include "textures.h"
 #include "defs.h"
 #include "utils.h"
+#include "ray.h"
 
 typedef struct {
     float x;

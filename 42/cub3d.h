@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/09 20:06:14 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/10 21:29:53 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ typedef struct	s_data
 	t_sprite		sprites[SPRITE_COUNT];
 	t_texture		textures[TEXTURE_COUNT];
 	t_dir			dir;
-	t_sizedata		size;
+	t_sizedata		screensize;
+	t_sizedata		mapsize;
 	uint32_t		*colorBuffer;
 	t_img			tile;
 	t_rays			rays[NUM_RAYS];
@@ -176,6 +177,7 @@ typedef struct	s_sprproj
 // INITIALIZATION
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
+void	ft_init_map_size(t_data *data);
 void	ft_init_player(t_data *data);
 int		ft_init_sprite_struct(t_data *data);
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
@@ -229,14 +231,11 @@ int		ft_cast_all_rays(t_data *data);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
 void	ft_gen_3d_proj(t_data *data);
 // SPRITE FUNCTIONS
-int		ft_find_sprite(t_data *data);
-void	ft_sort_sprites(t_data *data);
 void	ft_update_sprite(t_data *data);
 void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i);
 void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i);
 void	ft_draw_sprite(t_data *data);
-void	ft_sprite_dist(t_data *data);
-void	ft_sprites_update(t_data *data);
+int		ft_find_sprite(t_data *data);
 
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
