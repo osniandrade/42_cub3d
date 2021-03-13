@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/10 21:29:53 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/13 15:46:38 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,12 +125,21 @@ typedef struct s_rays
 	t_img	rayspr;			// ray sprite info (for minimap)
 }			t_rays;
 
-typedef struct	s_data
+typedef struct		s_filedata
+{
+	char			*tex_path[TEXTURE_COUNT];
+	char			*spr_path[SPRITE_COUNT];
+	int				*map;
+	t_sizedata		scrsize;
+	t_sizedata		mapsize;
+}					t_filedata;
+typedef struct		s_data
 {
 	void			*mlx;
 	void			*mlx_win;
 	int				visible_sprites[SPRITE_COUNT];
-	int				maptable[MAP_ROWS][MAP_COLS];
+	int				*maptable;
+	t_filedata		cub;
 	t_sprite		sprites[SPRITE_COUNT];
 	t_texture		textures[TEXTURE_COUNT];
 	t_dir			dir;
@@ -174,6 +183,8 @@ typedef struct	s_sprproj
 	t_sizedata		texsize;
 }					t_sprproj;
 
+// FILE DATA FUNCTIONS
+void	ft_load_cub_file(t_data *data);
 // INITIALIZATION
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
@@ -237,6 +248,7 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i);
 void	ft_draw_sprite(t_data *data);
 int		ft_find_sprite(t_data *data);
 
+// HELPER
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
 uint32_t		ft_get_r(int trgb);
@@ -245,5 +257,6 @@ uint32_t		ft_get_b(int trgb);
 int		ft_mapstats(int *map);
 int		ft_maparray(int argc, char **argv);
 
+// TESTING
 int		ft_test_init_sprite(t_data *data);
-
+void	ft_t_printmap(t_data *data);

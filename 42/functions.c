@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/10 21:36:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/13 16:23:10 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@
  *******************************************************************************/
 
 // map matrix (TEMPORARY)
-int map[MAP_ROWS][MAP_COLS] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+int map[MAP_ROWS * MAP_COLS] = {
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
 
 // textures paths (TEMPORARY)
@@ -47,6 +47,27 @@ static char* sprpath[SPRITE_COUNT] = {
 };
 
 /*******************************************************************************
+ * FILE DATA FUNCTIONS
+ *******************************************************************************/
+
+void	ft_load_cub_file(t_data *data)
+{
+	t_filedata	cubfile;
+
+	cubfile.tex_path[0] = "./img/stonewall.xpm";
+	cubfile.tex_path[1] = "./img/moldystonewall.xpm";
+	cubfile.tex_path[2] = "./img/labwall.xpm";
+	cubfile.tex_path[3] = "./img/bunkerwall.xpm";
+	cubfile.spr_path[0] = "./img/armor.xpm";
+	cubfile.scrsize.w = 1280;
+	cubfile.scrsize.h = 960;
+	cubfile.mapsize.w = 20;
+	cubfile.mapsize.h = 13;
+	cubfile.map = map;
+	data->cub = cubfile;
+}
+
+/*******************************************************************************
  * INITIALIZATION
  *******************************************************************************/
 
@@ -54,8 +75,8 @@ static char* sprpath[SPRITE_COUNT] = {
 int		ft_init_win(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->screensize.w = SCREENW;
-	data->screensize.h = SCREENH;
+	data->screensize.w = data->cub.scrsize.w;
+	data->screensize.h = data->cub.scrsize.h;
 	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
@@ -78,8 +99,9 @@ void	ft_init_img(t_data *data)
 // initializes the map size
 void	ft_init_map_size(t_data *data)
 {
-	data->mapsize.h = MAP_ROWS;
-	data->mapsize.w = MAP_COLS;
+	data->mapsize.h = data->cub.mapsize.h;
+	data->mapsize.w = data->cub.mapsize.w;
+	data->maptable = malloc(data->mapsize.w * data->mapsize.h * sizeof(int));
 }
 
 // initializes player data
@@ -89,7 +111,7 @@ void	ft_init_player(t_data *data)
 	data->player.playerspr.pos.y = (data->screensize.h / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI; // / 2;
+	data->player.rotationAngle = PI / 2;
 	data->player.walkSpeed = INIT_WALKSPD;
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }
@@ -142,13 +164,13 @@ void	ft_load_file_paths(t_data *data)
 
 	while (i < TEXTURE_COUNT)
 	{
-		data->textures[i].path = texpath[i];
+		data->textures[i].path = data->cub.tex_path[i];
 		i++;
 	}
 	i = 0;
 	while (i < SPRITE_COUNT)
 	{
-		data->sprites[i].texture.path = sprpath[i];
+		data->sprites[i].texture.path = data->cub.spr_path[i];
 		i++;
 	}
 }
@@ -204,24 +226,22 @@ void	ft_load_xpm_sprite(t_data *data)
 // loads map into data structure
 int		ft_loadmap(t_data *data)
 {
-	int i = 0;
-	int j = 0;
+	int x = 0;
+	int y = 0;
 
 	ft_init_map_size(data);
-	while (i < data->mapsize.h)
+	while (y < data->mapsize.h)
 	{
-		j = 0;
-		while (j < data->mapsize.w)
+		x = 0;
+		while (x < data->mapsize.w)
 		{
-			data->maptable[i][j] = map[i][j];
-			j++;
+			data->maptable[(data->mapsize.w * y) + x] = data->cub.map[(data->cub.mapsize.w * y) + x];  // what the fuck
+			x++;
 		}
-		i++;
+		y++;
 	}
-	// data->maptable = &map;
 	return (TRUE);
 }
-
 
 /*******************************************************************************
  * MAIN LOOP
@@ -231,6 +251,7 @@ int		ft_loadmap(t_data *data)
 void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
+	ft_load_cub_file(data);
 	ft_init_win(data);
 	ft_clear_colorbuffer(data, 1);
 	ft_init_img(data);
@@ -239,6 +260,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_xpm_texture(data);
 	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
+	ft_t_printmap(data);
 	ft_init_player(data);
 	ft_find_sprite(data);
 }
@@ -296,6 +318,7 @@ void	ft_destroy_images(t_data *data)
 void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
+	free(data->maptable);
 	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
@@ -516,7 +539,7 @@ int		ft_render_map(t_data *data)
 		{
 			data->tile.pos.x = (j * data->tile.size.w);
 			data->tile.pos.y = (i * data->tile.size.w);
-			tileColor = (data->maptable[i][j] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
+			tileColor = (data->maptable[(data->mapsize.w * i) + j] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
 			ft_draw_rect(data, data->tile.pos, data->tile.size, tileColor, 1);
 			j++;
 		}
@@ -593,7 +616,7 @@ int		ft_invalid_map_position(t_data *data, float x, float y)
 	int mapgridx = floor(x / data->tile.size.w);
 	int mapgridy = floor(y / data->tile.size.w);
 	
-	if (data->maptable[mapgridy][mapgridx] != 0)
+	if (data->maptable[(data->mapsize.w * mapgridy) + mapgridx] != 0)
 		return (TRUE);
 	else
 		return (FALSE);
@@ -661,6 +684,8 @@ int		ft_player_direction(t_data *data)
 int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
 {
 	int		mapcontent;
+	int		corr_x;
+	int		corr_y;
 
 	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->screensize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->screensize.h)
 	{
@@ -670,7 +695,9 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.x += (raytemp->face.l ? -1 : 0);
 		else
 			toCheck.y += (raytemp->face.u ? -1 : 0);
-		mapcontent = data->maptable[(int)floor(toCheck.y / data->tile.size.w)][(int)floor(toCheck.x / data->tile.size.w)];
+		corr_x = (int)floor(toCheck.x / data->tile.size.w);
+		corr_y = (int)floor(toCheck.y / data->tile.size.w);
+		mapcontent = data->maptable[(corr_y * data->mapsize.w) + corr_x];
 		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
@@ -963,7 +990,7 @@ int		ft_find_sprite(t_data *data)
 			y = 0;
 			while (y < data->mapsize.w)
 			{
-				if (data->maptable[y][x] == 2)
+				if (data->maptable[(data->mapsize.w * y) + x] == 2)
 				{
 					data->sprites[i].pos.x = x * data->tile.size.h;
 					data->sprites[i].pos.y = y * data->tile.size.w;
