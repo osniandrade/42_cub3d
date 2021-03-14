@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/02/18 16:17:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 08:50:41 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		main(int argc, char **argv)
 {
 	t_data	data;
 	
+	ft_load_cub_file(&data, argc, argv);
 	ft_setup(&data, argc, argv);
 	mlx_hook(data.mlx_win, KEYPRESS, 1L<<0, ft_key_press, &data);
 	mlx_hook(data.mlx_win, KEYRELEASE, 1L<<1, ft_key_release, &data);

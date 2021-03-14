@@ -1,10 +1,10 @@
-R 1280 960
-NO ./img/bunkerwall.xpm
-SO ./img/labwall.xpm
-WE ./img/moldystonewall.xpm
-EA ./img/stonewall.xpm
+   R 1280 960
+NO  ./img/bunkerwall.xpm
+ SO ./img/labwall.xpm     
+WE ./img/moldystonewall.xpm             
+           EA ./img/stonewall.xpm
 
-S ./
+S          ./img/armor.xpm
 
 11111111111111111111
 10000000000000000001
@@ -19,3 +19,4 @@ S ./
 10000100000000000011
 10000100000000000111
 11111111111111111111
+

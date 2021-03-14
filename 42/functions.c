@@ -6,66 +6,11 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/13 16:23:10 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 08:48:47 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-/*******************************************************************************
- * TEMPORARY
- *******************************************************************************/
-
-// map matrix (TEMPORARY)
-int map[MAP_ROWS * MAP_COLS] = {
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-};
-
-// textures paths (TEMPORARY)
-static char* texpath[TEXTURE_COUNT] = {
-	"./img/stonewall.xpm",
-	"./img/moldystonewall.xpm",
-	"./img/labwall.xpm",
-	"./img/bunkerwall.xpm"
-};
-
-// sprites paths (TEMPORARY)
-static char* sprpath[SPRITE_COUNT] = {
-	"./img/armor.xpm"
-};
-
-/*******************************************************************************
- * FILE DATA FUNCTIONS
- *******************************************************************************/
-
-void	ft_load_cub_file(t_data *data)
-{
-	t_filedata	cubfile;
-
-	cubfile.tex_path[0] = "./img/stonewall.xpm";
-	cubfile.tex_path[1] = "./img/moldystonewall.xpm";
-	cubfile.tex_path[2] = "./img/labwall.xpm";
-	cubfile.tex_path[3] = "./img/bunkerwall.xpm";
-	cubfile.spr_path[0] = "./img/armor.xpm";
-	cubfile.scrsize.w = 1280;
-	cubfile.scrsize.h = 960;
-	cubfile.mapsize.w = 20;
-	cubfile.mapsize.h = 13;
-	cubfile.map = map;
-	data->cub = cubfile;
-}
 
 /*******************************************************************************
  * INITIALIZATION
@@ -251,7 +196,6 @@ int		ft_loadmap(t_data *data)
 void	ft_setup(t_data *data, int argc, char **argv)
 {
 	//ft_maparray(argc, argv);  // reads the map into the main struct
-	ft_load_cub_file(data);
 	ft_init_win(data);
 	ft_clear_colorbuffer(data, 1);
 	ft_init_img(data);
@@ -260,7 +204,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_xpm_texture(data);
 	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
-	ft_t_printmap(data);
+	//ft_t_printmap(data);
 	ft_init_player(data);
 	ft_find_sprite(data);
 }
@@ -283,10 +227,10 @@ int		ft_draw(t_data *data)
 {
 	ft_print_colorbuffer(data);
 	ft_draw_sprite(data);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_minimap_sprite(data);
-	ft_render_player(data);
+	//ft_render_map(data);
+	//ft_render_ray(data);
+	//ft_render_minimap_sprite(data);
+	//ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }

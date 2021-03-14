@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_lini.c                                    :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocarlos- <ocarlos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 12:07:56 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/04/25 11:00:38 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 10:59:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ char		*ft_getst(char *s)
 		s++;
 	if (*s != '\0')
 		s++;
-	str = ft_strdup(s);
+	str = ft_gnl_strdup(s);
 	return (str);
 }
 
 t_lndata	ft_mainloop(t_lndata ln)
 {
-	while ((ft_strchr(ln.s)) != 1 && ln.ret != 0)
+	while ((ft_gnl_strchr(ln.s)) != 1 && ln.ret != 0)
 	{
 		if ((ln.ret = read(ln.fd, ln.buf, BUFFER_SIZE)) == -1)
 		{
@@ -63,7 +63,7 @@ t_lndata	ft_mainloop(t_lndata ln)
 			return (ln);
 		}
 		ln.buf[ln.ret] = '\0';
-		ln.s = ft_strjoin(ln.s, ln.buf);
+		ln.s = ft_gnl_strjoin(ln.s, ln.buf);
 	}
 	free(ln.buf);
 	return (ln);

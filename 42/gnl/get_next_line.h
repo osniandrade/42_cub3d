@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 16:51:46 by ocarlos-          #+#    #+#             */
-/*   Updated: 2020/12/02 14:51:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 11:00:17 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ typedef struct	s_lndata
 	char	*buf;
 	char	*s;
 }				t_lndata;
-char			*ft_strjoin(char *s1, char *s2);
-size_t			ft_strlen(const char *s);
-int				ft_strchr(char *s);
-char			*ft_strdup(char *s1);
+char			*ft_gnl_strjoin(char *s1, char *s2);
+size_t			ft_gnl_strlen(const char *s);
+int				ft_gnl_strchr(char *s);
+char			*ft_gnl_strdup(char *s1);
 int				get_next_line(int fd, char **line);
 char			*ft_getln(char *s);
 char			*ft_getst(char *s);

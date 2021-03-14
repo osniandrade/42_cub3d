@@ -6,11 +6,9 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/13 15:46:38 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 11:33:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <math.h>
 
 #define TRUE			1
 #define FALSE			0
@@ -46,12 +44,13 @@
 #define FOV				(60 * (PI / 180))
 #define DIST_PROJ_PLANE ((SCREENW / 2) / tan(FOV / 2))
 
-#include "minilibx/mlx.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdint.h>
+#include "minilibx/mlx.h"
+#include "gnl/get_next_line.h"
+
 #include <stdio.h>  // REMOVE LATER
-#include "get_next_line.h"
 
 typedef struct s_coord
 {
@@ -91,7 +90,6 @@ typedef struct s_texture
 	t_sizedata	size;
 	uint32_t*	buffer;
 }				t_texture;
-
 
 typedef struct s_sprite
 {
@@ -183,8 +181,12 @@ typedef struct	s_sprproj
 	t_sizedata		texsize;
 }					t_sprproj;
 
+// loadfile.c
 // FILE DATA FUNCTIONS
-void	ft_load_cub_file(t_data *data);
+int		ft_identify(t_data *data, char *line);
+void	ft_load_cub_file(t_data *data, int argc, char **argv);
+
+// functions.c
 // INITIALIZATION
 int		ft_init_win(t_data *data);
 void	ft_init_img(t_data *data);
@@ -248,15 +250,23 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i);
 void	ft_draw_sprite(t_data *data);
 int		ft_find_sprite(t_data *data);
 
+// helper.c
 // HELPER
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
 uint32_t		ft_get_r(int trgb);
 uint32_t		ft_get_g(int trgb);
 uint32_t		ft_get_b(int trgb);
-int		ft_mapstats(int *map);
-int		ft_maparray(int argc, char **argv);
+size_t			ft_strlen(const char *s);
+void			*ft_memcpy(void *dest, const void *src, size_t n);
+char			*ft_strdup(const char *s1);
+char			**ft_split(char const *s, char c);
+int				ft_isdigit(int c);
+static int		ft_tstspc(const char ch);
+int				ft_atoi(const char *str);
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
+// testing.c
 // TESTING
 int		ft_test_init_sprite(t_data *data);
 void	ft_t_printmap(t_data *data);
