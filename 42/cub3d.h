@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/14 11:33:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/14 12:36:24 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ typedef struct	s_sprproj
 
 // loadfile.c
 // FILE DATA FUNCTIONS
-int		ft_identify(t_data *data, char *line);
+int		ft_identify(t_filedata *cubfile, char *line);
 void	ft_load_cub_file(t_data *data, int argc, char **argv);
 
 // functions.c
