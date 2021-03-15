@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/14 11:33:11 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/15 14:55:33 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,5 +201,18 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n)
 		}
 		i++;
 	}
+	return (0);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	char			*sfer;
+
+	sfer = (char *)s;
+	while (*sfer != '\0')
+		if (*sfer++ == (char)c)
+			return (--sfer);
+	if ((c == '\0') && (*sfer == '\0'))
+		return (sfer);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/14 12:36:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/15 14:55:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,10 @@ typedef struct		s_filedata
 {
 	char			*tex_path[TEXTURE_COUNT];
 	char			*spr_path[SPRITE_COUNT];
+	int				argcount;
 	int				*map;
+	int				rgbup[3];
+	int				rgbdw[3];
 	t_sizedata		scrsize;
 	t_sizedata		mapsize;
 }					t_filedata;
@@ -137,6 +140,8 @@ typedef struct		s_data
 	void			*mlx_win;
 	int				visible_sprites[SPRITE_COUNT];
 	int				*maptable;
+	int				cei_color;
+	int				flo_color;
 	t_filedata		cub;
 	t_sprite		sprites[SPRITE_COUNT];
 	t_texture		textures[TEXTURE_COUNT];
@@ -183,7 +188,7 @@ typedef struct	s_sprproj
 
 // loadfile.c
 // FILE DATA FUNCTIONS
-int		ft_identify(t_filedata *cubfile, char *line);
+int		ft_id_n_load(t_filedata *cubfile, char *line);
 void	ft_load_cub_file(t_data *data, int argc, char **argv);
 
 // functions.c
@@ -200,6 +205,7 @@ void	ft_load_file_paths(t_data *data);
 void	ft_load_xpm_texture(t_data *data);
 void	ft_load_xpm_sprite(t_data *data);
 int		ft_loadmap(t_data *data);
+int		ft_loadcolors(t_data *data);
 // MAIN LOOP
 void	ft_setup(t_data *data, int argc, char **argv);
 int		ft_update(t_data *data);
@@ -265,6 +271,7 @@ int				ft_isdigit(int c);
 static int		ft_tstspc(const char ch);
 int				ft_atoi(const char *str);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
+char			*ft_strchr(const char *s, int c);
 
 // testing.c
 // TESTING

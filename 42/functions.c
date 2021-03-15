@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/14 08:48:47 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:15:48 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,24 @@ int		ft_loadmap(t_data *data)
 	return (TRUE);
 }
 
+// loads ceiling and floor colors to struct
+int		ft_loadcolors(t_data *data)
+{
+	data->flo_color = ft_crt_trgb(
+		255,
+		data->cub.rgbdw[0],
+		data->cub.rgbdw[1],
+		data->cub.rgbdw[2]
+	);
+	data->cei_color = ft_crt_trgb(
+		255,
+		data->cub.rgbup[0],
+		data->cub.rgbup[1],
+		data->cub.rgbup[2]
+	);
+	return (TRUE);
+}
+
 /*******************************************************************************
  * MAIN LOOP
  *******************************************************************************/
@@ -204,6 +222,7 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_xpm_texture(data);
 	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
+	ft_loadcolors(data);
 	//ft_t_printmap(data);
 	ft_init_player(data);
 	ft_find_sprite(data);
@@ -227,10 +246,10 @@ int		ft_draw(t_data *data)
 {
 	ft_print_colorbuffer(data);
 	ft_draw_sprite(data);
-	//ft_render_map(data);
-	//ft_render_ray(data);
-	//ft_render_minimap_sprite(data);
-	//ft_render_player(data);
+	ft_render_map(data);
+	ft_render_ray(data);
+	ft_render_minimap_sprite(data);
+	ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -263,6 +282,11 @@ void	ft_destroy(t_data *data)
 {
 	free(data->colorBuffer);
 	free(data->maptable);
+	free(data->cub.tex_path[0]);
+	free(data->cub.tex_path[1]);
+	free(data->cub.tex_path[2]);
+	free(data->cub.tex_path[3]);
+	free(data->cub.spr_path[0]);
 	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
@@ -632,6 +656,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 	int		corr_y;
 
 	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->screensize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->screensize.h)
+	//while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->mapsize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->mapsize.h)
 	{
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
@@ -641,6 +666,7 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.y += (raytemp->face.u ? -1 : 0);
 		corr_x = (int)floor(toCheck.x / data->tile.size.w);
 		corr_y = (int)floor(toCheck.y / data->tile.size.w);
+		//printf("%d, %d\n", corr_x, corr_y);
 		mapcontent = data->maptable[(corr_y * data->mapsize.w) + corr_x];
 		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
 		{
@@ -805,7 +831,7 @@ void	ft_gen_3d_proj(t_data *data)
 		projection.column_bottom = (data->screensize.h / 2) + (projection.proj_wall_h / 2);
 		projection.column_bottom = projection.column_bottom > data->screensize.h ? data->screensize.h : projection.column_bottom;
 		while (projection.y < projection.column_top)
-			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = ft_crt_trgb(255, 192, 192, 192);
+			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = data->cei_color;
 		
 		if (data->rays[projection.i].verticalhit)
 			if (data->rays[projection.i].face.l)
@@ -819,7 +845,7 @@ void	ft_gen_3d_proj(t_data *data)
 				ft_project_texture(data, &projection, 3);
 
 		while (projection.y < data->screensize.h)
-			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = ft_crt_trgb(255, 62, 64, 64);
+			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = data->flo_color;
 		projection.i++;
 	}
 }
@@ -923,26 +949,27 @@ void	ft_draw_sprite(t_data *data)
 // finds the sprite on the map
 int		ft_find_sprite(t_data *data)
 {
-	int x = 0;
-	int y;
+	int y = 0;
+	int x;
 	int i = 0;
 
 	while (i < SPRITE_COUNT)
 	{
-		while (x < data->mapsize.h)
+		while (y < data->mapsize.h)
 		{
-			y = 0;
-			while (y < data->mapsize.w)
+			x = 0;
+			while (x < data->mapsize.w)
 			{
 				if (data->maptable[(data->mapsize.w * y) + x] == 2)
 				{
 					data->sprites[i].pos.x = x * data->tile.size.h;
 					data->sprites[i].pos.y = y * data->tile.size.w;
+					
 					return (TRUE);
 				}
-				y++;
+				x++;
 			}
-			x++;
+			y++;
 		}
 		i++;
 	}
