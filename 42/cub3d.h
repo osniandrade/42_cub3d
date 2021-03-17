@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:27:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 12:01:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,28 @@ typedef struct	s_sprproj
 	t_sizedata		texsize;
 }					t_sprproj;
 
+typedef struct	s_count
+{
+	int	x;
+	int	y;
+	int	i;
+	int	j;
+}				t_count;
+
+typedef struct	s_drwline
+{
+	int			i_x;
+	int			i_y;
+	int			f_x;
+	int			f_y;
+	int			dx;
+	int			sx;
+	int			dy;
+	int			sy;
+	int			err;
+	int			e2;
+}				t_drwline;
+
 // loadfile.c
 // FILE DATA FUNCTIONS
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
@@ -196,6 +218,7 @@ void	ft_init_player(t_data *data);
 int		ft_init_sprite_struct(t_data *data);
 int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
 int		ft_clear_colorbuffer(t_data *data, int init);
+void	ft_init_drwstruct(t_drwline *c, t_coord *i_pos, t_coord *f_pos);
 // LOADING
 void	ft_load_file_paths(t_data *data);
 void	ft_load_xpm_texture(t_data *data);
@@ -203,7 +226,7 @@ void	ft_load_xpm_sprite(t_data *data);
 int		ft_loadmap(t_data *data);
 int		ft_loadcolors(t_data *data);
 // MAIN LOOP
-void	ft_setup(t_data *data, int argc, char **argv);
+void	ft_setup(t_data *data);
 int		ft_update(t_data *data);
 int		ft_draw(t_data *data);
 // FINISH PROGRAM
@@ -224,6 +247,7 @@ float	ft_normalize_angle2(float angle);
 float	ft_sprite_arctan(t_data *data, int i);
 float	ft_distance(t_coord coord_a, t_coord coord_b);
 void	ft_reset_array(int *array, int i);
+int		ft_pos(int w, int x, int y);
 // MINIMAP DRAWING FUNCTIONS
 int		ft_render_map(t_data *data);
 int		ft_render_player(t_data *data);
@@ -244,6 +268,7 @@ int		ft_fill_ray(t_data *data, t_rays *raytemp, int is_vert, int stripId);
 int		ft_cast_ray(t_data *data, float rayAngle, int stripId);
 int		ft_cast_all_rays(t_data *data);
 int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind);
+void	ft_walltext(t_data *data, t_3dproj *prj);
 void	ft_gen_3d_proj(t_data *data);
 // SPRITE FUNCTIONS
 void	ft_update_sprite(t_data *data);
@@ -251,6 +276,15 @@ void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i);
 void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i);
 void	ft_draw_sprite(t_data *data);
 int		ft_find_sprite(t_data *data);
+
+// loadfile.c
+// DATA LOADING FUNCTIONS
+int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
+int		ft_testmapchar(char *line);
+void	ft_getmapdata(t_filedata *cubfile, char *line, int fd);
+void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c);
+void	ft_processmap(t_filedata *cubfile, char *line, int fd);
+void	ft_load_cub_file(t_data *data, int argc, char **argv);
 
 // helper.c
 // HELPER

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:38:49 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 12:04:08 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,20 @@ int		ft_clear_colorbuffer(t_data *data, int init)
 	return (TRUE);
 }
 
+// inits ft_draw_line struct values
+void	ft_init_drwstruct(t_drwline *c, t_coord *i_pos, t_coord *f_pos)
+{
+	c->i_x = round(i_pos->x);
+	c->i_y = round(i_pos->y);
+	c->f_x = round(f_pos->x);
+	c->f_y = round(f_pos->y);	
+	c->dx = abs((int)c->f_x - (int)c->i_x);
+	c->sx = c->i_x < c->f_x ? 1 : -1;
+	c->dy = abs((int)c->f_y - (int)c->i_y);
+	c->sy = c->i_y < c->f_y ? 1 : -1;
+	c->err = (c->dx > c->dy ? c->dx : -c->dy) / 2;
+}
+
 /*******************************************************************************
  * LOADING
  *******************************************************************************/
@@ -180,19 +194,20 @@ void	ft_load_xpm_sprite(t_data *data)
 // loads map into data structure
 int		ft_loadmap(t_data *data)
 {
-	int x = 0;
-	int y = 0;
+	t_count c;
 
+	c = (t_count) {0};
 	ft_init_map_size(data);
-	while (y < data->mapsize.h)
+	c.i = data->mapsize.w;
+	while (c.y < data->mapsize.h)
 	{
-		x = 0;
-		while (x < data->mapsize.w)
+		while (c.x < data->mapsize.w)
 		{
-			data->maptable[(data->mapsize.w * y) + x] = data->cub.map[(data->cub.mapsize.w * y) + x];  // what the fuck
-			x++;
+			data->maptable[ft_pos(c.i, c.x, c.y)] = data->cub.map[ft_pos(c.i, c.x, c.y)];
+			c.x++;
 		}
-		y++;
+		c.x = 0;
+		c.y++;
 	}
 	return (TRUE);
 }
@@ -220,9 +235,8 @@ int		ft_loadcolors(t_data *data)
  *******************************************************************************/
 
 // initializes the setup for the main loop
-void	ft_setup(t_data *data, int argc, char **argv)
+void	ft_setup(t_data *data)
 {
-	//ft_maparray(argc, argv);  // reads the map into the main struct
 	ft_init_win(data);
 	ft_clear_colorbuffer(data, 1);
 	ft_init_img(data);
@@ -232,7 +246,6 @@ void	ft_setup(t_data *data, int argc, char **argv)
 	ft_load_xpm_sprite(data);
 	ft_loadmap(data);
 	ft_loadcolors(data);
-	//ft_t_printmap(data);
 	ft_init_player(data);
 	ft_find_sprite(data);
 }
@@ -297,6 +310,7 @@ void	ft_destroy(t_data *data)
 	free(data->cub.tex_path[3]);
 	free(data->cub.spr_path[0]);
 	free(data->cub.map);
+	free(data->rays);
 	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
@@ -346,9 +360,9 @@ int		ft_key_release(int keycode, t_data *data)
 void	ft_print_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
+	
 	x = round(x);
 	y = round(y);
-
 	if (y <= data->screensize.h && x <= data->screensize.w && x > 0 && y > 0)
 	{
 		dst = data->tile.addr + ((y * data->tile.line_length) + (x * (data->tile.bits_per_pixel / 8)));
@@ -359,33 +373,25 @@ void	ft_print_pixel(t_data *data, int x, int y, int color)
 // draws a line from i_pos to f_pos in color (Bresenham's algorithm)
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize)
 {
-	int i_x = round(i_pos.x);
-	int i_y = round(i_pos.y);
-	int f_x = round(f_pos.x);
-	int f_y = round(f_pos.y);	
-	int dx = abs((int)f_x - (int)i_x);
-	int sx = i_x < f_x ? 1 : -1;
-	int dy = abs((int)f_y - (int)i_y);
-	int sy = i_y < f_y ? 1 : -1;
-	int err = (dx > dy ? dx : -dy) / 2;
-	int e2;
-
-	while(!(i_x == f_x && i_y == f_y))
+	t_drwline	c;
+	
+	ft_init_drwstruct(&c, &i_pos, &f_pos);
+	while(!(c.i_x == c.f_x && c.i_y == c.f_y))
 	{
 		if (resize)
-			ft_print_pixel(data, i_x * MAP_SCALE, i_y * MAP_SCALE, color);
+			ft_print_pixel(data, c.i_x * MAP_SCALE, c.i_y * MAP_SCALE, color);
 		else
-			ft_print_pixel(data, i_x, i_y, color);
-		e2 = err;
-		if (e2 > -dx)
+			ft_print_pixel(data, c.i_x, c.i_y, color);
+		c.e2 = c.err;
+		if (c.e2 > -c.dx)
 		{
-			err -= dy;
-			i_x += sx;
+			c.err -= c.dy;
+			c.i_x += c.sx;
 		}
-		if (e2 < dy)
+		if (c.e2 < c.dy)
 		{
-			err += dx;
-			i_y += sy;
+			c.err += c.dx;
+			c.i_y += c.sy;
 		}
 	}
 	return (TRUE);
@@ -394,47 +400,49 @@ int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int res
 // draws a rectangle with defined height, width and color
 int		ft_draw_rect(t_data *data, t_coord pos, t_sizedata size, int color, int resize)
 {
-	t_coord	i_pos, f_pos;
+	t_coord	i_pos;
+	t_coord f_pos;
 
-		i_pos.x = pos.x;
-		i_pos.y = pos.y;
-		f_pos.x = pos.x + size.w;
-		f_pos.y = pos.y;
-		while (i_pos.y <= pos.y + size.h)
-		{
-			ft_draw_line(data, i_pos, f_pos, color, resize);
-			i_pos.y++;
-			f_pos.y++;
-		}
+	i_pos.x = pos.x;
+	i_pos.y = pos.y;
+	f_pos.x = pos.x + size.w;
+	f_pos.y = pos.y;
+	while (i_pos.y <= pos.y + size.h)
+	{
+		ft_draw_line(data, i_pos, f_pos, color, resize);
+		i_pos.y++;
+		f_pos.y++;
+	}
 	return (TRUE);
 }
 
 // changes a pixel color in the colorbuffer
 void	ft_update_colorbuffer(t_data *data, t_coord pos, int color)
 {
-	int x, y;
+	t_count c;
 
-	x = floor(pos.x);
-	y = floor(pos.y);
-	data->colorBuffer[(data->screensize.w * y) + x] = color;
+	c.x = floor(pos.x);
+	c.y = floor(pos.y);
+	c.i = data->screensize.w;
+	data->colorBuffer[ft_pos(c.i, c.x, c.y)] = color;
 }
 
 // renders the color buffer and fills it with color in parameter
 int		ft_print_colorbuffer(t_data *data)
 {
-	int x;
-	int y;
+	t_count c;
 
-	x = 0;
-	while (x < data->screensize.w)
+	c.x = 0;
+	c.i = data->screensize.w;
+	while (c.x < data->screensize.w)
 	{
-		y = 0;
-		while (y < data->screensize.h)
+		c.y = 0;
+		while (c.y < data->screensize.h)
 		{
-			ft_print_pixel(data, x, y, data->colorBuffer[(data->screensize.w * y) + x]);
-			y++;
+			ft_print_pixel(data, c.x, c.y, data->colorBuffer[ft_pos(c.i, c.x, c.y)]);
+			c.y++;
 		}
-		x++;
+		c.x++;
 	}
 	return (TRUE);
 }
@@ -472,8 +480,6 @@ float	ft_sprite_arctan(t_data *data, int i)
 	t_sizedata	sprsize = data->sprites[i].texture.size;
 	
 	return atan2(
-		//sprite.y - player.y,
-		//sprite.x - player.x
 		(sprite.y + (sprsize.h / 2)) - player.y,
 		(sprite.x + (sprsize.w / 2)) - player.x
 	);
@@ -500,6 +506,12 @@ void	ft_reset_array(int *array, int i)
 	}
 }
 
+// converts x and y pos to 2d array position
+int		ft_pos(int w, int x, int y)
+{
+	return ((w * y) + x);
+}
+
 /*******************************************************************************
  * MINIMAP DRAWING FUNCTIONS
  *******************************************************************************/
@@ -507,22 +519,23 @@ void	ft_reset_array(int *array, int i)
 // renders map
 int		ft_render_map(t_data *data)
 {
+	t_count c;
 	int tileColor;
-	int i = 0;
-	int j = 0;
 
-	while (i < data->mapsize.h)
+	c = (t_count) {0};
+	c.i = data->mapsize.w;
+	while (c.y < data->mapsize.h)
 	{
-		while (j < data->mapsize.w)
+		while (c.x < data->mapsize.w)
 		{
-			data->tile.pos.x = (j * data->tile.size.w);
-			data->tile.pos.y = (i * data->tile.size.w);
-			tileColor = (data->maptable[(data->mapsize.w * i) + j] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
+			data->tile.pos.x = (c.x * data->tile.size.w);
+			data->tile.pos.y = (c.y * data->tile.size.w);
+			tileColor = (data->maptable[ft_pos(c.i, c.x, c.y)] == 1) ? ft_crt_trgb(0,255,255,255) : 0;
 			ft_draw_rect(data, data->tile.pos, data->tile.size, tileColor, 1);
-			j++;
+			c.x++;
 		}
-		j = 0;
-		i++;
+		c.x = 0;
+		c.y++;
 	}
 	return (TRUE);
 }
@@ -591,10 +604,12 @@ int		ft_invalid_screen_area(t_data *data, float x, float y)
 // checks if screen position is valid
 int		ft_invalid_map_position(t_data *data, float x, float y)
 {
-	int mapgridx = floor(x / data->tile.size.w);
-	int mapgridy = floor(y / data->tile.size.w);
-	
-	if (data->maptable[(data->mapsize.w * mapgridy) + mapgridx] != 0)
+	t_count c;
+
+	c.x = floor(x / data->tile.size.w);
+	c.y = floor(y / data->tile.size.w);
+	c.i = data->mapsize.w;
+	if (data->maptable[ft_pos(c.i, c.x, c.y)] != 0)
 		return (TRUE);
 	else
 		return (FALSE);
@@ -620,22 +635,21 @@ int		ft_invalid_area(t_data *data, float x, float y)
 int		ft_move_player(t_data *data)
 {
 	float	movestep;
-	float	newPlayerX;
-	float	newPlayerY;
 	float	playerCos;
 	float	playerSin;
+	t_coord	newplayer;
 
 	data->player.rotationAngle += data->player.turnDirection * data->player.turnSpeed;
 	data->player.rotationAngle = ft_normalize_angle(data->player.rotationAngle);
 	movestep = data->player.walkDirection * data->player.walkSpeed;
 	playerCos = cos(data->player.rotationAngle) * movestep;
 	playerSin = sin(data->player.rotationAngle) * movestep;
-	newPlayerX = data->player.playerspr.pos.x + playerCos;
-	newPlayerY = data->player.playerspr.pos.y + playerSin;
-	if (!(ft_invalid_area(data, newPlayerX, newPlayerY)))
+	newplayer.x = data->player.playerspr.pos.x + playerCos;
+	newplayer.y = data->player.playerspr.pos.y + playerSin;
+	if (!(ft_invalid_area(data, newplayer.x, newplayer.y)))
 	{
-		data->player.playerspr.pos.x = newPlayerX;
-		data->player.playerspr.pos.y = newPlayerY;
+		data->player.playerspr.pos.x = newplayer.x;
+		data->player.playerspr.pos.y = newplayer.y;
 	}
 	return (TRUE);
 }
@@ -662,9 +676,9 @@ int		ft_player_direction(t_data *data)
 int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
 {
 	int		mapcontent;
-	int		corr_x;
-	int		corr_y;
+	t_count	corr;
 
+	corr.i = data->mapsize.w;
 	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->screensize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->screensize.h)
 	//while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->mapsize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->mapsize.h)
 	{
@@ -674,10 +688,10 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.x += (raytemp->face.l ? -1 : 0);
 		else
 			toCheck.y += (raytemp->face.u ? -1 : 0);
-		corr_x = (int)floor(toCheck.x / data->tile.size.w);
-		corr_y = (int)floor(toCheck.y / data->tile.size.w);
+		corr.x = (int)floor(toCheck.x / data->tile.size.w);
+		corr.y = (int)floor(toCheck.y / data->tile.size.w);
 		//printf("%d, %d\n", corr_x, corr_y);
-		mapcontent = data->maptable[(corr_y * data->mapsize.w) + corr_x];
+		mapcontent = data->maptable[ft_pos(corr.i, corr.x, corr.y)];
 		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
@@ -704,12 +718,14 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
 {
 	t_coord	toCheck;
+	t_coord p_pos;
 
+	p_pos = data->player.playerspr.pos;
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-	intercept.y = floor(data->player.playerspr.pos.y / data->tile.size.w) * data->tile.size.w;
+	intercept.y = floor(p_pos.y / data->tile.size.w) * data->tile.size.w;
 	intercept.y += raytemp->face.d ? data->tile.size.w : 0;
-	intercept.x = data->player.playerspr.pos.x + (intercept.y - data->player.playerspr.pos.y) / tan(rayAngle);
+	intercept.x = p_pos.x + (intercept.y - p_pos.y) / tan(rayAngle);
 	step.y = data->tile.size.w;
 	step.y *= raytemp->face.u ? -1 : 1;
 	step.x = data->tile.size.w / tan(rayAngle);
@@ -725,12 +741,14 @@ int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord
 int		ft_v_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
 {
 	t_coord	toCheck;
+	t_coord p_pos;
 
+	p_pos = data->player.playerspr.pos;
 	raytemp->wallhit.x = 0;
 	raytemp->wallhit.y = 0;
-	intercept.x = floor(data->player.playerspr.pos.x / data->tile.size.w) * data->tile.size.w;
+	intercept.x = floor(p_pos.x / data->tile.size.w) * data->tile.size.w;
 	intercept.x += raytemp->face.r ? data->tile.size.w : 0;
-	intercept.y = data->player.playerspr.pos.y + (intercept.x - data->player.playerspr.pos.x) * tan(rayAngle);
+	intercept.y = p_pos.y + (intercept.x - p_pos.x) * tan(rayAngle);
 	step.x = data->tile.size.w;
 	step.x *= raytemp->face.l ? -1 : 1;
 	step.y = data->tile.size.w * tan(rayAngle);
@@ -768,16 +786,16 @@ int		ft_cast_ray(t_data *data, float rayAngle, int stripId)
 	t_rays	raytemp_v;
 	t_coord intercept;
 	t_coord step;
-	t_coord	distance;
+	t_coord	dist;
 
 	rayAngle = ft_normalize_angle(rayAngle);
 	ft_init_raytemp(&raytemp_h, rayAngle);
 	ft_init_raytemp(&raytemp_v, rayAngle);
 	ft_h_intersection(data, &raytemp_h, intercept, step, rayAngle);
 	ft_v_intersection(data, &raytemp_v, intercept, step, rayAngle);
-	distance.x = raytemp_h.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_h.wallhit) : __FLT_MAX__;
-	distance.y = raytemp_v.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_v.wallhit) : __FLT_MAX__;
-	if (distance.y < distance.x)
+	dist.x = raytemp_h.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_h.wallhit) : __FLT_MAX__;
+	dist.y = raytemp_v.foundwall ? ft_distance(data->player.playerspr.pos, raytemp_v.wallhit) : __FLT_MAX__;
+	if (dist.y < dist.x)
 		ft_fill_ray(data, &raytemp_v, 1, stripId);
 	else
 		ft_fill_ray(data, &raytemp_h, 0, stripId);
@@ -805,59 +823,64 @@ int		ft_cast_all_rays(t_data *data)
 }
 
 // projects the wall textures to each strip of each wall
-int		ft_project_texture(t_data *data, t_3dproj *projection, int tex_ind)
+int		ft_project_texture(t_data *data, t_3dproj *prj, int tex_ind)
 {
-	int		textOffsetY;
-	int		textOffsetX;
+	t_count	offset;
 	int		distanceFromTop;
 
-	if (data->rays[projection->i].verticalhit)
-		textOffsetX = (int)data->rays[projection->i].wallhit.y % data->tile.size.w;
+	offset.i = data->screensize.w;
+	offset.j = data->textures[tex_ind].size.w;
+	if (data->rays[prj->i].verticalhit)
+		offset.x = (int)data->rays[prj->i].wallhit.y % data->tile.size.w;
 	else
-		textOffsetX = (int)data->rays[projection->i].wallhit.x % data->tile.size.w;
-	while (projection->y < projection->column_bottom)
+		offset.x = (int)data->rays[prj->i].wallhit.x % data->tile.size.w;
+	while (prj->y < prj->column_bottom)
 	{
-		distanceFromTop = (projection->y + (projection->strip_h / 2) - (data->screensize.h / 2));
-		textOffsetY = distanceFromTop * ((float)data->textures[tex_ind].size.h / projection->strip_h);
-		data->colorBuffer[(data->screensize.w * projection->y) + projection->i] = (uint32_t)data->textures[tex_ind].buffer[(data->textures[tex_ind].size.w * textOffsetY) + textOffsetX];
-		projection->y++;
+		distanceFromTop = (prj->y + (prj->strip_h / 2) - (data->screensize.h / 2));
+		offset.y = distanceFromTop * ((float)data->textures[tex_ind].size.h / prj->strip_h);
+		data->colorBuffer[ft_pos(offset.i, prj->i, prj->y)] = (uint32_t)data->textures[tex_ind].buffer[ft_pos(offset.j, offset.x, offset.y)];
+		prj->y++;
 	}
 	return (TRUE);
+}
+
+// selects the wall texture based on facing direction
+void	ft_walltext(t_data *data, t_3dproj *prj)
+{
+	if (data->rays[prj->i].verticalhit)
+		if (data->rays[prj->i].face.l)
+			ft_project_texture(data, prj, 0);
+		else
+			ft_project_texture(data, prj, 1);
+	else
+		if (data->rays[prj->i].face.u)
+			ft_project_texture(data, prj, 2);
+		else
+			ft_project_texture(data, prj, 3);
 }
 
 // generates the 3D projection using raycasting
 void	ft_gen_3d_proj(t_data *data)
 {
-	t_3dproj	projection;
+	t_3dproj	prj;
 
-	projection.i = 0;
-	while (projection.i < data->num_rays)
+	prj.i = 0;
+	while (prj.i < data->num_rays)
 	{
-		projection.y = 0;
-		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
-		projection.proj_wall_h = (data->tile.size.w / projection.c_distance) * data->d_proj_plane;
-		projection.strip_h = (int)projection.proj_wall_h;
-		projection.column_top = (data->screensize.h / 2) - (floor(projection.proj_wall_h) / 2);
-		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
-		projection.column_bottom = (data->screensize.h / 2) + (projection.proj_wall_h / 2);
-		projection.column_bottom = projection.column_bottom > data->screensize.h ? data->screensize.h : projection.column_bottom;
-		while (projection.y < projection.column_top)
-			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = data->cei_color;
-		
-		if (data->rays[projection.i].verticalhit)
-			if (data->rays[projection.i].face.l)
-				ft_project_texture(data, &projection, 0);
-			else
-				ft_project_texture(data, &projection, 1);
-		else
-			if (data->rays[projection.i].face.u)
-				ft_project_texture(data, &projection, 2);
-			else
-				ft_project_texture(data, &projection, 3);
-
-		while (projection.y < data->screensize.h)
-			data->colorBuffer[(data->screensize.w * projection.y++) + projection.i] = data->flo_color;
-		projection.i++;
+		prj.y = 0;
+		prj.c_distance = data->rays[prj.i].distance * cos(data->rays[prj.i].angle - data->player.rotationAngle);
+		prj.proj_wall_h = (data->tile.size.w / prj.c_distance) * data->d_proj_plane;
+		prj.strip_h = (int)prj.proj_wall_h;
+		prj.column_top = (data->screensize.h / 2) - (floor(prj.proj_wall_h) / 2);
+		prj.column_top = prj.column_top < 0 ? 0 : prj.column_top;
+		prj.column_bottom = (data->screensize.h / 2) + (prj.proj_wall_h / 2);
+		prj.column_bottom = prj.column_bottom > data->screensize.h ? data->screensize.h : prj.column_bottom;
+		while (prj.y < prj.column_top)
+			data->colorBuffer[(data->screensize.w * prj.y++) + prj.i] = data->cei_color;
+		ft_walltext(data, &prj);
+		while (prj.y < data->screensize.h)
+			data->colorBuffer[ft_pos(data->screensize.w, prj.i, prj.y++)] = data->flo_color;
+		prj.i++;
 	}
 }
 
@@ -960,29 +983,29 @@ void	ft_draw_sprite(t_data *data)
 // finds the sprite on the map
 int		ft_find_sprite(t_data *data)
 {
-	int y = 0;
-	int x;
-	int i = 0;
+	t_count	c;
 
-	while (i < SPRITE_COUNT)
+	c = (t_count) {0};
+	c.j = data->mapsize.w;
+	while (c.i < SPRITE_COUNT)
 	{
-		while (y < data->mapsize.h)
+		while (c.y < data->mapsize.h)
 		{
-			x = 0;
-			while (x < data->mapsize.w)
+			c.x = 0;
+			while (c.x < data->mapsize.w)
 			{
-				if (data->maptable[(data->mapsize.w * y) + x] == 2)
+				if (data->maptable[ft_pos(c.j, c.x, c.y)] == 2)
 				{
-					data->sprites[i].pos.x = x * data->tile.size.h;
-					data->sprites[i].pos.y = y * data->tile.size.w;
+					data->sprites[c.i].pos.x = c.x * data->tile.size.h;
+					data->sprites[c.i].pos.y = c.y * data->tile.size.w;
 					
 					return (TRUE);
 				}
-				x++;
+				c.x++;
 			}
-			y++;
+			c.y++;
 		}
-		i++;
+		c.i++;
 	}
 	return (FALSE);
 }

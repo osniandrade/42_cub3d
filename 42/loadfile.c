@@ -6,14 +6,14 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:28:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 12:06:58 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 /*******************************************************************************
- * FILE DATA FUNCTIONS
+ * DATA LOADING FUNCTIONS
  *******************************************************************************/
 
 // identifies the type of data and load into defined fields
@@ -109,57 +109,50 @@ void	ft_getmapdata(t_filedata *cubfile, char *line, int fd)
 	}
 }
 
+// tests for the character and fills the struct array
+void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
+{
+	char temp;
+	
+	if (line[c->x])
+	{
+		if (line[c->x] == ' ')
+			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 1;
+		if (line[c->x] == 'N' || line[c->x] == 'S' || line[c->x] == 'W' || line[c->x] == 'E')
+		{
+			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 0;
+			cubfile->plrdir = line[c->x];
+		}
+		if (line[c->x] == '0' || line[c->x] == '1' || line[c->x] == '2')
+		{
+			temp = line[c->x];
+			cubfile->map[ft_pos(c->j, c->i, c->y)] = ft_atoi(&temp);
+		}
+		c->x++;
+	}
+	else
+		cubfile->map[ft_pos(c->j, c->i, c->y)] = 1;
+	c->i++;
+}
+
 // fills the map array with the .cub file info
 void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 {
-	int x = 0;
-	int y = 0;
-	int i = 0;
-	char temp;
-	
+	t_count c;
+
+	c = (t_count) {0};
+	c.j = cubfile->mapsize.w;
 	cubfile->map = malloc(sizeof(int) * cubfile->mapsize.h * cubfile->mapsize.w);
 	while (get_next_line(fd, &line))
 	{
 		if (ft_testmapchar(line))
 		{
-			while (i < cubfile->mapsize.w)
-			{
-				if (line[x])
-				{
-					if (line[x] == ' ')
-						cubfile->map[(cubfile->mapsize.w * y) + i] = 1;
-					if (line[x] == 'N' || line[x] == 'S' || line[x] == 'W' || line[x] == 'E')
-					{
-						cubfile->map[(cubfile->mapsize.w * y) + i] = 0;
-						cubfile->plrdir = line[x];
-					}
-					if (line[x] == '0' || line[x] == '1' || line[x] == '2')
-					{
-						temp = line[x];
-						cubfile->map[(cubfile->mapsize.w * y) + i] = ft_atoi(&temp);
-					}
-					x++;
-				}
-				else
-					cubfile->map[(cubfile->mapsize.w * y) + i] = 1;
-				i++;
-			}
-			i = 0;
-			x = 0;
-			y++;
+			while (c.i < cubfile->mapsize.w)
+				ft_mapfill(cubfile, line, &c);
+			c.i = 0;
+			c.x = 0;
+			c.y++;
 		}
-	}
-	y = 0;
-	while (y < cubfile->mapsize.h)
-	{
-		x = 0;
-		while (x < cubfile->mapsize.w)
-		{
-			printf("%d,",cubfile->map[(cubfile->mapsize.w * y) + x]);
-			x++;
-		}
-		printf("\n");
-		y++;
 	}
 }
 
@@ -175,16 +168,12 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	cubfile.argcount = 0;
 	cubfile.mapsize.h = 0;
 	cubfile.mapsize.w = 0;
-
 	ft_id_n_load(&cubfile, line, fd);
-
 	ft_getmapdata(&cubfile, line, fd);
-
+	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
-
 	ft_processmap(&cubfile, line, fd);
-
 	data->cub = cubfile;
 	close(fd);
 }
