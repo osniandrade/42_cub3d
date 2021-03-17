@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:25:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:27:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ typedef struct		s_filedata
 {
 	char			*tex_path[TEXTURE_COUNT];
 	char			*spr_path[SPRITE_COUNT];
+	char			plrdir;
 	int				argcount;
 	int				*map;
 	int				rgbup[3];

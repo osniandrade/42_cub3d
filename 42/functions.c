@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:19:49 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:38:49 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,14 @@ void	ft_init_player(t_data *data)
 	data->player.playerspr.pos.y = (data->screensize.h / 2);
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
-	data->player.rotationAngle = PI / 2;
+	if (data->cub.plrdir == 'N')
+		data->player.rotationAngle = PI * 1.5;
+	if (data->cub.plrdir == 'S')
+		data->player.rotationAngle = PI * 0.5;
+	if (data->cub.plrdir == 'E')
+		data->player.rotationAngle = PI * 2;
+	if (data->cub.plrdir == 'W')
+		data->player.rotationAngle = PI;
 	data->player.walkSpeed = INIT_WALKSPD;
 	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
 }

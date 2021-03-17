@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:24:47 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:28:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,10 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 					if (line[x] == ' ')
 						cubfile->map[(cubfile->mapsize.w * y) + i] = 1;
 					if (line[x] == 'N' || line[x] == 'S' || line[x] == 'W' || line[x] == 'E')
+					{
 						cubfile->map[(cubfile->mapsize.w * y) + i] = 0;
+						cubfile->plrdir = line[x];
+					}
 					if (line[x] == '0' || line[x] == '1' || line[x] == '2')
 					{
 						temp = line[x];
