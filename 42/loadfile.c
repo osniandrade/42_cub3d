@@ -6,11 +6,122 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 12:06:58 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 16:56:58 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+/*******************************************************************************
+ * EXIT FUNCTIONS
+ *******************************************************************************/
+
+// exits cleanly if error found in cub file
+int	ft_exit(t_filedata *cubfile, char **clean_line, int i)
+{
+	free(clean_line);
+	if (i == 0)
+		exit(0);
+	free(cubfile->tex_path[0]);
+	if (i == 1)
+		exit(0);
+	free(cubfile->tex_path[1]);
+	if (i == 2)
+		exit(0);
+	free(cubfile->tex_path[2]);
+	if (i == 3)
+		exit(0);
+	free(cubfile->tex_path[3]);
+	if (i == 4)
+		exit(0);
+	free(cubfile->spr_path[0]);
+	if (i == 5)
+		exit(0);
+	exit(0);
+}
+
+/*******************************************************************************
+ * DATA VALIDATION FUNCTIONS
+ *******************************************************************************/
+
+// checks if screen resolution is valid
+t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line)
+{
+	t_sizedata size;
+	int	ratio;
+
+	if (clean_line[1] == NULL || clean_line[2] == NULL)
+	{
+		printf("missing screen resolution data\n");
+		ft_exit(cubfile, clean_line, 0);
+	}
+	size.w = ft_atoi(clean_line[1]);
+	size.h = ft_atoi(clean_line[2]);
+	ratio = size.w / 4;
+	if (size.w % 4 != 0 || size.h % 4 != 0)
+	{
+		printf("invalid screen resolution\n");
+		ft_exit(cubfile, clean_line, 0);
+	}
+	if (size.w != ratio * 4 || size.h != ratio * 3)
+	{
+		printf("invalid screen ratio\n");
+		ft_exit(cubfile, clean_line, 0);
+	}
+	cubfile->argcount++;
+	return (size);
+}
+
+// checks if informed file extension is .xpm
+int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int i)
+{
+	int	ln;
+
+	ln = ft_strlen(clean_line[1]);
+	if (ln == 0)
+	{
+		printf("missing file path\n");
+		ft_exit(cubfile, clean_line, 0);
+	}
+	if (clean_line[1][ln - 3] != 'x' ||
+		clean_line[1][ln - 2] != 'p' ||
+		clean_line[1][ln - 1] != 'm')
+	{
+		printf("invalid file extension\n");
+		ft_exit(cubfile, clean_line, i);
+	}
+	cubfile->argcount++;
+	return (TRUE);
+}
+
+// checks if rgb values are valid
+void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i)
+{
+	char **rgb_line;
+	int j = 0;
+
+	rgb_line = ft_split(clean_line[1], ',');
+	if (rgb_line[0] == NULL || rgb_line[1] == NULL || rgb_line[2] == NULL)
+	{
+		printf("missing color value\n");
+		free(rgb_line);
+		ft_exit(cubfile, clean_line, i);
+	}
+	rgb[0] = ft_atoi(rgb_line[0]);
+	rgb[1] = ft_atoi(rgb_line[1]);
+	rgb[2] = ft_atoi(rgb_line[2]);
+	free(rgb_line);
+	while (j < 3)
+	{
+		if (rgb[j] < 0 || rgb[j] > 255)
+		{
+			printf("invalid color values\n");
+			ft_exit(cubfile, clean_line, i);
+		}
+		j++;
+	}
+	cubfile->argcount++;
+}
 
 /*******************************************************************************
  * DATA LOADING FUNCTIONS
@@ -28,52 +139,26 @@ int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 		if (clean_line[0] != NULL)
 		{
 			if (!ft_strncmp(clean_line[0], "R", 3))
-			{
-				cubfile->scrsize.w = ft_atoi(clean_line[1]);
-				cubfile->scrsize.h = ft_atoi(clean_line[2]);
-				cubfile->argcount++;
-			}
+				cubfile->scrsize = ft_ck_scrsize(cubfile, clean_line);
 			if (!ft_strncmp(clean_line[0], "NO", 3))
-			{
-				cubfile->tex_path[0] = ft_strdup(clean_line[1]);
-				cubfile->argcount++;
-			}
+				if (ft_ck_filetype(cubfile, clean_line, 0))
+					cubfile->tex_path[0] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "SO", 3))
-			{
-				cubfile->tex_path[1] = ft_strdup(clean_line[1]);
-				cubfile->argcount++;
-			}
+				if (ft_ck_filetype(cubfile, clean_line, 1))
+					cubfile->tex_path[1] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "WE", 3))
-			{
-				cubfile->tex_path[2] = ft_strdup(clean_line[1]);
-				cubfile->argcount++;
-			}
+				if (ft_ck_filetype(cubfile, clean_line, 2))
+					cubfile->tex_path[2] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "EA", 3))
-			{
-				cubfile->tex_path[3] = ft_strdup(clean_line[1]);
-				cubfile->argcount++;
-			}
+				if (ft_ck_filetype(cubfile, clean_line, 3))
+					cubfile->tex_path[3] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "S", 3))
-			{
-				cubfile->spr_path[0] = ft_strdup(clean_line[1]);
-				cubfile->argcount++;
-			}
+				if (ft_ck_filetype(cubfile, clean_line, 4))
+					cubfile->spr_path[0] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "F", 3))
-			{
-				rgb_line = ft_split(clean_line[1], ',');
-				cubfile->rgbdw[0] = ft_atoi(rgb_line[0]);
-				cubfile->rgbdw[1] = ft_atoi(rgb_line[1]);
-				cubfile->rgbdw[2] = ft_atoi(rgb_line[2]);
-				cubfile->argcount++;
-			}
+				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, 5);
 			if (!ft_strncmp(clean_line[0], "C", 3))
-			{
-				rgb_line = ft_split(clean_line[1], ',');
-				cubfile->rgbup[0] = ft_atoi(rgb_line[0]);
-				cubfile->rgbup[1] = ft_atoi(rgb_line[1]);
-				cubfile->rgbup[2] = ft_atoi(rgb_line[2]);
-				cubfile->argcount++;
-			}
+				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, 5);
 		}
 	}
 }
