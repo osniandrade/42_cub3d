@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/15 20:15:48 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:19:49 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int		ft_init_win(t_data *data)
 	data->mlx = mlx_init();
 	data->screensize.w = data->cub.scrsize.w;
 	data->screensize.h = data->cub.scrsize.h;
+	data->d_proj_plane = (data->screensize.w / 2) / tan(FOV / 2);
+	data->num_rays = data->screensize.w;
 	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
@@ -287,6 +289,7 @@ void	ft_destroy(t_data *data)
 	free(data->cub.tex_path[2]);
 	free(data->cub.tex_path[3]);
 	free(data->cub.spr_path[0]);
+	free(data->cub.map);
 	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
@@ -538,7 +541,7 @@ int		ft_render_ray(t_data *data)
 
 	ray = 0;
 	color = ft_crt_trgb(255, 0, 0, 255);
-	while (ray < NUM_RAYS)
+	while (ray < data->num_rays)
 	{
 		ft_draw_line(data, data->player.playerspr.pos, data->rays[ray].wallhit, color, 1);
 		ray += 50;
@@ -782,11 +785,12 @@ int		ft_cast_all_rays(t_data *data)
 	int		stripId;
 
 	stripId = 0;
-	rayAngle = data->player.rotationAngle + atan((stripId - (NUM_RAYS / 2)) / DIST_PROJ_PLANE);
-	while (stripId < NUM_RAYS)
+	data->rays = malloc(sizeof(t_rays) * data->num_rays);
+	rayAngle = data->player.rotationAngle + atan((stripId - (data->num_rays / 2)) / data->d_proj_plane);
+	while (stripId < data->num_rays)
 	{
 		ft_cast_ray(data, rayAngle, stripId);
-		rayAngle += FOV / NUM_RAYS;
+		rayAngle += FOV / data->num_rays;
 		rayAngle = ft_normalize_angle(rayAngle);
 		stripId++;
 	}
@@ -820,11 +824,11 @@ void	ft_gen_3d_proj(t_data *data)
 	t_3dproj	projection;
 
 	projection.i = 0;
-	while (projection.i < NUM_RAYS)
+	while (projection.i < data->num_rays)
 	{
 		projection.y = 0;
 		projection.c_distance = data->rays[projection.i].distance * cos(data->rays[projection.i].angle - data->player.rotationAngle);
-		projection.proj_wall_h = (data->tile.size.w / projection.c_distance) * DIST_PROJ_PLANE;
+		projection.proj_wall_h = (data->tile.size.w / projection.c_distance) * data->d_proj_plane;
 		projection.strip_h = (int)projection.proj_wall_h;
 		projection.column_top = (data->screensize.h / 2) - (floor(projection.proj_wall_h) / 2);
 		projection.column_top = projection.column_top < 0 ? 0 : projection.column_top;
@@ -886,14 +890,14 @@ void	ft_update_sprite(t_data *data)
 void	ft_set_sprite(t_data *data, t_sprproj *sprite, int i)
 {
 	sprite->texsize = data->sprites[i].texture.size;
-	sprite->h = (sprite->texsize.h / data->sprites[i].distance) * DIST_PROJ_PLANE;
-	sprite->w = (sprite->texsize.w / data->sprites[i].distance) * DIST_PROJ_PLANE;
+	sprite->h = (sprite->texsize.h / data->sprites[i].distance) * data->d_proj_plane;
+	sprite->w = (sprite->texsize.w / data->sprites[i].distance) * data->d_proj_plane;
 	sprite->top_y = (data->screensize.h / 2) - (sprite->h / 2);
 	sprite->top_y = (sprite->top_y < 0) ? 0 : sprite->top_y;
 	sprite->btm_y = (data->screensize.h / 2) + (sprite->h / 2);
 	sprite->btm_y = (sprite->btm_y > data->screensize.h) ? data->screensize.h : sprite->btm_y;
 	sprite->angle = ft_sprite_arctan(data, i) - data->player.rotationAngle;
-	sprite->scr_x = tan(sprite->angle) * DIST_PROJ_PLANE;
+	sprite->scr_x = tan(sprite->angle) * data->d_proj_plane;
 	sprite->left_x = (data->screensize.w / 2) + sprite->scr_x - (sprite->w / 2);
 	sprite->right_x = sprite->left_x + sprite->w;
 	sprite->x = sprite->left_x;

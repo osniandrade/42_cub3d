@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/15 14:55:33 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/16 19:56:03 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ int				ft_isdigit(int c)
 		return (0);
 }
 
-static int		ft_tstspc(const char ch)
+int		ft_tstspc(const char ch)
 {
 	if ((ch == ' ') || (ch == '\f') || (ch == '\n') ||
 		(ch == '\r') || (ch == '\t') || (ch == '\v'))
@@ -215,4 +215,12 @@ char	*ft_strchr(const char *s, int c)
 	if ((c == '\0') && (*sfer == '\0'))
 		return (sfer);
 	return (0);
+}
+
+int		ft_isascii(int c)
+{
+	if ((c >= 0) && (c <= 127))
+		return (1);
+	else
+		return (0);
 }

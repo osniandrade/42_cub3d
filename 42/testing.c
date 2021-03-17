@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/13 16:14:59 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:23:44 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 // gives sprite a fixed random position
 int		ft_test_init_sprite(t_data *data)
 {
-	data->sprites[0].pos.x = (SCREENH / 2) + 200;
-	data->sprites[0].pos.y = (SCREENW / 2);
+	data->sprites[0].pos.x = (data->screensize.h / 2) + 200;
+	data->sprites[0].pos.y = (data->screensize.w / 2);
 
 	return (TRUE);
 }
@@ -28,10 +28,10 @@ void	ft_t_printmap(t_data *data)
 	int x = 0;
 	int y = 0;
 
-	while (y < MAP_ROWS)
+	while (y < data->mapsize.h)
 	{
 		x = 0;
-		while (x < MAP_COLS)
+		while (x < data->mapsize.w)
 		{
 			printf("%d, ", data->maptable[(data->mapsize.w * y) + x]);
 			x++;

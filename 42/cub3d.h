@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/15 14:55:43 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/17 10:25:01 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,10 @@
 #define PI				3.14159265
 
 #define TILE_SIZE		64
-#define MAP_ROWS		13
-#define MAP_COLS		20
 #define MAP_SCALE		0.25  // only values lower than 1.0
 #define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
 
-#define SCREENW			(MAP_COLS * TILE_SIZE)
-#define SCREENH			(MAP_ROWS * TILE_SIZE)
-
-#define NUM_RAYS		SCREENW
 #define FOV				(60 * (PI / 180))
-#define DIST_PROJ_PLANE ((SCREENW / 2) / tan(FOV / 2))
 
 #include <stdlib.h>
 #include <math.h>
@@ -142,6 +135,8 @@ typedef struct		s_data
 	int				*maptable;
 	int				cei_color;
 	int				flo_color;
+	int				num_rays;
+	float			d_proj_plane;
 	t_filedata		cub;
 	t_sprite		sprites[SPRITE_COUNT];
 	t_texture		textures[TEXTURE_COUNT];
@@ -150,7 +145,7 @@ typedef struct		s_data
 	t_sizedata		mapsize;
 	uint32_t		*colorBuffer;
 	t_img			tile;
-	t_rays			rays[NUM_RAYS];
+	t_rays			*rays;
 	t_playerdata	player;
 }					t_data;
 
@@ -188,7 +183,7 @@ typedef struct	s_sprproj
 
 // loadfile.c
 // FILE DATA FUNCTIONS
-int		ft_id_n_load(t_filedata *cubfile, char *line);
+int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
 void	ft_load_cub_file(t_data *data, int argc, char **argv);
 
 // functions.c
@@ -268,10 +263,11 @@ void			*ft_memcpy(void *dest, const void *src, size_t n);
 char			*ft_strdup(const char *s1);
 char			**ft_split(char const *s, char c);
 int				ft_isdigit(int c);
-static int		ft_tstspc(const char ch);
+int				ft_tstspc(const char ch);
 int				ft_atoi(const char *str);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			*ft_strchr(const char *s, int c);
+int				ft_isascii(int c);
 
 // testing.c
 // TESTING
