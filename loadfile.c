@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/18 16:16:04 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/19 16:08:00 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, in
 
 // checks if map size ratio is valid
 // **************TEST FOR 2 OR MORE STARTING POSITIONS*****************
-int		ft_ck_mapratio(t_filedata *cubfile)
+int		ft_ck_mapdata(t_filedata *cubfile)
 {
 	t_sizedata	size;
 	int			ratio;
@@ -148,19 +148,11 @@ int		ft_ck_mapratio(t_filedata *cubfile)
 		printf("missing map size data\n");
 		ft_map_exit(cubfile);
 	}
-	ratio = (size.w * TILE_SIZE) / 4;
-	if ((size.h * TILE_SIZE) % 4 != 0 || 
-		(size.w * TILE_SIZE) % 4 != 0)
+	if (size.h <= 3 || size.w <= 3)
 	{
-		printf("invalid map size data\n");
+		printf("map is too small\n");
 		ft_map_exit(cubfile);
 	}
-	// if ((size.w * TILE_SIZE != ratio * 4) || 
-	// 	(size.h * TILE_SIZE != ratio * 3))
-	// {
-	// 	printf("invalid map size ratio\n");
-	// 	ft_map_exit(cubfile);
-	// }
 	return (TRUE);
 }
 
@@ -264,6 +256,7 @@ void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
 }
 
 // fills the map array with the .cub file info
+// **************CHECK LAST LINE LOADING*****************
 void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 {
 	t_count c;
@@ -316,7 +309,7 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	ft_id_n_load(&cubfile, line, fd);
 	ft_getmapdata(&cubfile, line, fd);
 	close(fd);
-	ft_ck_mapratio(&cubfile);
+	ft_ck_mapdata(&cubfile);
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
 	ft_processmap(&cubfile, line, fd);
