@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 17:45:28 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/18 16:16:04 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, in
 }
 
 // checks if map size ratio is valid
+// **************TEST FOR 2 OR MORE STARTING POSITIONS*****************
 int		ft_ck_mapratio(t_filedata *cubfile)
 {
 	t_sizedata	size;
@@ -247,7 +248,7 @@ void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
 		if (line[c->x] == 'N' || line[c->x] == 'S' || 
 			line[c->x] == 'W' || line[c->x] == 'E')
 		{
-			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 0;
+			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 99;
 			cubfile->plrdir = line[c->x];
 		}
 		if (line[c->x] == '0' || line[c->x] == '1' || line[c->x] == '2')
@@ -280,6 +281,23 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 			c.x = 0;
 			c.y++;
 		}
+	}
+	c.y = 0;
+	while (c.y < cubfile->mapsize.h)
+	{
+		c.x = 0;
+		while (c.x < cubfile->mapsize.w)
+		{
+			if (cubfile->map[ft_pos(c.j, c.x, c.y)] == 99)
+			{
+				cubfile->plrstart.x = c.x * TILE_SIZE;
+				cubfile->plrstart.y = c.y * TILE_SIZE;
+				cubfile->map[ft_pos(c.j, c.x, c.y)] = 0;
+				return;
+			}
+			c.x++;
+		}
+		c.y++;
 	}
 }
 

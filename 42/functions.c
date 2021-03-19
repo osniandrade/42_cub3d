@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 12:04:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/19 13:58:54 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	ft_init_map_size(t_data *data)
 // initializes player data
 void	ft_init_player(t_data *data)
 {
-	data->player.playerspr.pos.x = (data->screensize.w / 2);
-	data->player.playerspr.pos.y = (data->screensize.h / 2);
+	data->player.playerspr.pos.x = data->cub.plrstart.x;
+	data->player.playerspr.pos.y = data->cub.plrstart.y;
 	data->player.turnDirection = 0;
 	data->player.walkDirection = 0;
 	if (data->cub.plrdir == 'N')
@@ -268,10 +268,10 @@ int		ft_draw(t_data *data)
 {
 	ft_print_colorbuffer(data);
 	ft_draw_sprite(data);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_minimap_sprite(data);
-	ft_render_player(data);
+	//ft_render_map(data);
+	//ft_render_ray(data);
+	//ft_render_minimap_sprite(data);
+	//ft_render_player(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -620,7 +620,7 @@ int		ft_invalid_area(t_data *data, float x, float y)
 {
 	if (ft_invalid_screen_area(data, x, y))
 		return (TRUE);
-	if (ft_invalid_map_position(data, x, y))
+	if (ft_invalid_map_position(data, x / TILE_SIZE, y / TILE_SIZE))
 		return (TRUE);
 	else
 		return (FALSE);
@@ -646,7 +646,8 @@ int		ft_move_player(t_data *data)
 	playerSin = sin(data->player.rotationAngle) * movestep;
 	newplayer.x = data->player.playerspr.pos.x + playerCos;
 	newplayer.y = data->player.playerspr.pos.y + playerSin;
-	if (!(ft_invalid_area(data, newplayer.x, newplayer.y)))
+	//if (!(ft_map(data, newplayer.x, newplayer.y)))
+	if (!(ft_invalid_map_position(data, newplayer.x, newplayer.y)))
 	{
 		data->player.playerspr.pos.x = newplayer.x;
 		data->player.playerspr.pos.y = newplayer.y;
@@ -672,6 +673,10 @@ int		ft_player_direction(t_data *data)
 	return (TRUE);
 }
 
+/*******************************************************************************
+ * RAYCASTING FUNCTIONS
+ *******************************************************************************/
+
 // loops until a wall is found - 0 for horizontal check and 1 for vertical check
 int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, int is_vert)
 {
@@ -679,8 +684,10 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 	t_count	corr;
 
 	corr.i = data->mapsize.w;
-	while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->screensize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->screensize.h)
-	//while (raytemp->nextTouch.x >= 0 && raytemp->nextTouch.x <= data->mapsize.w && raytemp->nextTouch.y > 0 && raytemp->nextTouch.y <= data->mapsize.h)
+	while (raytemp->nextTouch.x >= 0 && 
+			abs(raytemp->nextTouch.x / data->tile.size.w) <= data->mapsize.w && 
+			raytemp->nextTouch.y > 0 && 
+			abs(raytemp->nextTouch.y / data->tile.size.w) <= data->mapsize.h)
 	{
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
@@ -690,9 +697,8 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.y += (raytemp->face.u ? -1 : 0);
 		corr.x = (int)floor(toCheck.x / data->tile.size.w);
 		corr.y = (int)floor(toCheck.y / data->tile.size.w);
-		//printf("%d, %d\n", corr_x, corr_y);
 		mapcontent = data->maptable[ft_pos(corr.i, corr.x, corr.y)];
-		if (ft_invalid_area(data, toCheck.x, toCheck.y) && (mapcontent == 1))
+		if (ft_invalid_map_position(data, corr.x, corr.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
 			raytemp->wallhit.y = raytemp->nextTouch.y;
@@ -709,10 +715,6 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 	return (TRUE);
 }
 
-
-/*******************************************************************************
- * RAYCASTING FUNCTIONS
- *******************************************************************************/
 
 // calculates horizontal ray intersection on the grid
 int		ft_h_intersection(t_data *data, t_rays *raytemp, t_coord intercept, t_coord step, float rayAngle)
@@ -837,6 +839,7 @@ int		ft_project_texture(t_data *data, t_3dproj *prj, int tex_ind)
 	while (prj->y < prj->column_bottom)
 	{
 		distanceFromTop = (prj->y + (prj->strip_h / 2) - (data->screensize.h / 2));
+		distanceFromTop = (distanceFromTop < 1) ? distanceFromTop * -1 : distanceFromTop;
 		offset.y = distanceFromTop * ((float)data->textures[tex_ind].size.h / prj->strip_h);
 		data->colorBuffer[ft_pos(offset.i, prj->i, prj->y)] = (uint32_t)data->textures[tex_ind].buffer[ft_pos(offset.j, offset.x, offset.y)];
 		prj->y++;

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 12:01:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/18 16:06:28 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ typedef struct		s_filedata
 	int				*map;
 	int				rgbup[3];
 	int				rgbdw[3];
+	t_coord			plrstart;
 	t_sizedata		scrsize;
 	t_sizedata		mapsize;
 }					t_filedata;
