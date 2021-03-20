@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 15:13:32 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 16:37:28 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,25 @@
  *******************************************************************************/
 
 // exits cleanly if error found in cub file
-void	ft_exit(t_filedata *cubfile, char **clean_line, int i, int fd)
+void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
 {
-	free(clean_line);
 	close(fd);
-	if (i == 0)
-		exit(0);
-	free(cubfile->tex_path[0]);
-	if (i == 1)
-		exit(0);
-	free(cubfile->tex_path[1]);
-	if (i == 2)
-		exit(0);
-	free(cubfile->tex_path[2]);
-	if (i == 3)
-		exit(0);
-	free(cubfile->tex_path[3]);
-	if (i == 4)
-		exit(0);
-	free(cubfile->spr_path[0]);
-	if (i == 5)
-		exit(0);
+	if (cubfile->tex_path[0] != NULL)
+		free(cubfile->tex_path[0]);
+	if (cubfile->tex_path[1] != NULL)
+		free(cubfile->tex_path[1]);
+	if (cubfile->tex_path[2] != NULL)
+		free(cubfile->tex_path[2]);
+	if (cubfile->tex_path[3] != NULL)
+		free(cubfile->tex_path[3]);
+	if (cubfile->spr_path[0] != NULL)
+		free(cubfile->spr_path[0]);
+	free(clean_line);
 	exit(0);
 }
 
 // exit function from map part of validation
-void	ft_map_exit(t_filedata *cubfile, int f)
+void	ft_ex_wrongmap(t_filedata *cubfile, int f)
 {
 	free(cubfile->tex_path[0]);
 	free(cubfile->tex_path[1]);
@@ -68,7 +61,7 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 	if (clean_line[1] == NULL || clean_line[2] == NULL)
 	{
 		printf("missing screen resolution data\n");
-		ft_exit(cubfile, clean_line, 0, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	size.w = ft_atoi(clean_line[1]);
 	size.h = ft_atoi(clean_line[2]);
@@ -76,19 +69,19 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 	if (size.w % 4 != 0 || size.h % 4 != 0)
 	{
 		printf("invalid screen resolution\n");
-		ft_exit(cubfile, clean_line, 0, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	if (size.w != ratio * 4 || size.h != ratio * 3)
 	{
 		printf("invalid screen ratio\n");
-		ft_exit(cubfile, clean_line, 0, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	cubfile->argcount++;
 	return (size);
 }
 
 // checks if informed file extension is .xpm
-int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int i, int fd)
+int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd)
 {
 	int	ln;
 
@@ -96,21 +89,21 @@ int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int i, int fd)
 	if (ln == 0)
 	{
 		printf("missing file path\n");
-		ft_exit(cubfile, clean_line, 0, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	if (clean_line[1][ln - 3] != 'x' ||
 		clean_line[1][ln - 2] != 'p' ||
 		clean_line[1][ln - 1] != 'm')
 	{
 		printf("invalid file extension\n");
-		ft_exit(cubfile, clean_line, i, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	cubfile->argcount++;
 	return (TRUE);
 }
 
 // checks if rgb values are valid
-void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, int fd)
+void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int fd)
 {
 	char **rgb_line;
 	int j = 0;
@@ -120,7 +113,7 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, in
 	{
 		printf("missing color value\n");
 		free(rgb_line);
-		ft_exit(cubfile, clean_line, i, fd);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	rgb[0] = ft_atoi(rgb_line[0]);
 	rgb[1] = ft_atoi(rgb_line[1]);
@@ -131,7 +124,7 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, in
 		if (rgb[j] < 0 || rgb[j] > 255)
 		{
 			printf("invalid color values\n");
-			ft_exit(cubfile, clean_line, i, fd);
+			ft_ex_wrongdata(cubfile, clean_line, fd);
 		}
 		j++;
 	}
@@ -148,18 +141,18 @@ int		ft_ck_mapdata(t_filedata *cubfile)
 	if (size.h == 0 || size.w == 0)
 	{
 		printf("missing map size data\n");
-		ft_map_exit(cubfile, 0);
+		ft_ex_wrongmap(cubfile, 0);
 	}
 	if (size.h <= 3 || size.w <= 3)
 	{
 		printf("map is too small\n");
-		ft_map_exit(cubfile, 0);
+		ft_ex_wrongmap(cubfile, 0);
 	}
 	return (TRUE);
 }
 
 // check characters around a zero
-int		ft_ck_validchar(int *map, t_count c)
+int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile)
 {
 	if (map[ft_pos(c.j, c.x-1, c.y-1)] == 9 ||
 		map[ft_pos(c.j, c.x-1, c.y)] == 9 ||
@@ -169,9 +162,28 @@ int		ft_ck_validchar(int *map, t_count c)
 		map[ft_pos(c.j, c.x+1, c.y-1)] == 9 ||
 		map[ft_pos(c.j, c.x+1, c.y)] == 9 ||
 		map[ft_pos(c.j, c.x+1, c.y+1)] == 9)
-		return (FALSE);
+	{
+		printf("map not enclosed\n");
+		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
+		ft_ex_wrongmap(cubfile, 1);
+	}
 	else
 		return (TRUE);
+}
+
+// checks if sprite has been located before
+int		ft_ck_sprite(t_filedata *cubfile, int *trgr)
+{
+	if (*trgr == 0)
+	{
+		*trgr = 1;
+		return (TRUE);
+	}
+	else
+	{
+		printf("more than 1 sprite\n");
+		ft_ex_wrongmap(cubfile, 1);
+	}
 }
 
 // tests for wall composing rules
@@ -179,8 +191,10 @@ void	ft_ck_validmap(t_filedata *cubfile)
 {
 	t_count	c;
 	int		*map;
+	int		trgr;
 
 	c = (t_count) {0};
+	trgr = 0;
 	c.i = cubfile->mapsize.h;
 	c.j = cubfile->mapsize.w;
 	map = cubfile->map;
@@ -189,13 +203,9 @@ void	ft_ck_validmap(t_filedata *cubfile)
 		while (c.x < c.j)
 		{
 			if (map[ft_pos(c.j, c.x, c.y)] == 0)
-			{
-				if (ft_ck_validchar(&map, c))
-				{
-					printf("map not enclosed\n");
-					ft_map_exit(cubfile, 1);
-				}
-			}
+				ft_ck_validchar(map, c, cubfile);
+			if (map[ft_pos(c.j, c.x, c.y)] == 2)
+				ft_ck_sprite(cubfile, &trgr);
 			c.x++;
 		}
 		c.x = 0;
@@ -225,27 +235,32 @@ int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 			if (!ft_strncmp(clean_line[0], "R", 3))
 				cubfile->scrsize = ft_ck_scrsize(cubfile, clean_line, fd);
 			if (!ft_strncmp(clean_line[0], "NO", 3))
-				if (ft_ck_filetype(cubfile, clean_line, 0, fd))
+				if (ft_ck_filetype(cubfile, clean_line, fd))
 					cubfile->tex_path[0] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "SO", 3))
-				if (ft_ck_filetype(cubfile, clean_line, 1, fd))
+				if (ft_ck_filetype(cubfile, clean_line, fd))
 					cubfile->tex_path[1] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "WE", 3))
-				if (ft_ck_filetype(cubfile, clean_line, 2, fd))
+				if (ft_ck_filetype(cubfile, clean_line, fd))
 					cubfile->tex_path[2] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "EA", 3))
-				if (ft_ck_filetype(cubfile, clean_line, 3, fd))
+				if (ft_ck_filetype(cubfile, clean_line, fd))
 					cubfile->tex_path[3] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "S", 3))
-				if (ft_ck_filetype(cubfile, clean_line, 4, fd))
+				if (ft_ck_filetype(cubfile, clean_line, fd))
 					cubfile->spr_path[0] = ft_strdup(clean_line[1]);
 			if (!ft_strncmp(clean_line[0], "F", 3))
-				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, 5, fd);
+				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, fd);
 			if (!ft_strncmp(clean_line[0], "C", 3))
-				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, 5, fd);
+				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, fd);
 		}
-		free(clean_line);
 	}
+	if (cubfile->argcount != 8)
+	{
+		printf("missing arguments in .cub file\n");
+		ft_ex_wrongdata(cubfile, clean_line, fd);
+	}
+	free(clean_line);
 }
 
 // tests if the first valid char of a line is '1'
@@ -306,7 +321,7 @@ void	ft_mapfill_2(t_filedata *cubfile, char *line, t_count *c)
 		else
 		{
 			printf("invalid player start position\n");
-			ft_map_exit(cubfile, 1);
+			ft_ex_wrongmap(cubfile, 1);
 		}
 		cubfile->plrstart.x = c->x * TILE_SIZE;
 		cubfile->plrstart.y = c->y * TILE_SIZE;
@@ -336,7 +351,7 @@ void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
 		c->x++;
 	}
 	else
-		cubfile->map[ft_pos(c->j, c->i, c->y)] = 1;
+		cubfile->map[ft_pos(c->j, c->i, c->y)] = 9;
 	c->i++;
 }
 
@@ -374,9 +389,7 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
-	cubfile.argcount = 0;
-	cubfile.mapsize.h = 0;
-	cubfile.mapsize.w = 0;
+	cubfile = (t_filedata) {0};
 	ft_id_n_load(&cubfile, line, fd);
 	ft_getmapdata(&cubfile, line, fd);
 	close(fd);
@@ -384,6 +397,7 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
 	ft_processmap(&cubfile, line, fd);
+	ft_t_printmap(&cubfile);
 	close(fd);
 	ft_ck_validmap(&cubfile);
 	data->cub = cubfile;

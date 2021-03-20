@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/17 10:23:44 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 15:47:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,22 @@ int		ft_test_init_sprite(t_data *data)
 }
 
 // prints map on data structure
-void	ft_t_printmap(t_data *data)
+void	ft_t_printmap(t_filedata *cubfile)
 {
-	int x = 0;
-	int y = 0;
+	t_count c;
 
-	while (y < data->mapsize.h)
+	c = (t_count) {0};
+	c.i = cubfile->mapsize.w;
+	c.j = cubfile->mapsize.h;
+	while (c.y < c.j)
 	{
-		x = 0;
-		while (x < data->mapsize.w)
+		c.x = 0;
+		while (c.x < c.i)
 		{
-			printf("%d, ", data->maptable[(data->mapsize.w * y) + x]);
-			x++;
+			printf("%d, ", cubfile->map[ft_pos(c.i, c.x, c.y)]);
+			c.x++;
 		}
 		printf("\n");
-		y++;
+		c.y++;
 	}
 }

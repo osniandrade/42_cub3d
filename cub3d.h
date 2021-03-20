@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 15:14:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 16:34:57 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,13 +280,14 @@ int		ft_find_sprite(t_data *data);
 
 // loadfile.c
 // DATA LOADING FUNCTIONS
-void	ft_exit(t_filedata *cubfile, char **clean_line, int i, int fd);
-void	ft_map_exit(t_filedata *cubfile, int f);
+void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd);
+void	ft_ex_wrongmap(t_filedata *cubfile, int f);
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd);
-int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int i, int fd);
-void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, int fd);
+int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd);
+void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int fd);
 int		ft_ck_mapdata(t_filedata *cubfile);
-int		ft_ck_validchar(int *map, t_count c);
+int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile);
+int		ft_ck_sprite(t_filedata *cubfile, int *trgr);
 void	ft_ck_validmap(t_filedata *cubfile);
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
 int		ft_testmapchar(char *line);
@@ -319,4 +320,4 @@ int				ft_isascii(int c);
 // testing.c
 // TESTING
 int		ft_test_init_sprite(t_data *data);
-void	ft_t_printmap(t_data *data);
+void	ft_t_printmap(t_filedata *cubfile);
