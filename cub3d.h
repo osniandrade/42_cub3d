@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 16:34:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 17:32:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdint.h>
+#include <errno.h>
 #include "minilibx/mlx.h"
 #include "gnl/get_next_line.h"
 
@@ -232,7 +233,7 @@ int		ft_update(t_data *data);
 int		ft_draw(t_data *data);
 // FINISH PROGRAM
 void	ft_destroy_images(t_data *data);
-void	ft_destroy(t_data *data);
+void	ft_destroy(t_data *data, int f);
 // KEYBOARD INTERACTIONS
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
@@ -289,6 +290,7 @@ int		ft_ck_mapdata(t_filedata *cubfile);
 int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile);
 int		ft_ck_sprite(t_filedata *cubfile, int *trgr);
 void	ft_ck_validmap(t_filedata *cubfile);
+void	ft_argtest(t_filedata *cubfile, char **clean_line, int fd);
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
 int		ft_testmapchar(char *line);
 void	ft_getmapdata(t_filedata *cubfile, char *line, int fd);

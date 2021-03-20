@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 16:37:28 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 17:39:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,16 @@ void	ft_ex_wrongmap(t_filedata *cubfile, int f)
 /*******************************************************************************
  * DATA VALIDATION FUNCTIONS
  *******************************************************************************/
+
+// checks if necessary files were loaded as args
+void	ft_validargs(int argc, char **argv)
+{
+	if (argc == 1)
+	{
+		printf("missing .cub file\n");
+		exit(0);
+	}
+}
 
 // checks if screen resolution is valid
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
@@ -221,39 +231,42 @@ void	ft_ck_validmap(t_filedata *cubfile)
  * DATA LOADING FUNCTIONS
  *******************************************************************************/
 
+// tests for every argument in the .cub file
+void	ft_argtest(t_filedata *cubfile, char **clean_line, int fd)
+{
+	if (!ft_strncmp(clean_line[0], "R", 3))
+		cubfile->scrsize = ft_ck_scrsize(cubfile, clean_line, fd);
+	if (!ft_strncmp(clean_line[0], "NO", 3))
+		if (ft_ck_filetype(cubfile, clean_line, fd))
+			cubfile->tex_path[0] = ft_strdup(clean_line[1]);
+	if (!ft_strncmp(clean_line[0], "SO", 3))
+		if (ft_ck_filetype(cubfile, clean_line, fd))
+			cubfile->tex_path[1] = ft_strdup(clean_line[1]);
+	if (!ft_strncmp(clean_line[0], "WE", 3))
+		if (ft_ck_filetype(cubfile, clean_line, fd))
+			cubfile->tex_path[2] = ft_strdup(clean_line[1]);
+	if (!ft_strncmp(clean_line[0], "EA", 3))
+		if (ft_ck_filetype(cubfile, clean_line, fd))
+			cubfile->tex_path[3] = ft_strdup(clean_line[1]);
+	if (!ft_strncmp(clean_line[0], "S", 3))
+		if (ft_ck_filetype(cubfile, clean_line, fd))
+			cubfile->spr_path[0] = ft_strdup(clean_line[1]);
+	if (!ft_strncmp(clean_line[0], "F", 3))
+		ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, fd);
+	if (!ft_strncmp(clean_line[0], "C", 3))
+		ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, fd);
+}
+
 // identifies the type of data and load into defined fields
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 {
 	char **clean_line;
-	char **rgb_line;
 
 	while (get_next_line(fd, &line) > 0 && cubfile->argcount < 8)
 	{
 		clean_line = ft_split(line, ' ');
 		if (clean_line[0] != NULL)
-		{
-			if (!ft_strncmp(clean_line[0], "R", 3))
-				cubfile->scrsize = ft_ck_scrsize(cubfile, clean_line, fd);
-			if (!ft_strncmp(clean_line[0], "NO", 3))
-				if (ft_ck_filetype(cubfile, clean_line, fd))
-					cubfile->tex_path[0] = ft_strdup(clean_line[1]);
-			if (!ft_strncmp(clean_line[0], "SO", 3))
-				if (ft_ck_filetype(cubfile, clean_line, fd))
-					cubfile->tex_path[1] = ft_strdup(clean_line[1]);
-			if (!ft_strncmp(clean_line[0], "WE", 3))
-				if (ft_ck_filetype(cubfile, clean_line, fd))
-					cubfile->tex_path[2] = ft_strdup(clean_line[1]);
-			if (!ft_strncmp(clean_line[0], "EA", 3))
-				if (ft_ck_filetype(cubfile, clean_line, fd))
-					cubfile->tex_path[3] = ft_strdup(clean_line[1]);
-			if (!ft_strncmp(clean_line[0], "S", 3))
-				if (ft_ck_filetype(cubfile, clean_line, fd))
-					cubfile->spr_path[0] = ft_strdup(clean_line[1]);
-			if (!ft_strncmp(clean_line[0], "F", 3))
-				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, fd);
-			if (!ft_strncmp(clean_line[0], "C", 3))
-				ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, fd);
-		}
+			ft_argtest(cubfile, clean_line, fd);
 	}
 	if (cubfile->argcount != 8)
 	{
@@ -387,6 +400,8 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	int			fd;
 	char		*line;
 
+	errno = 0;
+	ft_validargs(argc, argv);
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
 	cubfile = (t_filedata) {0};
@@ -397,7 +412,6 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
 	ft_processmap(&cubfile, line, fd);
-	ft_t_printmap(&cubfile);
 	close(fd);
 	ft_ck_validmap(&cubfile);
 	data->cub = cubfile;

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 11:48:26 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 17:27:44 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,20 @@
 // initializes the main struct variables
 int		ft_init_win(t_data *data)
 {
+	int x;
+	int y;
+	
 	data->mlx = mlx_init();
 	data->screensize.w = data->cub.scrsize.w;
 	data->screensize.h = data->cub.scrsize.h;
 	data->d_proj_plane = (data->screensize.w / 2) / tan(FOV / 2);
 	data->num_rays = data->screensize.w;
+	mlx_get_screen_size(data->mlx, &x, &y);
+	if (x < data->screensize.w || y < data->screensize.h)
+	{
+		printf("screen resolution too big\n");
+		ft_destroy(data, 0);
+	}
 	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
@@ -300,22 +309,23 @@ void	ft_destroy_images(t_data *data)
 }
 
 // finishes the program
-void	ft_destroy(t_data *data)
+void	ft_destroy(t_data *data, int f)
 {
-	free(data->colorBuffer);
-	free(data->maptable);
 	free(data->cub.tex_path[0]);
 	free(data->cub.tex_path[1]);
 	free(data->cub.tex_path[2]);
 	free(data->cub.tex_path[3]);
 	free(data->cub.spr_path[0]);
 	free(data->cub.map);
+	if (f == 0)
+		exit(0);
+	free(data->colorBuffer);
+	free(data->maptable);
 	free(data->rays);
 	ft_destroy_images(data);
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	exit(0);
 }
-
 
 /*******************************************************************************
  * KEYBOARD INTERACTIONS
@@ -325,7 +335,7 @@ void	ft_destroy(t_data *data)
 int		ft_key_press(int keycode, t_data *data)
 {
 	if (keycode == ESC)
-		ft_destroy(data);
+		ft_destroy(data, 1);
 	if (keycode == LEFT)
 		data->dir.l = TRUE;
 	if (keycode == RIGHT)
@@ -942,7 +952,9 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
 	while (sprite->x < sprite->right_x)
 	{
 		sprite->texel_w = (sprite->texsize.w / sprite->w);
-		sprite->x_ofst = (sprite->x - sprite->left_x) * sprite->texel_w;
+		sprite->x_ofst = sprite->x - sprite->left_x;
+		sprite->x_ofst = (sprite->x_ofst < 0) ? sprite->x_ofst * -1 : sprite->x_ofst;
+		sprite->x_ofst *= sprite->texel_w;
 		sprite->y = sprite->top_y;
 		while (sprite->y < sprite->btm_y)
 		{
@@ -951,7 +963,7 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
 				sprite->dist_top = sprite->y + (sprite->h / 2) - (data->screensize.h / 2);
 				sprite->y_ofst = sprite->dist_top * (sprite->texsize.h / sprite->h);
 				sprite->buff = (uint32_t*)data->sprites[i].texture.buffer;
-				sprite->color = sprite->buff[(sprite->texsize.w * sprite->y_ofst) + sprite->x_ofst];
+				sprite->color = sprite->buff[ft_pos(sprite->texsize.w, sprite->x_ofst, sprite->y_ofst)];
 				if (sprite->color != data->sprites[i].texture.buffer[0])
 					if (data->sprites[i].distance < data->rays[sprite->x].distance)
 						ft_print_pixel(data, sprite->x, sprite->y, sprite->color);
