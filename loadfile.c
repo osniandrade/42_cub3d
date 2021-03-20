@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/19 16:08:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 11:47:07 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,16 @@ void	ft_exit(t_filedata *cubfile, char **clean_line, int i, int fd)
 }
 
 // exit function from map part of validation
-void	ft_map_exit(t_filedata *cubfile)
+void	ft_map_exit(t_filedata *cubfile, int f)
 {
 	free(cubfile->tex_path[0]);
 	free(cubfile->tex_path[1]);
 	free(cubfile->tex_path[2]);
 	free(cubfile->tex_path[3]);
 	free(cubfile->spr_path[0]);
+	if (f == 0)
+		exit(0);
+	free(cubfile->map);
 	exit(0);
 }
 
@@ -146,12 +149,12 @@ int		ft_ck_mapdata(t_filedata *cubfile)
 	if (size.h == 0 || size.w == 0)
 	{
 		printf("missing map size data\n");
-		ft_map_exit(cubfile);
+		ft_map_exit(cubfile, 0);
 	}
 	if (size.h <= 3 || size.w <= 3)
 	{
 		printf("map is too small\n");
-		ft_map_exit(cubfile);
+		ft_map_exit(cubfile, 0);
 	}
 	return (TRUE);
 }
@@ -226,28 +229,62 @@ void	ft_getmapdata(t_filedata *cubfile, char *line, int fd)
 		if (linesize != 0)
 			cubfile->mapsize.h++;
 	}
+	if (ft_testmapchar(line))
+	{
+		linesize = ft_strlen(line);
+		if (linesize > cubfile->mapsize.w)
+			cubfile->mapsize.w = linesize;
+		if (linesize != 0)
+			cubfile->mapsize.h++;
+	}
+}
+
+// checks map position for empty spaces (' ')
+void	ft_mapfill_1(t_filedata *cubfile, char *line, t_count *c)
+{
+	if (line[c->x] == ' ')
+		cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 1;
+}
+
+// checks map position for player start position
+void	ft_mapfill_2(t_filedata *cubfile, char *line, t_count *c)
+{
+	if (line[c->x] == 'N' || line[c->x] == 'S' || 
+		line[c->x] == 'W' || line[c->x] == 'E')
+	{
+		cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 0;
+		if (cubfile->plrdir == '0')
+			cubfile->plrdir = line[c->x];
+		else
+		{
+			printf("invalid player start position\n");
+			ft_map_exit(cubfile, 1);
+		}
+		cubfile->plrstart.x = c->x * TILE_SIZE;
+		cubfile->plrstart.y = c->y * TILE_SIZE;
+	}
+}
+
+// checks map position for wall, walk area or sprite positions
+void	ft_mapfill_3(t_filedata *cubfile, char *line, t_count *c)
+{
+	char temp;
+
+	if (line[c->x] == '0' || line[c->x] == '1' || line[c->x] == '2')
+	{
+		temp = line[c->x];
+		cubfile->map[ft_pos(c->j, c->i, c->y)] = ft_atoi(&temp);
+	}
 }
 
 // tests for the character and fills the struct array
 void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
 {
-	char temp;
-	
 	if (line[c->x])
 	{
-		if (line[c->x] == ' ')
-			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 1;
-		if (line[c->x] == 'N' || line[c->x] == 'S' || 
-			line[c->x] == 'W' || line[c->x] == 'E')
-		{
-			cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 99;
-			cubfile->plrdir = line[c->x];
-		}
-		if (line[c->x] == '0' || line[c->x] == '1' || line[c->x] == '2')
-		{
-			temp = line[c->x];
-			cubfile->map[ft_pos(c->j, c->i, c->y)] = ft_atoi(&temp);
-		}
+		ft_mapfill_1(cubfile, line, c);
+		ft_mapfill_2(cubfile, line, c);
+		ft_mapfill_3(cubfile, line, c);
 		c->x++;
 	}
 	else
@@ -263,6 +300,7 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 
 	c = (t_count) {0};
 	c.j = cubfile->mapsize.w;
+	cubfile->plrdir = '0';
 	cubfile->map = malloc(sizeof(int) * cubfile->mapsize.h * cubfile->mapsize.w);
 	while (get_next_line(fd, &line))
 	{
@@ -275,23 +313,10 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 			c.y++;
 		}
 	}
-	c.y = 0;
-	while (c.y < cubfile->mapsize.h)
-	{
-		c.x = 0;
-		while (c.x < cubfile->mapsize.w)
-		{
-			if (cubfile->map[ft_pos(c.j, c.x, c.y)] == 99)
-			{
-				cubfile->plrstart.x = c.x * TILE_SIZE;
-				cubfile->plrstart.y = c.y * TILE_SIZE;
-				cubfile->map[ft_pos(c.j, c.x, c.y)] = 0;
-				return;
-			}
-			c.x++;
-		}
-		c.y++;
-	}
+	if (ft_testmapchar(line))
+		while (c.i < cubfile->mapsize.w)
+			ft_mapfill(cubfile, line, &c);
+	printf("%s\n", line);
 }
 
 // loads the .cub file into the struct
