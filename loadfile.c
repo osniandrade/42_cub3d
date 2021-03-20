@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 11:47:07 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 15:13:32 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, in
 }
 
 // checks if map size ratio is valid
-// **************TEST FOR 2 OR MORE STARTING POSITIONS*****************
 int		ft_ck_mapdata(t_filedata *cubfile)
 {
 	t_sizedata	size;
@@ -157,6 +156,55 @@ int		ft_ck_mapdata(t_filedata *cubfile)
 		ft_map_exit(cubfile, 0);
 	}
 	return (TRUE);
+}
+
+// check characters around a zero
+int		ft_ck_validchar(int *map, t_count c)
+{
+	if (map[ft_pos(c.j, c.x-1, c.y-1)] == 9 ||
+		map[ft_pos(c.j, c.x-1, c.y)] == 9 ||
+		map[ft_pos(c.j, c.x-1, c.y+1)] == 9 ||
+		map[ft_pos(c.j, c.x, c.y-1)] == 9 ||
+		map[ft_pos(c.j, c.x, c.y+1)] == 9 ||
+		map[ft_pos(c.j, c.x+1, c.y-1)] == 9 ||
+		map[ft_pos(c.j, c.x+1, c.y)] == 9 ||
+		map[ft_pos(c.j, c.x+1, c.y+1)] == 9)
+		return (FALSE);
+	else
+		return (TRUE);
+}
+
+// tests for wall composing rules
+void	ft_ck_validmap(t_filedata *cubfile)
+{
+	t_count	c;
+	int		*map;
+
+	c = (t_count) {0};
+	c.i = cubfile->mapsize.h;
+	c.j = cubfile->mapsize.w;
+	map = cubfile->map;
+	while (c.y < c.i)
+	{
+		while (c.x < c.j)
+		{
+			if (map[ft_pos(c.j, c.x, c.y)] == 0)
+			{
+				if (ft_ck_validchar(&map, c))
+				{
+					printf("map not enclosed\n");
+					ft_map_exit(cubfile, 1);
+				}
+			}
+			c.x++;
+		}
+		c.x = 0;
+		c.y++;
+	}
+	c.x = 0;
+	while (c.x < c.i * c.j)
+		if (map[c.x++] == 9)
+			map[c.x-1] = 1;
 }
 
 /*******************************************************************************
@@ -243,7 +291,7 @@ void	ft_getmapdata(t_filedata *cubfile, char *line, int fd)
 void	ft_mapfill_1(t_filedata *cubfile, char *line, t_count *c)
 {
 	if (line[c->x] == ' ')
-		cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 1;
+		cubfile->map[(cubfile->mapsize.w * c->y) + c->i] = 9;
 }
 
 // checks map position for player start position
@@ -293,7 +341,6 @@ void	ft_mapfill(t_filedata *cubfile, char *line, t_count *c)
 }
 
 // fills the map array with the .cub file info
-// **************CHECK LAST LINE LOADING*****************
 void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 {
 	t_count c;
@@ -316,7 +363,6 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 	if (ft_testmapchar(line))
 		while (c.i < cubfile->mapsize.w)
 			ft_mapfill(cubfile, line, &c);
-	printf("%s\n", line);
 }
 
 // loads the .cub file into the struct
@@ -338,6 +384,7 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
 	ft_processmap(&cubfile, line, fd);
-	data->cub = cubfile;
 	close(fd);
+	ft_ck_validmap(&cubfile);
+	data->cub = cubfile;
 }

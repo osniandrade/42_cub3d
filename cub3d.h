@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 11:37:42 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/20 15:14:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,6 +286,8 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd);
 int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int i, int fd);
 void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int i, int fd);
 int		ft_ck_mapdata(t_filedata *cubfile);
+int		ft_ck_validchar(int *map, t_count c);
+void	ft_ck_validmap(t_filedata *cubfile);
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
 int		ft_testmapchar(char *line);
 void	ft_getmapdata(t_filedata *cubfile, char *line, int fd);
