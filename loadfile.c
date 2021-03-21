@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 16:55:52 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:00:38 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_ex_wrongmap(t_filedata *cubfile, int f)
  *******************************************************************************/
 
 // checks if necessary files were loaded as args
-void	ft_validargs(int argc, char **argv)
+void	ft_validargs(t_filedata *cubfile, int argc, char **argv)
 {
 	if (argc == 1)
 	{
@@ -67,11 +67,14 @@ void	ft_validargs(int argc, char **argv)
 			exit(0);
 		}
 	if (argc == 3)
+	{
 		if (ft_strncmp(argv[2], "--save", 6) != 0)
 		{
 			printf("invalid argument\n");
 			exit(0);
 		}
+		cubfile->savebmp = 1;
+	}
 	if (argc > 3)
 	{
 		printf("too many arguments\n");
@@ -428,10 +431,10 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	char		*line;
 
 	errno = 0;
-	ft_validargs(argc, argv);
+	cubfile = (t_filedata) {0};
+	ft_validargs(&cubfile, argc, argv);
 	fd = open(argv[1], O_RDONLY);
 	line = NULL;
-	cubfile = (t_filedata) {0};
 	ft_id_n_load(&cubfile, line, fd);
 	ft_getmapdata(&cubfile, line, fd);
 	close(fd);

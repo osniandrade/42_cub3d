@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 16:34:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 18:15:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ typedef struct		s_filedata
 	char			*spr_path[SPRITE_COUNT];
 	char			plrdir;
 	int				argcount;
+	int				savebmp;
 	int				*map;
 	int				rgbup[3];
 	int				rgbdw[3];
@@ -206,6 +207,30 @@ typedef struct	s_drwline
 	int			e2;
 }				t_drwline;
 
+typedef	struct		s_bmpfilehead
+{
+	unsigned short	type;
+	unsigned int	size;
+	unsigned short	reserved1;
+	unsigned short	reserved2;
+	unsigned int	off_bits;
+}					t_bmpfilehead;
+
+typedef struct		s_bmpfileinfo
+{
+	unsigned int	size;
+	int				width;
+	int				height;
+	unsigned short	planes;
+	unsigned short	bit_count;
+	unsigned int	compression;
+	unsigned int	size_image;
+	int				x_pels_per_meter;
+	int				y_pels_per_meter;
+	unsigned int	clr_used;
+	unsigned int	clr_important;
+}					t_bmpfileinfo;
+
 // loadfile.c
 // FILE DATA FUNCTIONS
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
@@ -283,6 +308,7 @@ int		ft_find_sprite(t_data *data);
 // DATA LOADING FUNCTIONS
 void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd);
 void	ft_ex_wrongmap(t_filedata *cubfile, int f);
+void	ft_validargs(t_filedata *cubfile, int argc, char **argv);
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd);
 int		ft_ck_fileext(char *line1, char *line2);
 int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd);
@@ -324,7 +350,7 @@ int				ft_isascii(int c);
 // bmp.c
 // BMP FILE CREATION
 int				ft_write_file(t_data *data, int file);
-int				ft_save_img(t_data *data);
+void			ft_save_img(t_data *data);
 
 // testing.c
 // TESTING

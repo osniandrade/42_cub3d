@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 16:04:34 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:01:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,8 @@ int		ft_draw(t_data *data)
 	//ft_render_ray(data);
 	//ft_render_minimap_sprite(data);
 	//ft_render_player(data);
-	ft_save_img(data);
+	if (data->cub.savebmp == 1)
+		ft_save_img(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
