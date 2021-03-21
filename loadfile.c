@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 17:39:30 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:55:52 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,23 @@ void	ft_validargs(int argc, char **argv)
 		printf("missing .cub file\n");
 		exit(0);
 	}
+	if (argc >= 2)
+		if (!ft_ck_fileext(argv[1], "cub"))
+		{
+			printf("wrong file extension\n");
+			exit(0);
+		}
+	if (argc == 3)
+		if (ft_strncmp(argv[2], "--save", 6) != 0)
+		{
+			printf("invalid argument\n");
+			exit(0);
+		}
+	if (argc > 3)
+	{
+		printf("too many arguments\n");
+		exit(0);
+	}
 }
 
 // checks if screen resolution is valid
@@ -90,6 +107,18 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 	return (size);
 }
 
+// checks if file extension is equal to other parameter
+int		ft_ck_fileext(char *line1, char *line2)
+{
+	int		ln;
+
+	ln = ft_strlen(line1);
+	if (ft_strncmp(&line1[ln - 3], line2, 3) == 0)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
 // checks if informed file extension is .xpm
 int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd)
 {
@@ -101,9 +130,7 @@ int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd)
 		printf("missing file path\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
-	if (clean_line[1][ln - 3] != 'x' ||
-		clean_line[1][ln - 2] != 'p' ||
-		clean_line[1][ln - 1] != 'm')
+	if (!ft_ck_fileext(clean_line[1], "xpm"))
 	{
 		printf("invalid file extension\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);

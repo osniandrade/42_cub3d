@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 17:27:44 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:04:34 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,7 @@ int		ft_draw(t_data *data)
 	//ft_render_ray(data);
 	//ft_render_minimap_sprite(data);
 	//ft_render_player(data);
+	ft_save_img(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
 	return (TRUE);
 }
@@ -310,6 +311,8 @@ void	ft_destroy_images(t_data *data)
 
 // finishes the program
 void	ft_destroy(t_data *data, int f)
+// f = 0 - used before creation of color and map buffers
+// f = 1 - used anytime after first image created
 {
 	free(data->cub.tex_path[0]);
 	free(data->cub.tex_path[1]);
@@ -382,6 +385,8 @@ void	ft_print_pixel(t_data *data, int x, int y, int color)
 
 // draws a line from i_pos to f_pos in color (Bresenham's algorithm)
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize)
+// resize = 1 - minimap pixels
+// resize = 0 - screen pixels
 {
 	t_drwline	c;
 	
@@ -656,7 +661,6 @@ int		ft_move_player(t_data *data)
 	playerSin = sin(data->player.rotationAngle) * movestep;
 	newplayer.x = data->player.playerspr.pos.x + playerCos;
 	newplayer.y = data->player.playerspr.pos.y + playerSin;
-	//if (!(ft_map(data, newplayer.x, newplayer.y)))
 	if (!(ft_invalid_map_position(data, newplayer.x, newplayer.y)))
 	{
 		data->player.playerspr.pos.x = newplayer.x;

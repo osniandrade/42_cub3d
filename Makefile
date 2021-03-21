@@ -6,7 +6,7 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/03/14 10:55:36 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/03/21 16:22:57 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ GNLFOLDER = ./gnl/
 MLXFOLDER = ./minilibx/
 GNLCODE = get_next_line.c get_next_line_utils.c
 GNL = $(addprefix $(GNLFOLDER), $(GNLCODE))
-SIDECODE = functions.c helper.c testing.c loadfile.c
+SIDECODE = functions.c helper.c testing.c loadfile.c bmp.c
 CODE = $(MAINCODE) $(SIDECODE) $(GNL)
 FLAGS = -Wall -Wextra -Werror
 MLXHEADER = -I $(MLXFOLDER)

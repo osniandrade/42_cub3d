@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 17:32:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:34:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ int		ft_find_sprite(t_data *data);
 void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd);
 void	ft_ex_wrongmap(t_filedata *cubfile, int f);
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd);
+int		ft_ck_fileext(char *line1, char *line2);
 int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd);
 void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int fd);
 int		ft_ck_mapdata(t_filedata *cubfile);
@@ -302,13 +303,14 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd);
 void	ft_load_cub_file(t_data *data, int argc, char **argv);
 
 // helper.c
-// HELPER
+// COLOR HANDLING FUNCTIONS
 uint32_t		ft_crt_trgb(int t, int r, int g, int b);
 uint32_t		ft_get_t(int trgb);
 uint32_t		ft_get_r(int trgb);
 uint32_t		ft_get_g(int trgb);
 uint32_t		ft_get_b(int trgb);
 size_t			ft_strlen(const char *s);
+// LIBFT FUNCTIONS
 void			*ft_memcpy(void *dest, const void *src, size_t n);
 char			*ft_strdup(const char *s1);
 char			**ft_split(char const *s, char c);
@@ -318,6 +320,11 @@ int				ft_atoi(const char *str);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			*ft_strchr(const char *s, int c);
 int				ft_isascii(int c);
+
+// bmp.c
+// BMP FILE CREATION
+int				ft_write_file(t_data *data, int file);
+int				ft_save_img(t_data *data);
 
 // testing.c
 // TESTING

@@ -6,11 +6,15 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/16 19:56:03 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/21 15:58:42 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+/*******************************************************************************
+ * COLOR HANDLING FUNCTIONS
+ *******************************************************************************/
 
 // returns a color in hexadecimal format to use in minilibx
 uint32_t	ft_crt_trgb(int t, int r, int g, int b)
@@ -42,6 +46,11 @@ uint32_t	ft_get_b(int trgb)
 	return (trgb & 0xFF);
 }
 
+/*******************************************************************************
+ * LIBFT FUNCTIONS
+ *******************************************************************************/
+
+// returns the size of a string
 size_t		ft_strlen(const char *s)
 {
 	size_t		i;
@@ -54,6 +63,7 @@ size_t		ft_strlen(const char *s)
 	return (i);
 }
 
+// copies n characters of a memory address to another
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	char			*d;
@@ -68,6 +78,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
+// duplicates the content of a memory address to a new allocated address
 char	*ft_strdup(const char *s1)
 {
 	char	*dst;
@@ -81,6 +92,7 @@ char	*ft_strdup(const char *s1)
 	return (dst);
 }
 
+// side function of ft_split
 char	**ft_setarray(char *temp, char ch)
 {
 	int		words;
@@ -103,6 +115,7 @@ char	**ft_setarray(char *temp, char ch)
 	return ((char **)malloc(sizeof(char *) * (words + 1)));
 }
 
+// side function of ft_split
 int		*ft_setdelim(char *temp, char ch)
 {
 	int		i;
@@ -117,6 +130,7 @@ int		*ft_setdelim(char *temp, char ch)
 	return (0);
 }
 
+// side function of ft_split
 int		*ft_setnull(int *i)
 {
 	i[0] = 0;
@@ -125,6 +139,7 @@ int		*ft_setnull(int *i)
 	return (0);
 }
 
+// splits a string using 'c' char as separator
 char	**ft_split(char const *s, char c)
 {
 	char	**result;
@@ -153,6 +168,7 @@ char	**ft_split(char const *s, char c)
 	return (result);
 }
 
+// checks if 'c' character is numeric
 int				ft_isdigit(int c)
 {
 	if ((c >= 48) && (c <= 57))
@@ -161,6 +177,7 @@ int				ft_isdigit(int c)
 		return (0);
 }
 
+// checks if 'ch' character is any kind of blank space
 int		ft_tstspc(const char ch)
 {
 	if ((ch == ' ') || (ch == '\f') || (ch == '\n') ||
@@ -169,6 +186,7 @@ int		ft_tstspc(const char ch)
 	return (0);
 }
 
+// converts a numeric char to integer
 int				ft_atoi(const char *str)
 {
 	int		signal;
@@ -188,6 +206,7 @@ int				ft_atoi(const char *str)
 	return (num * signal);
 }
 
+// compares the n characters of 2 strings
 int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	unsigned int		i;
@@ -204,6 +223,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
+// checks if character 'c' is present in string 's'
 char	*ft_strchr(const char *s, int c)
 {
 	char			*sfer;
@@ -217,6 +237,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
+// checks if character 'c' is an ASCII value
 int		ft_isascii(int c)
 {
 	if ((c >= 0) && (c <= 127))
