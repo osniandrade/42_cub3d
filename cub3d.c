@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:36 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 16:57:10 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/22 17:28:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		main(int argc, char **argv)
 	ft_setup(&data);
 	mlx_hook(data.mlx_win, KEYPRESS, 1L<<0, ft_key_press, &data);
 	mlx_hook(data.mlx_win, KEYRELEASE, 1L<<1, ft_key_release, &data);
+	mlx_hook(data.mlx_win, MOUSECLICK, 11<<17, ft_mouseclose, &data);
 	mlx_loop_hook(data.mlx, main_loop, &data);
 	mlx_loop(data.mlx);
 	return (0);
