@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 15:58:42 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/22 16:53:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,4 +244,15 @@ int		ft_isascii(int c)
 		return (1);
 	else
 		return (0);
+}
+
+// fills a string with '0'
+void	*ft_bzero(void *s, size_t n)
+{
+	char	*start;
+
+	start = s;
+	while (n--)
+		*start++ = 0;
+	return (s);
 }

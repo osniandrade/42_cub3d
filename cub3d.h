@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 18:15:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/22 17:09:47 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,29 +207,6 @@ typedef struct	s_drwline
 	int			e2;
 }				t_drwline;
 
-typedef	struct		s_bmpfilehead
-{
-	unsigned short	type;
-	unsigned int	size;
-	unsigned short	reserved1;
-	unsigned short	reserved2;
-	unsigned int	off_bits;
-}					t_bmpfilehead;
-
-typedef struct		s_bmpfileinfo
-{
-	unsigned int	size;
-	int				width;
-	int				height;
-	unsigned short	planes;
-	unsigned short	bit_count;
-	unsigned int	compression;
-	unsigned int	size_image;
-	int				x_pels_per_meter;
-	int				y_pels_per_meter;
-	unsigned int	clr_used;
-	unsigned int	clr_important;
-}					t_bmpfileinfo;
 
 // loadfile.c
 // FILE DATA FUNCTIONS
@@ -346,10 +323,12 @@ int				ft_atoi(const char *str);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			*ft_strchr(const char *s, int c);
 int				ft_isascii(int c);
+void			*ft_bzero(void *s, size_t n);
 
 // bmp.c
 // BMP FILE CREATION
-int				ft_write_file(t_data *data, int file);
+void			ft_bitwiseconv(unsigned char *addr, unsigned int value);
+void			ft_write_file(t_data *data, int fd);
 void			ft_save_img(t_data *data);
 
 // testing.c
