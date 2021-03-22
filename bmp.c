@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 15:49:54 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/22 17:16:12 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/22 17:18:06 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	ft_write_file(t_data *data, int fd)
 	t_count			c;
 	uint32_t		color;
 
+	c.y = 0;
+	c.x = c.i * c.j;
 	c.i = data->screensize.w;
 	c.j = data->screensize.h;
 	ft_bzero(&file, 54);
@@ -45,13 +47,10 @@ void	ft_write_file(t_data *data, int fd)
 	file[26] = (unsigned char)(1);
 	file[28] = (unsigned char)(32);
 	write(fd, &file, 54);
-	c.y = 0;
-	c.x = c.i * c.j;
 	while (c.y < c.x)
 	{
-		color = (uint32_t)(data->colorBuffer[c.y]);
+		color = (uint32_t)(data->colorBuffer[c.y++]);
 		write(fd, &color, 4);
-		c.y++;
 	}
 }
 
