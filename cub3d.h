@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/22 17:24:51 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 13:09:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
-#define	MOUSECLICK		17
+#define	MOUSECLICK		33
 #define TEXTURE_COUNT	4
 #define SPRITE_COUNT	1
 
@@ -240,7 +240,7 @@ void	ft_destroy(t_data *data, int f);
 // KEYBOARD INTERACTIONS
 int		ft_key_press(int keycode, t_data *data);
 int		ft_key_release(int keycode, t_data *data);
-int		ft_mouseclose(int keycode, t_data *data);
+int		ft_mouseclose(t_data *data);
 // BASIC GRAPHIC FUNCTIONS
 void	ft_print_pixel(t_data *data, int x, int y, int color);
 int		ft_draw_line(t_data *data, t_coord i_pos, t_coord f_pos, int color, int resize);

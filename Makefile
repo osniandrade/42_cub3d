@@ -6,7 +6,7 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/03/21 16:22:57 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/03/23 13:14:50 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,9 @@ memleak:
 
 run:
 	./$(OUTPUT) $(MAPFILE)
+
+save:
+	./$(OUTPUT) $(MAPFILE) --save
 
 clean:
 	rm *.out

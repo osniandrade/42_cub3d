@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/22 17:25:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 13:12:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,10 +366,9 @@ int		ft_key_release(int keycode, t_data *data)
 }
 
 // execute when the x in windows is clicked
-int		ft_mouseclose(int keycode, t_data *data)
+int		ft_mouseclose(t_data *data)
 {
-	if (keycode == MOUSECLICK)
-		ft_destroy(data, 1);
+	ft_destroy(data, 1);
 	return (TRUE);
 }
 
