@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 13:37:20 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 15:18:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <errno.h>
+#include <string.h>
 #include "minilibx/mlx.h"
 #include "gnl/get_next_line.h"
 

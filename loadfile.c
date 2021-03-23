@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/21 17:00:38 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 15:19:55 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,19 @@ void	ft_ex_wrongmap(t_filedata *cubfile, int f)
 		exit(0);
 	free(cubfile->map);
 	exit(0);
+}
+
+// prints error message and finishes the program
+void	ft_error(void)
+{
+	int err;
+
+	err = errno;
+	if (err)
+	{
+		printf("%s\n", strerror(err));
+		exit(0);
+	}
 }
 
 /*******************************************************************************
@@ -434,6 +447,7 @@ void	ft_load_cub_file(t_data *data, int argc, char **argv)
 	cubfile = (t_filedata) {0};
 	ft_validargs(&cubfile, argc, argv);
 	fd = open(argv[1], O_RDONLY);
+	ft_error();
 	line = NULL;
 	ft_id_n_load(&cubfile, line, fd);
 	ft_getmapdata(&cubfile, line, fd);
