@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 13:09:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 13:37:20 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 #define PI				3.14159265
 
 #define TILE_SIZE		64
-#define MAP_SCALE		0.25  // only values lower than 1.0
+#define MAP_SCALE		0.1  // only values lower than 1.0
 #define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
 
 #define FOV				(60 * (PI / 180))
