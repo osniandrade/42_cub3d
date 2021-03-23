@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 15:19:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 17:06:14 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,6 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 	if (size.w % 4 != 0 || size.h % 4 != 0)
 	{
 		printf("invalid screen resolution\n");
-		ft_ex_wrongdata(cubfile, clean_line, fd);
-	}
-	if (size.w != ratio * 4 || size.h != ratio * 3)
-	{
-		printf("invalid screen ratio\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	cubfile->argcount++;

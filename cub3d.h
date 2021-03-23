@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 15:18:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 17:21:45 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #define FALSE			0
 
 #define GAMESPEED		0.5  // only values lower than 1.0
-#define INIT_WALKSPD	(16 * GAMESPEED)
-#define INIT_TURNSPD	(6 * GAMESPEED)
+#define INIT_WALKSPD	16
+#define INIT_TURNSPD	6
 #define MOVESPEED		1
 #define KEYPRESS		2
 #define KEYRELEASE		3
@@ -24,10 +24,12 @@
 #define SPRITE_COUNT	1
 
 // keycodes
-#define UP				65362
-#define DOWN			65364
-#define RIGHT			65363
-#define LEFT			65361
+#define UP				119//65362
+#define DOWN			115//65364
+#define RIGHT			100//65363
+#define LEFT			97//65361
+#define STRFR			101
+#define STRFL			113
 #define ESC				65307
 
 #define PI				3.14159265
@@ -66,6 +68,8 @@ typedef struct s_dir
 	int		d;
 	int		l;
 	int		r;
+	int		sl;
+	int		sr;
 }			t_dir;
 
 typedef struct s_img
@@ -100,6 +104,7 @@ typedef struct s_playerdata
 {
 	int		turnDirection;  // -1 for left, +1 for right
     int		walkDirection;  // -1 for back, +1 for front
+	int		strafe;
     float	rotationAngle;	// rotation angle info (in radians)
     float	walkSpeed;		// walk speed multiplier
     float	turnSpeed;		// turn speed multiplier
@@ -143,6 +148,7 @@ typedef struct		s_data
 	int				flo_color;
 	int				num_rays;
 	float			d_proj_plane;
+	float			gamespd;
 	t_filedata		cub;
 	t_sprite		sprites[SPRITE_COUNT];
 	t_texture		textures[TEXTURE_COUNT];

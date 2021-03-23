@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 13:36:07 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 17:21:47 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,17 @@ int		ft_init_win(t_data *data)
 	int y;
 	
 	data->mlx = mlx_init();
+	mlx_get_screen_size(data->mlx, &x, &y);
+	if (x < data->cub.scrsize.w || y < data->cub.scrsize.h)
+	{
+		data->cub.scrsize.w = x;
+		data->cub.scrsize.h = y;
+	}
+	data->gamespd = (((float)data->cub.scrsize.h) / (float)y) * GAMESPEED;
 	data->screensize.w = data->cub.scrsize.w;
 	data->screensize.h = data->cub.scrsize.h;
 	data->d_proj_plane = (data->screensize.w / 2) / tan(FOV / 2);
 	data->num_rays = data->screensize.w;
-	mlx_get_screen_size(data->mlx, &x, &y);
-	if (x < data->screensize.w || y < data->screensize.h)
-	{
-		printf("screen resolution too big\n");
-		ft_destroy(data, 0);
-	}
 	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
@@ -75,8 +76,8 @@ void	ft_init_player(t_data *data)
 		data->player.rotationAngle = PI * 2;
 	if (data->cub.plrdir == 'W')
 		data->player.rotationAngle = PI;
-	data->player.walkSpeed = INIT_WALKSPD;
-	data->player.turnSpeed = INIT_TURNSPD * (PI / 180);
+	data->player.walkSpeed = INIT_WALKSPD * data->gamespd;
+	data->player.turnSpeed = INIT_TURNSPD * (PI / 180) * data->gamespd;
 }
 
 // initializes sprite structs with zero
@@ -277,10 +278,10 @@ int		ft_draw(t_data *data)
 {
 	ft_draw_sprite(data);
 	ft_print_colorbuffer(data);
-	ft_render_map(data);
-	ft_render_ray(data);
-	ft_render_minimap_sprite(data);
-	ft_render_player(data);
+	//ft_render_map(data);
+	//ft_render_ray(data);
+	//ft_render_minimap_sprite(data);
+	//ft_render_player(data);
 	if (data->cub.savebmp == 1)
 		ft_save_img(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->tile.img, 0, 0);
@@ -348,6 +349,10 @@ int		ft_key_press(int keycode, t_data *data)
 		data->dir.u = TRUE;
 	if (keycode == DOWN)
 		data->dir.d = TRUE;
+	if (keycode == STRFL)
+		data->dir.sl = TRUE;
+	if (keycode == STRFR)
+		data->dir.sr = TRUE;
 	return (TRUE);
 }
 
@@ -362,6 +367,10 @@ int		ft_key_release(int keycode, t_data *data)
 		data->dir.u = FALSE;
 	if (keycode == DOWN)
 		data->dir.d = FALSE;
+	if (keycode == STRFL)
+		data->dir.sl = FALSE;
+	if (keycode == STRFR)
+		data->dir.sr = FALSE;
 	return (TRUE);
 }
 
@@ -680,6 +689,7 @@ int		ft_move_player(t_data *data)
 // gets player moving direction and speed
 int		ft_player_direction(t_data *data)
 {
+	data->player.strafe = 0;
 	if (data->dir.l == TRUE)
 		data->player.turnDirection = -MOVESPEED;
 	if (data->dir.r == TRUE)
@@ -688,6 +698,16 @@ int		ft_player_direction(t_data *data)
 		data->player.walkDirection = +MOVESPEED;
 	if (data->dir.d == TRUE)
 		data->player.walkDirection = -MOVESPEED;
+	if (data->dir.sl == TRUE)
+	{
+		data->player.walkDirection = -MOVESPEED;
+		data->player.strafe = 1;
+	}
+	if (data->dir.sr == TRUE)
+	{
+		data->player.walkDirection = +MOVESPEED;
+		data->player.strafe = 1;
+	}
 	if (data->dir.u == FALSE && data->dir.d == FALSE)
 		data->player.walkDirection = 0;
 	if (data->dir.l == FALSE && data->dir.r == FALSE)
