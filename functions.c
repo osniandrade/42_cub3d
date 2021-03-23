@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 13:12:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/23 13:34:12 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,8 +275,8 @@ int		ft_update(t_data *data)
 // draws elements in the window
 int		ft_draw(t_data *data)
 {
-	ft_print_colorbuffer(data);
 	ft_draw_sprite(data);
+	ft_print_colorbuffer(data);
 	//ft_render_map(data);
 	//ft_render_ray(data);
 	//ft_render_minimap_sprite(data);
@@ -978,7 +978,7 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
 				sprite->color = sprite->buff[ft_pos(sprite->texsize.w, sprite->x_ofst, sprite->y_ofst)];
 				if (sprite->color != data->sprites[i].texture.buffer[0])
 					if (data->sprites[i].distance < data->rays[sprite->x].distance)
-						ft_print_pixel(data, sprite->x, sprite->y, sprite->color);
+						data->colorBuffer[ft_pos(data->screensize.w, sprite->x, sprite->y)] = sprite->color;
 			}
 			sprite->y++;
 		}
