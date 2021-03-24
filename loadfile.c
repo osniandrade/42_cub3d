@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 17:06:14 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 16:34:29 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,11 @@ int		ft_ck_filetype(t_filedata *cubfile, char **clean_line, int fd)
 		printf("invalid file extension\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
+	if (access(clean_line[1], F_OK) != 0)
+	{
+		printf("file '%s' does not exist\n", clean_line[1]);
+		ft_ex_wrongdata(cubfile, clean_line, fd);
+	}
 	cubfile->argcount++;
 	return (TRUE);
 }
@@ -215,6 +220,19 @@ int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile)
 		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
 		ft_ex_wrongmap(cubfile, 1);
 	}
+	// if (map[ft_pos(c.j, c.x-1, c.y-1)] == 9)
+	// 	if (map[ft_pos(c.j, c.x-1, c.y)] == 9)
+	// 		if (map[ft_pos(c.j, c.x-1, c.y+1)] == 9)
+	// 			if (map[ft_pos(c.j, c.x, c.y-1)] == 9)
+	// 				if (map[ft_pos(c.j, c.x, c.y+1)] == 9)
+	// 					if (map[ft_pos(c.j, c.x+1, c.y-1)] == 9)
+	// 						if (map[ft_pos(c.j, c.x+1, c.y)] == 9)
+	// 							if (map[ft_pos(c.j, c.x+1, c.y+1)] == 9)
+	// 								{
+	// 									printf("map not enclosed\n");
+	// 									printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
+	// 									ft_ex_wrongmap(cubfile, 1);
+	// 								}
 	else
 		return (TRUE);
 }
@@ -246,6 +264,19 @@ void	ft_ck_validmap(t_filedata *cubfile)
 	c.i = cubfile->mapsize.h;
 	c.j = cubfile->mapsize.w;
 	map = cubfile->map;
+	while (c.y < c.i)
+	{
+		while (c.x < c.j)
+		{
+			printf("%d ", cubfile->map[ft_pos(c.j, c.x, c.y)]);
+			c.x++;
+		}
+		c.x = 0;
+		c.y++;
+		printf("\n");
+	}
+	c.x = 0;
+	c.y = 0;
 	while (c.y < c.i)
 	{
 		while (c.x < c.j)
@@ -382,13 +413,8 @@ void	ft_mapfill_2(t_filedata *cubfile, char *line, t_count *c)
 // checks map position for wall, walk area or sprite positions
 void	ft_mapfill_3(t_filedata *cubfile, char *line, t_count *c)
 {
-	char temp;
-
 	if (line[c->x] == '0' || line[c->x] == '1' || line[c->x] == '2')
-	{
-		temp = line[c->x];
-		cubfile->map[ft_pos(c->j, c->i, c->y)] = ft_atoi(&temp);
-	}
+		cubfile->map[ft_pos(c->j, c->i, c->y)] = line[c->x] - 48;
 }
 
 // tests for the character and fills the struct array
