@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 12:07:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 16:59:57 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -754,7 +754,8 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 			toCheck.y += (raytemp->face.u ? -1 : 0);
 		corr.x = (int)floor(toCheck.x / data->tile.size.w);
 		corr.y = (int)floor(toCheck.y / data->tile.size.w);
-		mapcontent = data->maptable[ft_pos(corr.i, corr.x, corr.y)];
+		if (corr.x < data->mapsize.w && corr.y < data->mapsize.h)
+			mapcontent = data->maptable[ft_pos(corr.i, corr.x, corr.y)];
 		if (ft_invalid_map_position(data, corr.x, corr.y) && (mapcontent == 1))
 		{
 			raytemp->wallhit.x = raytemp->nextTouch.x;
