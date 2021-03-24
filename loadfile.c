@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 16:34:29 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 16:36:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,19 +220,6 @@ int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile)
 		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
 		ft_ex_wrongmap(cubfile, 1);
 	}
-	// if (map[ft_pos(c.j, c.x-1, c.y-1)] == 9)
-	// 	if (map[ft_pos(c.j, c.x-1, c.y)] == 9)
-	// 		if (map[ft_pos(c.j, c.x-1, c.y+1)] == 9)
-	// 			if (map[ft_pos(c.j, c.x, c.y-1)] == 9)
-	// 				if (map[ft_pos(c.j, c.x, c.y+1)] == 9)
-	// 					if (map[ft_pos(c.j, c.x+1, c.y-1)] == 9)
-	// 						if (map[ft_pos(c.j, c.x+1, c.y)] == 9)
-	// 							if (map[ft_pos(c.j, c.x+1, c.y+1)] == 9)
-	// 								{
-	// 									printf("map not enclosed\n");
-	// 									printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
-	// 									ft_ex_wrongmap(cubfile, 1);
-	// 								}
 	else
 		return (TRUE);
 }
@@ -264,19 +251,6 @@ void	ft_ck_validmap(t_filedata *cubfile)
 	c.i = cubfile->mapsize.h;
 	c.j = cubfile->mapsize.w;
 	map = cubfile->map;
-	while (c.y < c.i)
-	{
-		while (c.x < c.j)
-		{
-			printf("%d ", cubfile->map[ft_pos(c.j, c.x, c.y)]);
-			c.x++;
-		}
-		c.x = 0;
-		c.y++;
-		printf("\n");
-	}
-	c.x = 0;
-	c.y = 0;
 	while (c.y < c.i)
 	{
 		while (c.x < c.j)
