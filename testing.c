@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/13 13:44:25 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/20 15:47:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 11:57:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,11 @@ void	ft_t_printmap(t_filedata *cubfile)
 		printf("\n");
 		c.y++;
 	}
+}
+
+// tests strafe movement
+void	ft_movtest(t_data *data)
+{
+	data->player.strafe = TRUE;
+	data->player.walkDirection = -MOVESPEED;
 }

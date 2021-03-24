@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 17:21:47 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 12:00:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,9 +368,15 @@ int		ft_key_release(int keycode, t_data *data)
 	if (keycode == DOWN)
 		data->dir.d = FALSE;
 	if (keycode == STRFL)
+	{
 		data->dir.sl = FALSE;
+		data->player.strafe = FALSE;
+	}
 	if (keycode == STRFR)
+	{
 		data->dir.sr = FALSE;
+		data->player.strafe = FALSE;
+	}
 	return (TRUE);
 }
 
@@ -676,8 +682,16 @@ int		ft_move_player(t_data *data)
 	movestep = data->player.walkDirection * data->player.walkSpeed;
 	playerCos = cos(data->player.rotationAngle) * movestep;
 	playerSin = sin(data->player.rotationAngle) * movestep;
-	newplayer.x = data->player.playerspr.pos.x + playerCos;
-	newplayer.y = data->player.playerspr.pos.y + playerSin;
+	if (data->player.strafe == TRUE)
+	{
+		newplayer.x = data->player.playerspr.pos.x - playerSin;
+		newplayer.y = data->player.playerspr.pos.y + playerCos;
+	}
+	else
+	{
+		newplayer.x = data->player.playerspr.pos.x + playerCos;
+		newplayer.y = data->player.playerspr.pos.y + playerSin;
+	}	
 	if (!(ft_invalid_map_position(data, newplayer.x, newplayer.y)))
 	{
 		data->player.playerspr.pos.x = newplayer.x;
@@ -701,14 +715,15 @@ int		ft_player_direction(t_data *data)
 	if (data->dir.sl == TRUE)
 	{
 		data->player.walkDirection = -MOVESPEED;
-		data->player.strafe = 1;
+		data->player.strafe = TRUE;
 	}
 	if (data->dir.sr == TRUE)
 	{
 		data->player.walkDirection = +MOVESPEED;
-		data->player.strafe = 1;
+		data->player.strafe = TRUE;
 	}
-	if (data->dir.u == FALSE && data->dir.d == FALSE)
+	if (data->dir.u == FALSE && data->dir.d == FALSE && 
+		data->dir.sl == FALSE && data->dir.sr == FALSE)
 		data->player.walkDirection = 0;
 	if (data->dir.l == FALSE && data->dir.r == FALSE)
 		data->player.turnDirection = 0;

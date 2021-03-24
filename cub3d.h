@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/23 17:21:45 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/24 11:53:08 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,3 +344,5 @@ void			ft_save_img(t_data *data);
 // TESTING
 int		ft_test_init_sprite(t_data *data);
 void	ft_t_printmap(t_filedata *cubfile);
+void	ft_movtest(t_data *data);
+
