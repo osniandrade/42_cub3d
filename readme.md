@@ -11,7 +11,7 @@ You'll need **Linux** and the basic tools to compile C code.
 All non-standard libraries included in this project are inside the main folder.
 
 ### RUN
--` make debug; make run`
+- ` make debug; make run`
 
 ### COMMAND
 - W, A, S, D - walk
