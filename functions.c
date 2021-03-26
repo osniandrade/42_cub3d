@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 16:59:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/26 11:52:33 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		ft_init_win(t_data *data)
 	data->screensize.h = data->cub.scrsize.h;
 	data->d_proj_plane = (data->screensize.w / 2) / tan(FOV / 2);
 	data->num_rays = data->screensize.w;
+	data->rays = malloc(sizeof(t_rays) * data->num_rays);
 	data->mlx_win = mlx_new_window(data->mlx, data->screensize.w, data->screensize.h, "A MAZE IN");
 	return (TRUE);
 }
@@ -870,7 +871,6 @@ int		ft_cast_all_rays(t_data *data)
 	int		stripId;
 
 	stripId = 0;
-	data->rays = malloc(sizeof(t_rays) * data->num_rays);
 	rayAngle = data->player.rotationAngle + atan((stripId - (data->num_rays / 2)) / data->d_proj_plane);
 	while (stripId < data->num_rays)
 	{
