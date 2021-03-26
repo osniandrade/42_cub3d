@@ -5,7 +5,10 @@ was the first FPS ever. It will enable you to explore ray-casting. Your goal wil
 make a dynamic view inside a maze, in which you’ll have to find your way.*
 
 ## HOW TO USE
-You'll need the basic tools to compile C code. All non-standard libraries included in this project are inside the main folder.
+You'll need **Linux** and the basic tools to compile C code.
+- `sudo apt install gcc`
+
+All non-standard libraries included in this project are inside the main folder.
 
 ### RUN
 -` make debug; make run`
