@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/26 12:45:58 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/26 12:53:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,21 @@
  * EXIT FUNCTIONS
  *******************************************************************************/
 
-// exits cleanly if error found in cub file
-void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
+// frees clean_line array of arrays
+void	ft_free_c_line(char **clean_line)
 {
 	int	i;
 
 	i = 0;
+	while (clean_line[i])
+		if (clean_line[i] != NULL)
+			free(clean_line[i++]);
+	free(clean_line);
+}
+
+// exits cleanly if error found in cub file
+void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
+{
 	close(fd);
 	if (cubfile->tex_path[0] != NULL)
 		free(cubfile->tex_path[0]);
@@ -34,12 +43,7 @@ void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
 	if (cubfile->spr_path[0] != NULL)
 		free(cubfile->spr_path[0]);
 	if (clean_line != NULL)
-	{
-		while (clean_line[i])
-			if (clean_line[i] != NULL)
-				free(clean_line[i++]);
-		free(clean_line);
-	}
+		ft_free_c_line(clean_line);
 	exit(0);
 }
 
@@ -174,13 +178,15 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int fd)
 	if (rgb_line[0] == NULL || rgb_line[1] == NULL || rgb_line[2] == NULL)
 	{
 		printf("missing color value\n");
-		free(rgb_line);
+		if (rgb_line != NULL)
+			ft_free_c_line(rgb_line);
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
 	rgb[0] = ft_atoi(rgb_line[0]);
 	rgb[1] = ft_atoi(rgb_line[1]);
 	rgb[2] = ft_atoi(rgb_line[2]);
-	free(rgb_line);
+	if (rgb_line != NULL)
+		ft_free_c_line(rgb_line);
 	while (j < 3)
 	{
 		if (rgb[j] < 0 || rgb[j] > 255)
@@ -322,12 +328,8 @@ int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 		if (clean_line[0] != NULL)
 			ft_argtest(cubfile, clean_line, fd);
 		free(line);
-		if (clean_line)
-		{
-			while (clean_line[i])
-				free(clean_line[i++]);
-			free(clean_line);
-		}
+		if (clean_line != NULL)
+			ft_free_c_line(clean_line);
 	}
 	if (cubfile->argcount != 8)
 	{

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 11:53:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/26 13:19:21 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,9 +291,12 @@ void	ft_draw_sprite(t_data *data);
 int		ft_find_sprite(t_data *data);
 
 // loadfile.c
-// DATA LOADING FUNCTIONS
+// EXIT FUNCTIONS
+void	ft_free_c_line(char **clean_line);
 void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd);
 void	ft_ex_wrongmap(t_filedata *cubfile, int f);
+void	ft_error(void);
+// DATA VALIDATION FUNCTIONS
 void	ft_validargs(t_filedata *cubfile, int argc, char **argv);
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd);
 int		ft_ck_fileext(char *line1, char *line2);
@@ -303,6 +306,7 @@ int		ft_ck_mapdata(t_filedata *cubfile);
 int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile);
 int		ft_ck_sprite(t_filedata *cubfile, int *trgr);
 void	ft_ck_validmap(t_filedata *cubfile);
+// DATA LOADING FUNCTIONS
 void	ft_argtest(t_filedata *cubfile, char **clean_line, int fd);
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd);
 int		ft_testmapchar(char *line);
