@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:29:52 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 16:26:02 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/26 12:47:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ char	**ft_split(char const *s, char c)
 			i[2] += ft_strlen(&temp[i[2]]);
 		}
 	}
+	free(temp);
 	result[i[1]] = NULL;
 	return (result);
 }

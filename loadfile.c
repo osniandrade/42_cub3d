@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/24 16:36:43 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/26 12:45:58 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 // exits cleanly if error found in cub file
 void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
 {
+	int	i;
+
+	i = 0;
 	close(fd);
 	if (cubfile->tex_path[0] != NULL)
 		free(cubfile->tex_path[0]);
@@ -30,7 +33,13 @@ void	ft_ex_wrongdata(t_filedata *cubfile, char **clean_line, int fd)
 		free(cubfile->tex_path[3]);
 	if (cubfile->spr_path[0] != NULL)
 		free(cubfile->spr_path[0]);
-	free(clean_line);
+	if (clean_line != NULL)
+	{
+		while (clean_line[i])
+			if (clean_line[i] != NULL)
+				free(clean_line[i++]);
+		free(clean_line);
+	}
 	exit(0);
 }
 
@@ -303,20 +312,28 @@ void	ft_argtest(t_filedata *cubfile, char **clean_line, int fd)
 // identifies the type of data and load into defined fields
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 {
-	char **clean_line;
+	char	**clean_line;
+	int		i;
 
 	while (get_next_line(fd, &line) > 0 && cubfile->argcount < 8)
 	{
+		i = 0;
 		clean_line = ft_split(line, ' ');
 		if (clean_line[0] != NULL)
 			ft_argtest(cubfile, clean_line, fd);
+		free(line);
+		if (clean_line)
+		{
+			while (clean_line[i])
+				free(clean_line[i++]);
+			free(clean_line);
+		}
 	}
 	if (cubfile->argcount != 8)
 	{
 		printf("missing arguments in .cub file\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
-	free(clean_line);
 }
 
 // tests if the first valid char of a line is '1'
@@ -347,6 +364,7 @@ void	ft_getmapdata(t_filedata *cubfile, char *line, int fd)
 			cubfile->mapsize.w = linesize;
 		if (linesize != 0)
 			cubfile->mapsize.h++;
+		free(line);
 	}
 	if (ft_testmapchar(line))
 	{
@@ -425,6 +443,7 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 			c.x = 0;
 			c.y++;
 		}
+		free(line);
 	}
 	if (ft_testmapchar(line))
 		while (c.i < cubfile->mapsize.w)
