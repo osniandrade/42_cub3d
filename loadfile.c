@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/26 12:53:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/29 20:41:45 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,6 +331,7 @@ int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 		if (clean_line != NULL)
 			ft_free_c_line(clean_line);
 	}
+	free(line);
 	if (cubfile->argcount != 8)
 	{
 		printf("missing arguments in .cub file\n");
@@ -376,6 +377,7 @@ void	ft_getmapdata(t_filedata *cubfile, char *line, int fd)
 		if (linesize != 0)
 			cubfile->mapsize.h++;
 	}
+	free(line);
 }
 
 // checks map position for empty spaces (' ')
@@ -450,6 +452,7 @@ void	ft_processmap(t_filedata *cubfile, char *line, int fd)
 	if (ft_testmapchar(line))
 		while (c.i < cubfile->mapsize.w)
 			ft_mapfill(cubfile, line, &c);
+	free(line);
 }
 
 // loads the .cub file into the struct

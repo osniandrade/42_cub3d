@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/26 11:52:33 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/29 20:39:33 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1013,8 +1013,9 @@ void	ft_sprite_projection(t_data *data, t_sprproj *sprite, int i)
 				sprite->buff = (uint32_t*)data->sprites[i].texture.buffer;
 				sprite->color = sprite->buff[ft_pos(sprite->texsize.w, sprite->x_ofst, sprite->y_ofst)];
 				if (sprite->color != data->sprites[i].texture.buffer[0])
-					if (data->sprites[i].distance < data->rays[sprite->x].distance)
-						data->colorBuffer[ft_pos(data->screensize.w, sprite->x, sprite->y)] = sprite->color;
+					if (sprite->x < data->screensize.w)
+						if (data->sprites[i].distance < data->rays[sprite->x].distance)
+							data->colorBuffer[ft_pos(data->screensize.w, sprite->x, sprite->y)] = sprite->color;
 			}
 			sprite->y++;
 		}
