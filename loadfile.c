@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 08:46:18 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/29 20:41:45 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/30 09:58:51 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void	ft_validargs(t_filedata *cubfile, int argc, char **argv)
 t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 {
 	t_sizedata size;
-	int	ratio;
 
 	if (clean_line[1] == NULL || clean_line[2] == NULL)
 	{
@@ -121,7 +120,6 @@ t_sizedata ft_ck_scrsize(t_filedata *cubfile, char **clean_line, int fd)
 	}
 	size.w = ft_atoi(clean_line[1]);
 	size.h = ft_atoi(clean_line[2]);
-	ratio = size.w / 4;
 	if (size.w % 4 != 0 || size.h % 4 != 0)
 	{
 		printf("invalid screen resolution\n");
@@ -203,7 +201,6 @@ void	ft_ck_rgbvalues(t_filedata *cubfile, char **clean_line, int *rgb, int fd)
 int		ft_ck_mapdata(t_filedata *cubfile)
 {
 	t_sizedata	size;
-	int			ratio;
 
 	size = cubfile->mapsize;
 	if (size.h == 0 || size.w == 0)
@@ -234,6 +231,7 @@ int		ft_ck_validchar(int *map, t_count c, t_filedata *cubfile)
 		printf("map not enclosed\n");
 		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
 		ft_ex_wrongmap(cubfile, 1);
+		return (FALSE);
 	}
 	else
 		return (TRUE);
@@ -251,6 +249,7 @@ int		ft_ck_sprite(t_filedata *cubfile, int *trgr)
 	{
 		printf("more than 1 sprite\n");
 		ft_ex_wrongmap(cubfile, 1);
+		return (FALSE);
 	}
 }
 
@@ -319,11 +318,9 @@ void	ft_argtest(t_filedata *cubfile, char **clean_line, int fd)
 int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 {
 	char	**clean_line;
-	int		i;
 
 	while (get_next_line(fd, &line) > 0 && cubfile->argcount < 8)
 	{
-		i = 0;
 		clean_line = ft_split(line, ' ');
 		if (clean_line[0] != NULL)
 			ft_argtest(cubfile, clean_line, fd);
@@ -337,6 +334,7 @@ int		ft_id_n_load(t_filedata *cubfile, char *line, int fd)
 		printf("missing arguments in .cub file\n");
 		ft_ex_wrongdata(cubfile, clean_line, fd);
 	}
+	return (TRUE);
 }
 
 // tests if the first valid char of a line is '1'
@@ -353,6 +351,7 @@ int		ft_testmapchar(char *line)
 		else
 			return (FALSE);
 	}
+	return (FALSE);
 }
 
 // loads the size of the map

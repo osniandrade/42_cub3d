@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/29 20:39:33 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/30 09:55:04 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -743,9 +743,9 @@ int		ft_find_wall(t_data *data, t_rays *raytemp, t_coord toCheck, t_coord step, 
 
 	corr.i = data->mapsize.w;
 	while (raytemp->nextTouch.x >= 0 && 
-			abs(raytemp->nextTouch.x / data->tile.size.w) <= data->mapsize.w && 
+			floor(raytemp->nextTouch.x / data->tile.size.w) <= data->mapsize.w && 
 			raytemp->nextTouch.y > 0 && 
-			abs(raytemp->nextTouch.y / data->tile.size.w) <= data->mapsize.h)
+			floor(raytemp->nextTouch.y / data->tile.size.w) <= data->mapsize.h)
 	{
 		toCheck.x = raytemp->nextTouch.x;
 		toCheck.y = raytemp->nextTouch.y;
