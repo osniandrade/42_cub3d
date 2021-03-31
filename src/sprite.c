@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_update_sprite(t_data *d)
 	{
 		sprite_player_angle = d->plr.rt_angl - ft_sprite_arctan(d, i);
 		sprite_player_angle = fabs(ft_normalize_angle2(sprite_player_angle));
-		if (sprite_player_angle < (FOV / 2) + 0.2)
+		if (sprite_player_angle < (d->fov / 2) + 0.2)
 		{
 			d->spr[i].visbl = 1;
 			d->spr[i].angle = sprite_player_angle;

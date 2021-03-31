@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:06:06 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:15:14 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@
 # define PI				3.14159265
 # define TILE_SIZE		64
 # define MAP_SCALE		0.1
-# define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
-# define FOV			(60 * (PI / 180))
 # define T_CL			uint32_t
 
 typedef struct		s_pos
@@ -98,6 +96,7 @@ typedef struct		s_player
 	float			rt_angl;
 	float			walkspd;
 	float			turnspd;
+	//float			plsize;
 	t_img			spr;
 }					t_player;
 typedef struct		s_rays
@@ -135,6 +134,7 @@ typedef struct		s_data
 	int				c_clr;
 	int				f_clr;
 	int				n_rays;
+	float			fov;
 	float			dpp;
 	float			gamespd;
 	t_file			cub;
@@ -285,6 +285,8 @@ T_CL	ft_get_b(int trgb);
 size_t	ft_strlen(const char *s);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strdup(const char *s1);
+char	**ft_setarray(char *temp, char ch);
+int		*ft_setdelim(char *temp, char ch);
 char	**ft_split(char const *s, char c);
 int		ft_isdigit(int c);
 int		ft_tstspc(const char ch);

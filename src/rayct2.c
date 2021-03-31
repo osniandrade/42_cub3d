@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		ft_cast_all_rays(t_data *d)
 	while (stripId < d->n_rays)
 	{
 		ft_cast_ray(d, rayAngle, stripId);
-		rayAngle += FOV / d->n_rays;
+		rayAngle += d->fov / d->n_rays;
 		rayAngle = ft_normalize_angle(rayAngle);
 		stripId++;
 	}

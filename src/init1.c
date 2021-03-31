@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 15:06:02 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int		ft_init_win(t_data *d)
 	d->scrsz.h = d->cub.scrsize.h;
 	c.i = d->scrsz.w;
 	c.j = d->scrsz.h;
-	d->dpp = (c.i / 2) / tan(FOV / 2);
+	d->fov = (60 * (PI / 180));
+	d->dpp = (c.i / 2) / tan(d->fov / 2);
 	d->n_rays = c.i;
 	d->rays = malloc(sizeof(t_rays) * d->n_rays);
 	d->mlx_win = mlx_new_window(d->mlx, c.i, c.j, "CUB3D");
@@ -83,4 +84,5 @@ void	ft_init_player(t_data *d)
 		d->plr.rt_angl = PI;
 	d->plr.walkspd = INIT_WALKSPD * d->gamespd;
 	d->plr.turnspd = INIT_TURNSPD * (PI / 180) * d->gamespd;
+	//d->plr.plsize = ((TILE_SIZE / 2) * MAP_SCALE);
 }
