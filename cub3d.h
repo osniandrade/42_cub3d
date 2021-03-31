@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:37:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:44:47 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ void			ft_ex_wrongdata(t_file *cubfile, char **clean_line, int fd);
 void			ft_ex_wrongmap(t_file *cubfile, int f);
 void			ft_error(void);
 void			ft_validargs(t_file *cubfile, int argc, char **argv);
-t_size 			ft_ck_scrsize(t_file *cubfile, char **clean_line, int fd);
+t_size			ft_ck_scrsize(t_file *cubfile, char **clean_line, int fd);
 int				ft_ck_fileext(char *line1, char *line2);
 int				ft_ck_filetype(t_file *cubfile, char **clean_line, int fd);
 void			ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd);
