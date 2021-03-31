@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 16:44:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:01:46 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,25 +100,25 @@ int		ft_v_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
 	return (TRUE);
 }
 
-int		ft_fill_ray(t_data *d, t_rays *rtmp, int isvtc, int stripId)
+int		ft_fill_ray(t_data *d, t_rays *rtmp, int isvtc, int stp_id)
 {
-	d->rays[stripId].dist = ft_distance(d->plr.spr.pos, rtmp->wallhit);
-	d->rays[stripId].wallhit.x = rtmp->wallhit.x;
-	d->rays[stripId].wallhit.y = rtmp->wallhit.y;
-	d->rays[stripId].face.u = rtmp->face.u;
-	d->rays[stripId].face.d = rtmp->face.d;
-	d->rays[stripId].face.l = rtmp->face.l;
-	d->rays[stripId].face.r = rtmp->face.r;
-	d->rays[stripId].fndwall = rtmp->fndwall;
-	d->rays[stripId].ctntwall = rtmp->ctntwall;
+	d->rays[stp_id].dist = ft_distance(d->plr.spr.pos, rtmp->wallhit);
+	d->rays[stp_id].wallhit.x = rtmp->wallhit.x;
+	d->rays[stp_id].wallhit.y = rtmp->wallhit.y;
+	d->rays[stp_id].face.u = rtmp->face.u;
+	d->rays[stp_id].face.d = rtmp->face.d;
+	d->rays[stp_id].face.l = rtmp->face.l;
+	d->rays[stp_id].face.r = rtmp->face.r;
+	d->rays[stp_id].fndwall = rtmp->fndwall;
+	d->rays[stp_id].ctntwall = rtmp->ctntwall;
 	if (isvtc)
-		d->rays[stripId].v_hit = TRUE;
+		d->rays[stp_id].v_hit = TRUE;
 	else
-		d->rays[stripId].v_hit = FALSE;
+		d->rays[stp_id].v_hit = FALSE;
 	return (TRUE);
 }
 
-int		ft_cast_ray(t_data *d, float ang, int stripId)
+int		ft_cast_ray(t_data *d, float ang, int stp_id)
 {
 	t_rays	raytemp_h;
 	t_rays	raytemp_v;
@@ -134,9 +134,9 @@ int		ft_cast_ray(t_data *d, float ang, int stripId)
 	dist.x = raytemp_h.fndwall ? ft_distance(d->plr.spr.pos, raytemp_h.wallhit) : __FLT_MAX__;
 	dist.y = raytemp_v.fndwall ? ft_distance(d->plr.spr.pos, raytemp_v.wallhit) : __FLT_MAX__;
 	if (dist.y < dist.x)
-		ft_fill_ray(d, &raytemp_v, 1, stripId);
+		ft_fill_ray(d, &raytemp_v, 1, stp_id);
 	else
-		ft_fill_ray(d, &raytemp_h, 0, stripId);
-	d->rays[stripId].angle = ang;
+		ft_fill_ray(d, &raytemp_h, 0, stp_id);
+	d->rays[stp_id].angle = ang;
 	return (TRUE);
 }

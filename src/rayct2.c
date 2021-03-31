@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 16:49:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		ft_project_texture(t_data *d, t_3dproj *prj, int tex_ind)
 		offset.y = dst_top * ((float)d->txt[tex_ind].size.h / prj->strph);
 		pos1 = ft_pos(offset.i, prj->i, prj->y);
 		pos2 = ft_pos(offset.j, offset.x, offset.y);
-		d->buf[pos1] = (t_cl)d->txt[tex_ind].buffer[pos2];
+		d->buf[pos1] = (T_CL)d->txt[tex_ind].buffer[pos2];
 		prj->y++;
 	}
 	return (TRUE);

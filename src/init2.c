@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 15:09:24 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ int		ft_init_sprite_struct(t_data *d)
 	return (TRUE);
 }
 
-int		ft_init_raytemp(t_rays *raytemp, float rayAngle)
+int		ft_init_raytemp(t_rays *raytemp, float angle)
 {
 	*raytemp = (t_rays) {0};
-	raytemp->face.d = rayAngle > 0 && rayAngle < PI;
+	raytemp->face.d = angle > 0 && angle < PI;
 	raytemp->face.u = !(raytemp->face.d);
-	raytemp->face.r = rayAngle < (0.5 * PI) || rayAngle > (1.5 * PI);
+	raytemp->face.r = angle < (0.5 * PI) || angle > (1.5 * PI);
 	raytemp->face.l = !(raytemp->face.r);
 	return (TRUE);
 }
@@ -49,9 +49,9 @@ int		ft_clear_colorbuffer(t_data *d, int init)
 	int i = 0;
 
 	if(init == 1)
-		d->buf = (t_cl*) malloc(sizeof(t_cl) * 
-                            (t_cl)d->scrsz.w * 
-                            (t_cl)d->scrsz.h);
+		d->buf = (T_CL*) malloc(sizeof(T_CL) * 
+                            (T_CL)d->scrsz.w * 
+                            (T_CL)d->scrsz.h);
 	while(i < d->scrsz.w * d->scrsz.h)
 		d->buf[i++] = ft_crt_trgb(255, 0, 0, 0);
 	return (TRUE);

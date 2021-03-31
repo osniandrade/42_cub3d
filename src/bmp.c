@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 15:49:54 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 16:59:21 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_write_file(t_data *d, int fd)
 	unsigned char	file[54];
 	int				filesize;
 	t_cnt			c;
-	t_cl		color;
+	T_CL		color;
 
 	c.y = 0;
 	c.i = d->scrsz.w;
@@ -54,7 +54,7 @@ void	ft_write_file(t_data *d, int fd)
 	write(fd, &file, 54);
 	while (c.y < c.x)
 	{
-		color = (t_cl)(d->buf[c.y++]);
+		color = (T_CL)(d->buf[c.y++]);
 		write(fd, &color, 4);
 	}
 }

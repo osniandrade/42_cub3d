@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 16:53:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_sprite_projection(t_data *d, t_pjspr *sprite, int i)
 			{
 				sprite->dsttop = sprite->y + (sprite->h / 2) - (d->scrsz.h / 2);
 				sprite->yofst = sprite->dsttop * (sprite->texsz.h / sprite->h);
-				sprite->buff = (t_cl*)d->spr[i].txtr.buffer;
+				sprite->buff = (T_CL*)d->spr[i].txtr.buffer;
 				sprite->color = sprite->buff[ft_pos(sprite->texsz.w, sprite->xofst, sprite->yofst)];
 				if (sprite->color != d->spr[i].txtr.buffer[0])
 					if (sprite->x < d->scrsz.w)

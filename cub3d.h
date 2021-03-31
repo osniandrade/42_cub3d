@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 10:59:43 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:06:06 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define MOVESPEED		1
 # define KEYPRESS		2
 # define KEYRELEASE		3
-# define	MOUSECLICK		33
+# define MOUSECLICK		33
 # define TEXTURE_COUNT	4
 # define SPRITE_COUNT	1
 # define UP				119
@@ -38,13 +38,13 @@
 # define LEFT			97
 # define STRFR			101
 # define STRFL			113
-# define ESC				65307
+# define ESC			65307
 # define PI				3.14159265
 # define TILE_SIZE		64
 # define MAP_SCALE		0.1
 # define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
-# define FOV				(60 * (PI / 180))
-# define t_cl			uint32_t
+# define FOV			(60 * (PI / 180))
+# define T_CL			uint32_t
 
 typedef struct		s_pos
 {
@@ -80,7 +80,7 @@ typedef struct		s_txtr
 	char			*path;
 	t_img			instc;
 	t_size			size;
-	t_cl*			buffer;
+	T_CL			*buffer;
 }					t_txtr;
 typedef struct		s_sprt
 {
@@ -93,11 +93,11 @@ typedef struct		s_sprt
 typedef struct		s_player
 {
 	int				turndir;
-    int				walkdir;
+	int				walkdir;
 	int				strafe;
-    float			rt_angl;
-    float			walkspd;
-    float			turnspd;
+	float			rt_angl;
+	float			walkspd;
+	float			turnspd;
 	t_img			spr;
 }					t_player;
 typedef struct		s_rays
@@ -143,7 +143,7 @@ typedef struct		s_data
 	t_dir			dir;
 	t_size			scrsz;
 	t_size			mapsz;
-	t_cl			*buf;
+	T_CL			*buf;
 	t_img			tile;
 	t_rays			*rays;
 	t_player		plr;
@@ -174,8 +174,8 @@ typedef struct		s_pjspr
 	float			lftx;
 	float			rgtx;
 	float			txlw;
-	t_cl			*buff;
-	t_cl			color;
+	T_CL			*buff;
+	T_CL			color;
 	t_size			texsz;
 }					t_pjspr;
 typedef struct		s_cnt
@@ -206,7 +206,7 @@ void	ft_init_img(t_data *d);
 void	ft_init_map_size(t_data *d);
 void	ft_init_player(t_data *d);
 int		ft_init_sprite_struct(t_data *d);
-int		ft_init_raytemp(t_rays *raytemp, float rayAngle);
+int		ft_init_raytemp(t_rays *raytemp, float angle);
 int		ft_clear_colorbuffer(t_data *d, int init);
 void	ft_init_drwstruct(t_drwline *c, t_pos *i_pos, t_pos *f_pos);
 void	ft_load_file_paths(t_data *d);
@@ -241,8 +241,8 @@ int		ft_player_direction(t_data *d);
 int		ft_fndwall(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc);
 int		ft_h_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang);
 int		ft_v_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang);
-int		ft_fill_ray(t_data *d, t_rays *rtmp, int is_vert, int stripId);
-int		ft_cast_ray(t_data *d, float ang, int stripId);
+int		ft_fill_ray(t_data *d, t_rays *rtmp, int is_vert, int stp_id);
+int		ft_cast_ray(t_data *d, float ang, int stp_id);
 int		ft_cast_all_rays(t_data *d);
 int		ft_project_texture(t_data *d, t_3dproj *projection, int tex_ind);
 void	ft_walltext(t_data *d, t_3dproj *prj);
@@ -277,11 +277,11 @@ void	ft_mapfill_3(t_file *cubfile, char *line, t_cnt *c);
 void	ft_mapfill(t_file *cubfile, char *line, t_cnt *c);
 void	ft_processmap(t_file *cubfile, char *line, int fd);
 void	ft_load_cub_file(t_data *d, int argc, char **argv);
-t_cl	ft_crt_trgb(int t, int r, int g, int b);
-t_cl	ft_get_t(int trgb);
-t_cl	ft_get_r(int trgb);
-t_cl	ft_get_g(int trgb);
-t_cl	ft_get_b(int trgb);
+T_CL	ft_crt_trgb(int t, int r, int g, int b);
+T_CL	ft_get_t(int trgb);
+T_CL	ft_get_r(int trgb);
+T_CL	ft_get_g(int trgb);
+T_CL	ft_get_b(int trgb);
 size_t	ft_strlen(const char *s);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strdup(const char *s1);
