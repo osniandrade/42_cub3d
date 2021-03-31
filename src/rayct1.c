@@ -6,14 +6,14 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:01:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:37:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
 /*
-** int	ft_fndwall(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc)
+** int	ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc)
 **		loops until a wall is found - 
 ** 		0 for horizontal check
 **		1 for vertical check
@@ -27,7 +27,7 @@
 **		function responsible for casting each ray
 */
 
-int		ft_fndwall(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc)
+int		ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st, int isvtc)
 {
 	int		mapcontent;
 	t_cnt	corr;
@@ -49,14 +49,14 @@ int		ft_fndwall(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc)
 			break;
 		else
 		{
-			rtmp->n_touch.x += step.x;
-			rtmp->n_touch.y += step.y;
+			rtmp->n_touch.x += st.x;
+			rtmp->n_touch.y += st.y;
 		}
 	}
 	return (TRUE);
 }
 
-int		ft_h_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
+int		ft_in_h(t_data *d, t_rays *rtmp, t_pos it, t_pos st, float ang)
 {
 	t_pos	toCheck;
 	t_pos	p_pos;
@@ -64,21 +64,21 @@ int		ft_h_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
 	p_pos = d->plr.spr.pos;
 	rtmp->wallhit.x = 0;
 	rtmp->wallhit.y = 0;
-	icpt.y = floor(p_pos.y / d->tile.size.w) * d->tile.size.w;
-	icpt.y += rtmp->face.d ? d->tile.size.w : 0;
-	icpt.x = p_pos.x + (icpt.y - p_pos.y) / tan(ang);
-	step.y = d->tile.size.w;
-	step.y *= rtmp->face.u ? -1 : 1;
-	step.x = d->tile.size.w / tan(ang);
-	step.x *= (rtmp->face.l && step.x > 0) ? -1 : 1;
-	step.x *= (rtmp->face.r && step.x < 0) ? -1 : 1;
-	rtmp->n_touch.x = icpt.x;
-	rtmp->n_touch.y = icpt.y;
-	ft_fndwall(d, rtmp, toCheck, step, 0);
+	it.y = floor(p_pos.y / d->tile.size.w) * d->tile.size.w;
+	it.y += rtmp->face.d ? d->tile.size.w : 0;
+	it.x = p_pos.x + (it.y - p_pos.y) / tan(ang);
+	st.y = d->tile.size.w;
+	st.y *= rtmp->face.u ? -1 : 1;
+	st.x = d->tile.size.w / tan(ang);
+	st.x *= (rtmp->face.l && st.x > 0) ? -1 : 1;
+	st.x *= (rtmp->face.r && st.x < 0) ? -1 : 1;
+	rtmp->n_touch.x = it.x;
+	rtmp->n_touch.y = it.y;
+	ft_fwl(d, rtmp, toCheck, st, 0);
 	return (TRUE);
 }
 
-int		ft_v_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
+int		ft_in_v(t_data *d, t_rays *rtmp, t_pos it, t_pos st, float ang)
 {
 	t_pos	toCheck;
 	t_pos	p_pos;
@@ -86,17 +86,17 @@ int		ft_v_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
 	p_pos = d->plr.spr.pos;
 	rtmp->wallhit.x = 0;
 	rtmp->wallhit.y = 0;
-	icpt.x = floor(p_pos.x / d->tile.size.w) * d->tile.size.w;
-	icpt.x += rtmp->face.r ? d->tile.size.w : 0;
-	icpt.y = p_pos.y + (icpt.x - p_pos.x) * tan(ang);
-	step.x = d->tile.size.w;
-	step.x *= rtmp->face.l ? -1 : 1;
-	step.y = d->tile.size.w * tan(ang);
-	step.y *= (rtmp->face.u && step.y > 0) ? -1 : 1;
-	step.y *= (rtmp->face.d && step.y < 0) ? -1 : 1;
-	rtmp->n_touch.x = icpt.x;
-	rtmp->n_touch.y = icpt.y;
-	ft_fndwall(d, rtmp, toCheck, step, 1);
+	it.x = floor(p_pos.x / d->tile.size.w) * d->tile.size.w;
+	it.x += rtmp->face.r ? d->tile.size.w : 0;
+	it.y = p_pos.y + (it.x - p_pos.x) * tan(ang);
+	st.x = d->tile.size.w;
+	st.x *= rtmp->face.l ? -1 : 1;
+	st.y = d->tile.size.w * tan(ang);
+	st.y *= (rtmp->face.u && st.y > 0) ? -1 : 1;
+	st.y *= (rtmp->face.d && st.y < 0) ? -1 : 1;
+	rtmp->n_touch.x = it.x;
+	rtmp->n_touch.y = it.y;
+	ft_fwl(d, rtmp, toCheck, st, 1);
 	return (TRUE);
 }
 
@@ -129,8 +129,8 @@ int		ft_cast_ray(t_data *d, float ang, int stp_id)
 	ang = ft_normalize_angle(ang);
 	ft_init_raytemp(&raytemp_h, ang);
 	ft_init_raytemp(&raytemp_v, ang);
-	ft_h_intsc(d, &raytemp_h, intercept, step, ang);
-	ft_v_intsc(d, &raytemp_v, intercept, step, ang);
+	ft_in_h(d, &raytemp_h, intercept, step, ang);
+	ft_in_v(d, &raytemp_v, intercept, step, ang);
 	dist.x = raytemp_h.fndwall ? ft_distance(d->plr.spr.pos, raytemp_h.wallhit) : __FLT_MAX__;
 	dist.y = raytemp_v.fndwall ? ft_distance(d->plr.spr.pos, raytemp_v.wallhit) : __FLT_MAX__;
 	if (dist.y < dist.x)

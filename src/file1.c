@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 10:42:00 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:37:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	ft_argtest(t_file *cubfile, char **clean_line, int fd)
 		if (ft_ck_filetype(cubfile, clean_line, fd))
 			cubfile->sppath[0] = ft_strdup(clean_line[1]);
 	if (!ft_strncmp(clean_line[0], "F", 3))
-		ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbdw, fd);
+		ft_ck_rgb(cubfile, clean_line, cubfile->rgbdw, fd);
 	if (!ft_strncmp(clean_line[0], "C", 3))
-		ft_ck_rgbvalues(cubfile, clean_line, cubfile->rgbup, fd);
+		ft_ck_rgb(cubfile, clean_line, cubfile->rgbup, fd);
 }
 
 int		ft_id_n_load(t_file *cubfile, char *line, int fd)

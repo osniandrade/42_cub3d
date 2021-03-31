@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 16:49:17 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:30:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int		ft_loopwall(t_data *d, t_rays *rtmp)
 		return (FALSE);
 }
 
-int		ft_wallhit(t_data *d, t_rays *rtmp, int mapcontent, t_cnt *corr)
+int		ft_wallhit(t_data *d, t_rays *rtmp, int mapct, t_cnt *corr)
 {
-	if (ft_invalid_map_position(d, corr->x, corr->y) && (mapcontent == 1))
+	if (ft_invalid_map_position(d, corr->x, corr->y) && (mapct == 1))
 	{
 		rtmp->wallhit.x = rtmp->n_touch.x;
 		rtmp->wallhit.y = rtmp->n_touch.y;
-		rtmp->ctntwall = mapcontent;
+		rtmp->ctntwall = mapct;
 		rtmp->fndwall = TRUE;
 		return (TRUE);
 	}

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:30:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		ft_cast_all_rays(t_data *d)
 	return (TRUE);
 }
 
-int		ft_project_texture(t_data *d, t_3dproj *prj, int tex_ind)
+int		ft_proj_txtr(t_data *d, t_3dproj *prj, int tex_ind)
 {
 	t_cnt	offset;
 	int		dst_top;
@@ -70,14 +70,14 @@ void	ft_walltext(t_data *d, t_3dproj *prj)
 {
 	if (d->rays[prj->i].v_hit)
 		if (d->rays[prj->i].face.l)
-			ft_project_texture(d, prj, 0);
+			ft_proj_txtr(d, prj, 0);
 		else
-			ft_project_texture(d, prj, 1);
+			ft_proj_txtr(d, prj, 1);
 	else
 		if (d->rays[prj->i].face.u)
-			ft_project_texture(d, prj, 2);
+			ft_proj_txtr(d, prj, 2);
 		else
-			ft_project_texture(d, prj, 3);
+			ft_proj_txtr(d, prj, 3);
 }
 
 void	ft_gen_3d_proj(t_data *d)

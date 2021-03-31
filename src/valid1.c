@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 10:30:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:37:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 **      checks if file extension is equal to other parameter
 ** int	ft_ck_filetype(t_file *cubfile, char **clean_line, int fd)
 **      checks if informed file extension is .xpm
-** void	ft_ck_rgbvalues(t_file *cubfile, char **clean_line, int *rgb, int fd)
+** void	ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd)
 **      checks if rgb values are valid
 */
 
@@ -109,7 +109,7 @@ int		ft_ck_filetype(t_file *cubfile, char **clean_line, int fd)
 	return (TRUE);
 }
 
-void	ft_ck_rgbvalues(t_file *cubfile, char **clean_line, int *rgb, int fd)
+void	ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd)
 {
 	char	**rgb_line;
 	int		j;
