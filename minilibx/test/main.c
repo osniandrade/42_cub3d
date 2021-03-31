@@ -29,17 +29,17 @@ int	endian1;
 int	endian2;
 int	endian3;
 int	endian4;
-char	*data1;
-char	*data2;
-char	*data3;
-char	*data4;
+char	*d1;
+char	*d2;
+char	*d3;
+char	*d4;
 int	xpm1_x;
 int	xpm1_y;
 
 int	local_endian;
 
 int	color_map_1(void *win,int w,int h);
-int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int type);
+int	color_map_2(unsigned char *d,int bpp,int sl,int w,int h,int endian, int type);
 
 int	expose_win1(void *p)
 {
@@ -138,7 +138,7 @@ int	main()
 	 ((t_img *)im1)->type);
 
   printf(" => Fill Image1 ...");
-  color_map_2(data1,bpp1,sl1,IM1_SX,IM1_SY,endian1, 1);
+  color_map_2(d1,bpp1,sl1,IM1_SX,IM1_SY,endian1, 1);
   printf("OK (pixmap : %d)\n",(int)((t_img *)im1)->pix);
 
   printf(" => Put Image1 ...");
@@ -162,7 +162,7 @@ int	main()
 	 ((t_img *)im3)->type);
 
   printf(" => Fill Image3 ...");
-  color_map_2(data3,bpp3,sl3,IM3_SX,IM3_SY,endian3, 1);
+  color_map_2(d3,bpp3,sl3,IM3_SX,IM3_SY,endian3, 1);
   printf("OK (pixmap : %d)\n",(int)((t_img *)im3)->pix);
 
   printf(" => Put Image3 ...");
@@ -201,7 +201,7 @@ int	main()
       exit(1);
     }
   data4 = mlx_get_data_addr(im4,&bpp4,&sl4,&endian4);
-  color_map_2(data4,bpp4,sl4,IM3_SX,IM3_SY,endian4, 2);
+  color_map_2(d4,bpp4,sl4,IM3_SX,IM3_SY,endian4, 2);
 
   printf(" 3rd window, Installing hooks ...");
   win3 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title3");
@@ -240,7 +240,7 @@ int	color_map_1(void *win,int w,int h)
 }
 
 
-int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int type)
+int	color_map_2(unsigned char *d,int bpp,int sl,int w,int h,int endian, int type)
 {
   int	x;
   int	y;

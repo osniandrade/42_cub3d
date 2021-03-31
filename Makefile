@@ -6,17 +6,24 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/03/23 13:14:50 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/03/31 10:45:33 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 MAINCODE = cub3d.c
 GNLFOLDER = ./gnl/
 MLXFOLDER = ./minilibx/
+SRCFOLDER = ./src/
 GNLCODE = get_next_line.c get_next_line_utils.c
 GNL = $(addprefix $(GNLFOLDER), $(GNLCODE))
-SIDECODE = functions.c helper.c testing.c loadfile.c bmp.c
-CODE = $(MAINCODE) $(SIDECODE) $(GNL)
+SIDECODE = helper.c testing.c loadfile.c
+SRCCODE = init1.c init2.c load.c mloop.c finish.c keybrd.c \
+			graph.c help1.c help2.c test.c move.c rayct1.c \
+			rayct2.c rayct3.c sprite.c bmp.c color.c libft1.c \
+			libft2.c libft3.c exit.c valid1.c valid2.c file1.c \
+			file2.c
+SRC = $(addprefix $(SRCFOLDER), $(SRCCODE))
+CODE = $(MAINCODE) $(SIDECODE) $(SRC) $(GNL)
 FLAGS = -Wall -Wextra -Werror
 MLXHEADER = -I $(MLXFOLDER)
 MLXLIB = -L $(MLXFOLDER)

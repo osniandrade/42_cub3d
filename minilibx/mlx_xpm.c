@@ -115,7 +115,7 @@ int	mlx_int_get_text_rgb(char *name, char *end)
 }
 
 
-int	mlx_int_xpm_set_pixel(t_img *img, char *data, int opp, int col, int x)
+int	mlx_int_xpm_set_pixel(t_img *img, char *d, int opp, int col, int x)
 {
 	int	dec;
 	
@@ -123,9 +123,9 @@ int	mlx_int_xpm_set_pixel(t_img *img, char *data, int opp, int col, int x)
   	while (dec--)
     {
     	if (img->image->byte_order)
-			*(data+x*opp+dec) = col&0xFF;
+			*(d+x*opp+dec) = col&0xFF;
       	else
-			*(data+x*opp+opp-dec-1) = col&0xFF;
+			*(d+x*opp+opp-dec-1) = col&0xFF;
       	col >>= 8;
     }
 }
@@ -136,7 +136,7 @@ void	*mlx_int_parse_xpm(t_xvar *xvar,void *info,int info_size,char *(*f)())
 		int		pos;
 		char	*line;
 		char	**tab;
-		char	*data;
+		char	*d;
 		char	*clip_data;
 		int		nc;
 		int		opp;

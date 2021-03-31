@@ -93,7 +93,7 @@ typedef struct	s_img
 	int				height;
 	int				type;
 	int				format;
-	char			*data;
+	char			*d;
 	XShmSegmentInfo	shm;
 }				t_img;
 
