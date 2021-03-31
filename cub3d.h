@@ -6,56 +6,56 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 10:48:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 10:59:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <math.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include "minilibx/mlx.h"
-#include "gnl/get_next_line.h"
+#ifndef CUB3D_H
+# define CUB3D_H
+# include <stdlib.h>
+# include <math.h>
+# include <stdint.h>
+# include <errno.h>
+# include <string.h>
+# include <stdio.h>
+# include "minilibx/mlx.h"
+# include "gnl/get_next_line.h"
 
-#define TRUE			1
-#define FALSE			0
-#define GAMESPEED		0.5
-#define INIT_WALKSPD	16
-#define INIT_TURNSPD	6
-#define MOVESPEED		1
-#define KEYPRESS		2
-#define KEYRELEASE		3
-#define	MOUSECLICK		33
-#define TEXTURE_COUNT	4
-#define SPRITE_COUNT	1
-#define UP				119
-#define DOWN			115
-#define RIGHT			100
-#define LEFT			97
-#define STRFR			101
-#define STRFL			113
-#define ESC				65307
-#define PI				3.14159265
-#define TILE_SIZE		64
-#define MAP_SCALE		0.1
-#define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
-#define FOV				(60 * (PI / 180))
-#define t_cl			uint32_t
+# define TRUE			1
+# define FALSE			0
+# define GAMESPEED		0.5
+# define INIT_WALKSPD	16
+# define INIT_TURNSPD	6
+# define MOVESPEED		1
+# define KEYPRESS		2
+# define KEYRELEASE		3
+# define	MOUSECLICK		33
+# define TEXTURE_COUNT	4
+# define SPRITE_COUNT	1
+# define UP				119
+# define DOWN			115
+# define RIGHT			100
+# define LEFT			97
+# define STRFR			101
+# define STRFL			113
+# define ESC				65307
+# define PI				3.14159265
+# define TILE_SIZE		64
+# define MAP_SCALE		0.1
+# define PLAYERSIZE		((TILE_SIZE / 2) * MAP_SCALE)
+# define FOV				(60 * (PI / 180))
+# define t_cl			uint32_t
 
 typedef struct		s_pos
 {
 	float			x;
 	float			y;
 }					t_pos;
-
 typedef struct		s_size
 {
 	int				h;
 	int				w;
 }					t_size;
-
 typedef struct		s_dir
 {
 	int				u;
@@ -65,7 +65,6 @@ typedef struct		s_dir
 	int				sl;
 	int				sr;
 }					t_dir;
-
 typedef struct		s_img
 {
 	void			*img;
@@ -76,7 +75,6 @@ typedef struct		s_img
 	t_size			size;
 	t_pos			pos;
 }					t_img;
-
 typedef struct		s_txtr
 {
 	char			*path;
@@ -84,7 +82,6 @@ typedef struct		s_txtr
 	t_size			size;
 	t_cl*			buffer;
 }					t_txtr;
-
 typedef struct		s_sprt
 {
 	float			dstnc;
@@ -93,7 +90,6 @@ typedef struct		s_sprt
 	t_txtr			txtr;
 	t_pos			pos;
 }					t_sprt;
-
 typedef struct		s_player
 {
 	int				turndir;
@@ -104,7 +100,6 @@ typedef struct		s_player
     float			turnspd;
 	t_img			spr;
 }					t_player;
-
 typedef struct		s_rays
 {
 	float			angle;
@@ -117,7 +112,6 @@ typedef struct		s_rays
 	t_pos			n_touch;
 	t_img			rayspr;
 }					t_rays;
-
 typedef struct		s_file
 {
 	char			*txpath[TEXTURE_COUNT];
@@ -154,7 +148,6 @@ typedef struct		s_data
 	t_rays			*rays;
 	t_player		plr;
 }					t_data;
-
 typedef struct		s_3dproj
 {
 	int				cltop;
@@ -165,7 +158,6 @@ typedef struct		s_3dproj
 	float			pldist;
 	float			prwallh;
 }					t_3dproj;
-
 typedef struct		s_pjspr
 {
 	int				x;
@@ -186,7 +178,6 @@ typedef struct		s_pjspr
 	t_cl			color;
 	t_size			texsz;
 }					t_pjspr;
-
 typedef struct		s_cnt
 {
 	int				x;
@@ -194,7 +185,6 @@ typedef struct		s_cnt
 	int				i;
 	int				j;
 }					t_cnt;
-
 typedef struct		s_drwline
 {
 	int				i_x;
@@ -208,7 +198,6 @@ typedef struct		s_drwline
 	int				err;
 	int				e2;
 }					t_drwline;
-
 
 int		ft_id_n_load(t_file *cubfile, char *line, int fd);
 void	ft_load_cub_file(t_data *d, int argc, char **argv);
@@ -307,3 +296,4 @@ void	*ft_bzero(void *s, size_t n);
 void	ft_bitwiseconv(unsigned char *addr, unsigned int value);
 void	ft_write_file(t_data *d, int fd);
 void	ft_save_img(t_data *d);
+#endif
