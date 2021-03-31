@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:15:14 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:19:07 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ typedef struct		s_player
 	float			rt_angl;
 	float			walkspd;
 	float			turnspd;
-	//float			plsize;
 	t_img			spr;
 }					t_player;
 typedef struct		s_rays

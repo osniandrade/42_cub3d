@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:19:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,4 @@ void	ft_init_player(t_data *d)
 		d->plr.rt_angl = PI;
 	d->plr.walkspd = INIT_WALKSPD * d->gamespd;
 	d->plr.turnspd = INIT_TURNSPD * (PI / 180) * d->gamespd;
-	//d->plr.plsize = ((TILE_SIZE / 2) * MAP_SCALE);
 }
