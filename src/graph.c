@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:02:30 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:24:27 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 void	ft_print_pixel(t_data *d, int x, int y, int color)
 {
 	char	*dst;
-	
+
 	x = round(x);
 	y = round(y);
 	if (y <= d->scrsz.h && x <= d->scrsz.w && x > 0 && y > 0)

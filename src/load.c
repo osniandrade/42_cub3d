@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:21:51 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:22:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_load_xpm_texture(t_data *d)
 			&(d->txt[i].instc.bpp),
 			&(d->txt[i].instc.ln_lngt),
 			&(d->txt[i].instc.endian));
-		d->txt[i].buffer = (T_CL *) d->txt[i].instc.addr;
+		d->txt[i].buffer = (T_CL *)d->txt[i].instc.addr;
 		i++;
 	}
 }
