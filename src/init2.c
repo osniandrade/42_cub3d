@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:32:45 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:33:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,6 @@ int		ft_clear_colorbuffer(t_data *d, int init)
 	while(i < d->scrsz.w * d->scrsz.h)
 		d->buf[i++] = ft_crt_trgb(255, 0, 0, 0);
 	return (TRUE);
-}
-
-void	ft_initdrwstrct(t_drwline *c, t_pos *i_pos, t_pos *f_pos)
-{
-	// c->i_x = round(i_pos->x);
-	// c->i_y = round(i_pos->y);
-	// c->f_x = round(f_pos->x);
-	// c->f_y = round(f_pos->y);
-	// c->dx = abs((int)c->f_x - (int)c->i_x);
-	// c->sx = c->i_x < c->f_x ? 1 : -1;
-	// c->dy = abs((int)c->f_y - (int)c->i_y);
-	// c->sy = c->i_y < c->f_y ? 1 : -1;
-	// c->err = (c->dx > c->dy ? c->dx : -c->dy) / 2;
 }
 
 void	ft_initsprproj(t_data *d, t_pjspr *spr, int i)

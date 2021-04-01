@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:32:45 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:33:58 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,19 +186,6 @@ typedef struct	s_cnt
 	int			i;
 	int			j;
 }				t_cnt;
-typedef struct	s_drwline
-{
-	int			i_x;
-	int			i_y;
-	int			f_x;
-	int			f_y;
-	int			dx;
-	int			sx;
-	int			dy;
-	int			sy;
-	int			err;
-	int			e2;
-}				t_drwline;
 
 int				ft_id_n_load(t_file *cubfile, char *line, int fd);
 void			ft_load_cub_file(t_data *d, int argc, char **argv);
@@ -209,7 +196,6 @@ void			ft_init_player(t_data *d);
 int				ft_init_sprite_struct(t_data *d);
 int				ft_init_raytemp(t_rays *raytemp, float angle);
 int				ft_clear_colorbuffer(t_data *d, int init);
-void			ft_initdrwstrct(t_drwline *c, t_pos *i_pos, t_pos *f_pos);
 void			ft_initsprproj(t_data *d, t_pjspr *spr, int i);
 void			ft_load_file_paths(t_data *d);
 void			ft_load_xpm_texture(t_data *d);
