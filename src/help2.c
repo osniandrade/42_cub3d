@@ -6,14 +6,14 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 15:41:15 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:48:51 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
 /*
-** float	ft_distance(t_pos coord_a, t_pos coord_b)
+** float	ft_dst(t_pos coord_a, t_pos coord_b)
 **		calculates the distance between two coordinates x and y
 ** void	ft_reset_array(int *array, int i)
 **		resets every position in the array to 0
@@ -21,7 +21,7 @@
 **		converts x and y coordinates to 2d array position
 */
 
-float	ft_distance(t_pos coord_a, t_pos coord_b)
+float	ft_dst(t_pos coord_a, t_pos coord_b)
 {
 	t_pos	rslt;
 

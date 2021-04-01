@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:30:30 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:50:39 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int		ft_proj_txtr(t_data *d, t_3dproj *prj, int tex_ind)
 	offset.i = d->scrsz.w;
 	offset.j = d->txt[tex_ind].size.w;
 	if (d->rays[prj->i].v_hit)
-		offset.x = (int)d->rays[prj->i].wallhit.y % d->tile.size.w;
+		offset.x = (int)d->rays[prj->i].w_hit.y % d->tile.size.w;
 	else
-		offset.x = (int)d->rays[prj->i].wallhit.x % d->tile.size.w;
+		offset.x = (int)d->rays[prj->i].w_hit.x % d->tile.size.w;
 	while (prj->y < prj->clbot)
 	{
 		dst_top = (prj->y + (prj->strph / 2) - (d->scrsz.h / 2));

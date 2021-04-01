@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:13:23 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/03/31 11:48:51 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_update_sprite(t_data *d)
 		{
 			d->spr[i].visbl = 1;
 			d->spr[i].angle = sprite_player_angle;
-			d->spr[i].dstnc = ft_distance(d->spr[i].pos, d->plr.spr.pos);
+			d->spr[i].dstnc = ft_dst(d->spr[i].pos, d->plr.spr.pos);
 			d->vsbspr[sprc++] = i;
 		}
 		else

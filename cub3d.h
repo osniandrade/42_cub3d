@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:44:47 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:02:17 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,12 @@ typedef struct	s_rays
 {
 	float		angle;
 	float		dist;
+	float		t_ang;
 	int			v_hit;
 	int			fndwall;
 	int			ctntwall;
 	t_dir		face;
-	t_pos		wallhit;
+	t_pos		w_hit;
 	t_pos		n_touch;
 	t_img		rayspr;
 }				t_rays;
@@ -222,14 +223,12 @@ int				ft_key_press(int keycode, t_data *d);
 int				ft_key_release(int keycode, t_data *d);
 int				ft_mouseclose(t_data *d);
 void			ft_print_pixel(t_data *d, int x, int y, int color);
-int				ft_drwln(t_data *d, t_pos i_pos, t_pos f_pos, int cl, int rsz);
-int				ft_drwrt(t_data *d, t_pos pos, t_size size, int cl, int rez);
 void			ft_update_colorbuffer(t_data *d, t_pos pos, int color);
 int				ft_print_colorbuffer(t_data *d);
 float			ft_normalize_angle(float angle);
 float			ft_normalize_angle2(float angle);
 float			ft_sprite_arctan(t_data *d, int i);
-float			ft_distance(t_pos coord_a, t_pos coord_b);
+float			ft_dst(t_pos coord_a, t_pos coord_b);
 void			ft_reset_array(int *array, int i);
 int				ft_pos(int w, int x, int y);
 int				ft_invalid_screen_area(t_data *d, float x, float y);
@@ -237,9 +236,9 @@ int				ft_invalid_map_position(t_data *d, float x, float y);
 int				ft_invalid_area(t_data *d, float x, float y);
 int				ft_move_player(t_data *d);
 int				ft_player_direction(t_data *d);
-int				ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st, int isvtc);
-int				ft_in_h(t_data *d, t_rays *rtmp, t_pos it, t_pos st, float ang);
-int				ft_in_v(t_data *d, t_rays *rtmp, t_pos it, t_pos st, float ang);
+int				ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st);
+int				ft_in_h(t_data *d, t_rays *rtmp, t_pos it, t_pos st);
+int				ft_in_v(t_data *d, t_rays *rtmp, t_pos it, t_pos st);
 int				ft_fill_ray(t_data *d, t_rays *rtmp, int is_vert, int stp_id);
 int				ft_cast_ray(t_data *d, float ang, int stp_id);
 int				ft_cast_all_rays(t_data *d);
