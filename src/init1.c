@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:19:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:04:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 
 int		ft_init_win(t_data *d)
 {
-	t_cnt c;
-	
+	t_cnt	c;
+
 	d->mlx = mlx_init();
 	mlx_get_screen_size(d->mlx, &c.x, &c.y);
 	if (c.x < d->cub.scrsize.w || c.y < d->cub.scrsize.h)
@@ -52,8 +52,8 @@ void	ft_init_img(t_data *d)
 	t_img	img;
 
 	img.img = mlx_new_image(d->mlx, d->scrsz.w, d->scrsz.h);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, 
-									&img.ln_lngt, &img.endian);
+	img.addr = mlx_get_data_addr(img.img, &img.bpp,
+								&img.ln_lngt, &img.endian);
 	img.pos.x = 0;
 	img.pos.y = 0;
 	img.size.w = TILE_SIZE;

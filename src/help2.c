@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:48:51 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:59:58 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ float	ft_dst(t_pos coord_a, t_pos coord_b)
 	rslt.x *= rslt.x;
 	rslt.y = coord_b.y - coord_a.y;
 	rslt.y *= rslt.y;
-	return sqrt(rslt.x + rslt.y);
+	return (sqrt(rslt.x + rslt.y));
 }
 
 void	ft_reset_array(int *array, int i)
 {
-	while(i >= 0)
+	while (i >= 0)
 		array[i--] = 9999;
 }
 

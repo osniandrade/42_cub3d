@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:50:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:00:49 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 
 int		ft_loopwall(t_data *d, t_rays *rtmp)
 {
-	if (rtmp->n_touch.x >= 0 && 
-		floor(rtmp->n_touch.x / d->tile.size.w) <= d->mapsz.w && 
-		rtmp->n_touch.y > 0 && 
+	if (rtmp->n_touch.x >= 0 &&
+		floor(rtmp->n_touch.x / d->tile.size.w) <= d->mapsz.w &&
+		rtmp->n_touch.y > 0 &&
 		floor(rtmp->n_touch.y / d->tile.size.w) <= d->mapsz.h)
 		return (TRUE);
 	else
@@ -41,5 +41,5 @@ int		ft_wallhit(t_data *d, t_rays *rtmp, int mapct, t_cnt *corr)
 		return (TRUE);
 	}
 	else
-	return (FALSE);
+		return (FALSE);
 }
