@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 10:34:29 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:36:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ int		ft_ck_mapdata(t_file *cubfile)
 
 int		ft_ck_validchar(int *map, t_cnt c, t_file *cubfile)
 {
-	if (map[ft_pos(c.j, c.x-1, c.y-1)] == 9 ||
-		map[ft_pos(c.j, c.x-1, c.y)] == 9 ||
-		map[ft_pos(c.j, c.x-1, c.y+1)] == 9 ||
-		map[ft_pos(c.j, c.x, c.y-1)] == 9 ||
-		map[ft_pos(c.j, c.x, c.y+1)] == 9 ||
-		map[ft_pos(c.j, c.x+1, c.y-1)] == 9 ||
-		map[ft_pos(c.j, c.x+1, c.y)] == 9 ||
-		map[ft_pos(c.j, c.x+1, c.y+1)] == 9)
+	if (map[ft_pos(c.j, c.x - 1, c.y - 1)] == 9 ||
+		map[ft_pos(c.j, c.x - 1, c.y)] == 9 ||
+		map[ft_pos(c.j, c.x - 1, c.y + 1)] == 9 ||
+		map[ft_pos(c.j, c.x, c.y - 1)] == 9 ||
+		map[ft_pos(c.j, c.x, c.y + 1)] == 9 ||
+		map[ft_pos(c.j, c.x + 1, c.y - 1)] == 9 ||
+		map[ft_pos(c.j, c.x + 1, c.y)] == 9 ||
+		map[ft_pos(c.j, c.x + 1, c.y + 1)] == 9)
 	{
 		printf("map not enclosed\n");
 		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
@@ -100,8 +100,7 @@ void	ft_ck_validmap(t_file *cubfile)
 		c.x = 0;
 		c.y++;
 	}
-	c.x = 0;
 	while (c.x < c.i * c.j)
 		if (map[c.x++] == 9)
-			map[c.x-1] = 1;
+			map[c.x - 1] = 1;
 }
