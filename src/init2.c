@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:28:55 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:29:18 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,16 @@
 // 	return (TRUE);
 // }
 
-int		ft_init_raytemp(t_rays *raytemp, float angle)
-{
-	*raytemp = (t_rays) {0};
-	raytemp->face.d = (angle > 0 && angle < PI);
-	raytemp->face.u = !(raytemp->face.d);
-	raytemp->face.r = (angle < (0.5 * PI) || angle > (1.5 * PI));
-	raytemp->face.l = !(raytemp->face.r);
-	raytemp->t_ang = angle;
-	return (TRUE);
-}
+// int		ft_init_raytemp(t_rays *raytemp, float angle)
+// {
+// 	*raytemp = (t_rays) {0};
+// 	raytemp->face.d = (angle > 0 && angle < PI);
+// 	raytemp->face.u = !(raytemp->face.d);
+// 	raytemp->face.r = (angle < (0.5 * PI) || angle > (1.5 * PI));
+// 	raytemp->face.l = !(raytemp->face.r);
+// 	raytemp->t_ang = angle;
+// 	return (TRUE);
+// }
 
 int		ft_clear_colorbuffer(t_data *d, int init)
 {
