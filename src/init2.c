@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:31:12 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:32:45 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 **		initializes the colorbuffer
 **		init = 0 - skips memory allocation
 **		init = 1 - allocates memory for buffer
-** void	ft_init_drwstruct(t_drwline *c, t_coord *i_pos, t_coord *f_pos)
+** void	ft_initdrwstrct(t_drwline *c, t_coord *i_pos, t_coord *f_pos)
 **		inits ft_draw_line struct values
 ** void	ft_initsprproj(t_data *d, t_pjspr *spr, int i)
 **		fills sprite info for projection calculation
@@ -60,7 +60,7 @@ int		ft_clear_colorbuffer(t_data *d, int init)
 	return (TRUE);
 }
 
-void	ft_init_drwstruct(t_drwline *c, t_pos *i_pos, t_pos *f_pos)
+void	ft_initdrwstrct(t_drwline *c, t_pos *i_pos, t_pos *f_pos)
 {
 	// c->i_x = round(i_pos->x);
 	// c->i_y = round(i_pos->y);
