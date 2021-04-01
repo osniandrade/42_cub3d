@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:13:27 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:15:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 ** int	ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos step, int isvtc)
-**		loops until a wall is found - 
+**		loops until a wall is found
 ** 		0 for horizontal check
 **		1 for vertical check
 ** int	ft_h_intsc(t_data *d, t_rays *rtmp, t_pos icpt, t_pos step, float ang)
@@ -45,7 +45,7 @@ int		ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st)
 		if (corr.x < d->mapsz.w && corr.y < d->mapsz.h)
 			mapcontent = d->maptbl[ft_pos(corr.i, corr.x, corr.y)];
 		if (ft_wallhit(d, rtmp, mapcontent, &corr))
-			break;
+			return (TRUE);
 		else
 		{
 			rtmp->n_touch.x += st.x;
