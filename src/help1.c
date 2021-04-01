@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:06:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:22:55 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 **		gets the arc tangent of a sprite relative to player position
 */
 
-float	ft_normalize_angle(float angle) 
+float	ft_normalize_angle(float angle)
 {
 	angle = remainder(angle, PI * 2);
 	if (angle < 0)
