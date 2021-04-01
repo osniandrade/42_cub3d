@@ -6,23 +6,23 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:57:04 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:09:57 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
 /*
-** int  ft_init_sprite_struct(t_data *d)
-**      initializes sprite structs with zero
+** int	ft_init_sprite_struct(t_data *d)
+**		initializes sprite structs with zero
 ** int	ft_init_raytemp(t_rays *raytemp, float rayAngle)
-**      initializes raytemp struct with basic values
+**		initializes raytemp struct with basic values
 ** int	ft_clear_colorbuffer(t_data *d, int init)
-**      initializes the colorbuffer
-**      init = 0  - skips memory allocation
-**      init = 1  - allocates memory for buffer
+**		initializes the colorbuffer
+**		init = 0 - skips memory allocation
+**		init = 1 - allocates memory for buffer
 ** void	ft_init_drwstruct(t_drwline *c, t_coord *i_pos, t_coord *f_pos)
-**      inits ft_draw_line struct values
+**		inits ft_draw_line struct values
 ** void	ft_initsprproj(t_data *d, t_pjspr *spr, int i)
 **		fills sprite info for projection calculation
 */
@@ -49,8 +49,9 @@ int		ft_init_raytemp(t_rays *raytemp, float angle)
 
 int		ft_clear_colorbuffer(t_data *d, int init)
 {
-	int i = 0;
+	int i;
 
+	i = 0;
 	if(init == 1)
 		d->buf = (T_CL*) malloc(sizeof(T_CL) * 
                             (T_CL)d->scrsz.w * 
