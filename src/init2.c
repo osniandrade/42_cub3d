@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:26:02 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:27:37 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int		ft_init_sprite_struct(t_data *d)
 
 int		ft_init_raytemp(t_rays *raytemp, float angle)
 {
-	*raytemp = (t_rays) {0};
-	raytemp->face.d = (angle > 0 && angle < PI);
-	raytemp->face.u = !(raytemp->face.d);
-	raytemp->face.r = (angle < (0.5 * PI) || angle > (1.5 * PI));
-	raytemp->face.l = !(raytemp->face.r);
-	raytemp->t_ang = angle;
+	// *raytemp = (t_rays) {0};
+	// raytemp->face.d = (angle > 0 && angle < PI);
+	// raytemp->face.u = !(raytemp->face.d);
+	// raytemp->face.r = (angle < (0.5 * PI) || angle > (1.5 * PI));
+	// raytemp->face.l = !(raytemp->face.r);
+	// raytemp->t_ang = angle;
 	return (TRUE);
 }
 
