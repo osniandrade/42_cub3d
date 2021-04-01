@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:43:35 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:55:16 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,7 @@ void	ft_sprite_projection(t_data *d, t_pjspr *spr, int i)
 		{
 			if (!(ft_invalid_screen_area(d, (float)spr->x, (float)spr->y)))
 			{
-				spr->dsttop = spr->y + (spr->h / 2) - (d->scrsz.h / 2);
-				spr->yofst = spr->dsttop * (spr->texsz.h / spr->h);
-				spr->buff = (T_CL*)d->spr[i].txtr.buffer;
-				spr->t_pos = ft_pos(spr->texsz.w, spr->xofst, spr->yofst);
-				spr->color = spr->buff[spr->t_pos];
-				spr->t_pos = ft_pos(d->scrsz.w, spr->x, spr->y);
+				ft_initsprproj(d, spr, i);
 				if (spr->color != d->spr[i].txtr.buffer[0])
 					if (spr->x < d->scrsz.w)
 						if (d->spr[i].dstnc < d->rays[spr->x].dist)
