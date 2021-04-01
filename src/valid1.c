@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:37:56 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:06:13 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_validargs(t_file *cubfile, int argc, char **argv)
 	}
 }
 
-t_size ft_ck_scrsize(t_file *cubfile, char **clean_line, int fd)
+t_size	ft_ck_scrsize(t_file *cubfile, char **clean_line, int fd)
 {
 	t_size	size;
 
@@ -129,13 +129,10 @@ void	ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd)
 	if (rgb_line != NULL)
 		ft_free_c_line(rgb_line);
 	while (j < 3)
-	{
-		if (rgb[j] < 0 || rgb[j] > 255)
+		if (rgb[j] < 0 || rgb[j++] > 255)
 		{
 			printf("invalid color values\n");
 			ft_ex_wrongdata(cubfile, clean_line, fd);
 		}
-		j++;
-	}
 	cubfile->argcnt++;
 }

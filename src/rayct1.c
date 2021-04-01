@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 15:38:20 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:13:27 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int		ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st)
 	corr.i = d->mapsz.w;
 	while (ft_loopwall(d, rtmp))
 	{
-		chk.x = rtmp->n_touch.x;
-		chk.y = rtmp->n_touch.y;
+		chk = rtmp->n_touch;
 		if (rtmp->v_hit)
 			chk.x += (rtmp->face.l ? -1 : 0);
 		else
@@ -46,14 +45,13 @@ int		ft_fwl(t_data *d, t_rays *rtmp, t_pos chk, t_pos st)
 		if (corr.x < d->mapsz.w && corr.y < d->mapsz.h)
 			mapcontent = d->maptbl[ft_pos(corr.i, corr.x, corr.y)];
 		if (ft_wallhit(d, rtmp, mapcontent, &corr))
-			break; 
+			break;
 		else
 		{
 			rtmp->n_touch.x += st.x;
 			rtmp->n_touch.y += st.y;
 		}
 	}
-	rtmp->v_hit = 0;
 	return (TRUE);
 }
 
@@ -77,6 +75,7 @@ int		ft_in_h(t_data *d, t_rays *rtmp, t_pos it, t_pos st)
 	rtmp->n_touch.y = it.y;
 	rtmp->v_hit = 0;
 	ft_fwl(d, rtmp, chk, st);
+	rtmp->v_hit = 0;
 	return (TRUE);
 }
 
@@ -100,6 +99,7 @@ int		ft_in_v(t_data *d, t_rays *rtmp, t_pos it, t_pos st)
 	rtmp->n_touch.y = it.y;
 	rtmp->v_hit = 1;
 	ft_fwl(d, rtmp, chk, st);
+	rtmp->v_hit = 0;
 	return (TRUE);
 }
 
