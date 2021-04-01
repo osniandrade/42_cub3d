@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 15:49:54 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:05:09 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:28:28 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 /*
 ** void	ft_bitwiseconv(unsigned char *addr, unsigned int value)
 **		does the bitwise conversion of some header info
+** void	ft_initcount(t_data *d, t_cnt *c);
+**		inits the counting variable
 ** void	ft_write_file(t_data *d, int fd)
 **		writes the header info and the color buffer into the file
 ** void	ft_save_img(t_data *d)
@@ -29,17 +31,22 @@ void	ft_bitwiseconv(unsigned char *addr, unsigned int value)
 	addr[3] = (unsigned char)(value >> 24);
 }
 
+void	ft_initcount(t_data *d, t_cnt *c)
+{
+	c->y = 0;
+	c->i = d->scrsz.w;
+	c->j = d->scrsz.h;
+	c->x = c->i * c->j;
+}
+
 void	ft_write_file(t_data *d, int fd)
 {
 	unsigned char	file[54];
 	int				filesize;
 	t_cnt			c;
-	T_CL		color;
+	T_CL			color;
 
-	c.y = 0;
-	c.i = d->scrsz.w;
-	c.j = d->scrsz.h;
-	c.x = c.i * c.j;
+	ft_initcount(d, &c);
 	ft_bzero(&file, 54);
 	filesize = 54 + (c.i * c.j);
 	file[0] = (unsigned char)('B');
@@ -61,9 +68,9 @@ void	ft_write_file(t_data *d, int fd)
 
 void	ft_save_img(t_data *d)
 {
-    int	fd;
+	int	fd;
 
-    fd = open("save.bmp", O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 777);
+	fd = open("save.bmp", O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 777);
 	ft_write_file(d, fd);
 	close(fd);
 	ft_destroy(d, 1);

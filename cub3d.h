@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:02:17 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:28:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,6 +294,7 @@ char			*ft_strchr(const char *s, int c);
 int				ft_isascii(int c);
 void			*ft_bzero(void *s, size_t n);
 void			ft_bitwiseconv(unsigned char *addr, unsigned int value);
+void			ft_initcount(t_data *d, t_cnt *c);
 void			ft_write_file(t_data *d, int fd);
 void			ft_save_img(t_data *d);
 #endif
