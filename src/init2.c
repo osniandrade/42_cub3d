@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:35:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:35:31 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int		ft_clear_colorbuffer(t_data *d, int init)
 
 	i = 0;
 	if (init == 1)
-		d->buf = (T_CL *)malloc(sizeof(T_CL) * 
-								(T_CL)d->scrsz.w * 
+		d->buf = (T_CL *)malloc(sizeof(T_CL) *
+								(T_CL)d->scrsz.w *
 								(T_CL)d->scrsz.h);
 	while (i < d->scrsz.w * d->scrsz.h)
 		d->buf[i++] = ft_crt_trgb(255, 0, 0, 0);
