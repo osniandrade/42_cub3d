@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:48:51 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:43:35 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,33 @@ void	ft_set_sprite(t_data *d, t_pjspr *sprite, int i)
 	sprite->x = sprite->lftx;
 }
 
-void	ft_sprite_projection(t_data *d, t_pjspr *sprite, int i)
+void	ft_sprite_projection(t_data *d, t_pjspr *spr, int i)
 {
-	while (sprite->x < sprite->rgtx)
+	while (spr->x < spr->rgtx)
 	{
-		sprite->txlw = (sprite->texsz.w / sprite->w);
-		sprite->xofst = sprite->x - sprite->lftx;
-		sprite->xofst = (sprite->xofst < 0) ? sprite->xofst * -1 : sprite->xofst;
-		sprite->xofst *= sprite->txlw;
-		sprite->y = sprite->topy;
-		while (sprite->y < sprite->btmy)
+		spr->txlw = (spr->texsz.w / spr->w);
+		spr->xofst = spr->x - spr->lftx;
+		spr->xofst = (spr->xofst < 0) ? spr->xofst * -1 : spr->xofst;
+		spr->xofst *= spr->txlw;
+		spr->y = spr->topy;
+		while (spr->y < spr->btmy)
 		{
-			if (!(ft_invalid_screen_area(d, (float)sprite->x, (float)sprite->y)))
+			if (!(ft_invalid_screen_area(d, (float)spr->x, (float)spr->y)))
 			{
-				sprite->dsttop = sprite->y + (sprite->h / 2) - (d->scrsz.h / 2);
-				sprite->yofst = sprite->dsttop * (sprite->texsz.h / sprite->h);
-				sprite->buff = (T_CL*)d->spr[i].txtr.buffer;
-				sprite->color = sprite->buff[ft_pos(sprite->texsz.w, sprite->xofst, sprite->yofst)];
-				if (sprite->color != d->spr[i].txtr.buffer[0])
-					if (sprite->x < d->scrsz.w)
-						if (d->spr[i].dstnc < d->rays[sprite->x].dist)
-							d->buf[ft_pos(d->scrsz.w, sprite->x, sprite->y)] = sprite->color;
+				spr->dsttop = spr->y + (spr->h / 2) - (d->scrsz.h / 2);
+				spr->yofst = spr->dsttop * (spr->texsz.h / spr->h);
+				spr->buff = (T_CL*)d->spr[i].txtr.buffer;
+				spr->t_pos = ft_pos(spr->texsz.w, spr->xofst, spr->yofst);
+				spr->color = spr->buff[spr->t_pos];
+				spr->t_pos = ft_pos(d->scrsz.w, spr->x, spr->y);
+				if (spr->color != d->spr[i].txtr.buffer[0])
+					if (spr->x < d->scrsz.w)
+						if (d->spr[i].dstnc < d->rays[spr->x].dist)
+							d->buf[spr->t_pos] = spr->color;
 			}
-			sprite->y++;
+			spr->y++;
 		}
-		sprite->x++;
+		spr->x++;
 	}
 }
 
@@ -99,7 +101,7 @@ void	ft_draw_sprite(t_data *d)
 	int		i;
 	int		j;
 	t_pjspr	sprite;
-	
+
 	i = 0;
 	j = 0;
 	while (i < SPRITE_COUNT)

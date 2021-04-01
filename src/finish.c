@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/30 15:28:21 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:37:45 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 
 void	ft_destroy_images(t_data *d)
 {
-	int i = 0;
+	int		i;
 
+	i = 0;
 	mlx_destroy_image(d->mlx, d->tile.img);
 	while (i < TEXTURE_COUNT)
 	{
