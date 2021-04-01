@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:09:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:13:36 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@
 
 int		ft_init_sprite_struct(t_data *d)
 {
-	int i = 0;
+	int		i;
 
+	i = 0;
 	while (i < SPRITE_COUNT)
 		d->spr[i++] = (t_sprt) {0};
 	return (TRUE);
@@ -49,13 +50,13 @@ int		ft_init_raytemp(t_rays *raytemp, float angle)
 
 int		ft_clear_colorbuffer(t_data *d, int init)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	if(init == 1)
-		d->buf = (T_CL*) malloc(sizeof(T_CL) * 
-                            (T_CL)d->scrsz.w * 
-                            (T_CL)d->scrsz.h);
+		d->buf = (T_CL*)malloc(sizeof(T_CL) *
+								(T_CL)d->scrsz.w *
+								(T_CL)d->scrsz.h);
 	while(i < d->scrsz.w * d->scrsz.h)
 		d->buf[i++] = ft_crt_trgb(255, 0, 0, 0);
 	return (TRUE);
@@ -66,7 +67,7 @@ void	ft_init_drwstruct(t_drwline *c, t_pos *i_pos, t_pos *f_pos)
 	c->i_x = round(i_pos->x);
 	c->i_y = round(i_pos->y);
 	c->f_x = round(f_pos->x);
-	c->f_y = round(f_pos->y);	
+	c->f_y = round(f_pos->y);
 	c->dx = abs((int)c->f_x - (int)c->i_x);
 	c->sx = c->i_x < c->f_x ? 1 : -1;
 	c->dy = abs((int)c->f_y - (int)c->i_y);
