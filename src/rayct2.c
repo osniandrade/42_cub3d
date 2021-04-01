@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 11:50:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/01 16:33:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@
 
 int		ft_cast_all_rays(t_data *d)
 {
-	float	rayAngle;
-	int		stripId;
+	float	ang;
+	int		stp_id;
 
-	stripId = 0;
-	rayAngle = d->plr.rt_angl + atan((stripId - (d->n_rays / 2)) / d->dpp);
-	while (stripId < d->n_rays)
+	stp_id = 0;
+	ang = d->plr.rt_angl + atan((stp_id - (d->n_rays / 2)) / d->dpp);
+	while (stp_id < d->n_rays)
 	{
-		ft_cast_ray(d, rayAngle, stripId);
-		rayAngle += d->fov / d->n_rays;
-		rayAngle = ft_normalize_angle(rayAngle);
-		stripId++;
+		ft_cast_ray(d, ang, stp_id);
+		ang += d->fov / d->n_rays;
+		ang = ft_normalize_angle(ang);
+		stp_id++;
 	}
 	return (TRUE);
 }
@@ -69,15 +69,19 @@ int		ft_proj_txtr(t_data *d, t_3dproj *prj, int tex_ind)
 void	ft_walltext(t_data *d, t_3dproj *prj)
 {
 	if (d->rays[prj->i].v_hit)
+	{
 		if (d->rays[prj->i].face.l)
 			ft_proj_txtr(d, prj, 0);
 		else
 			ft_proj_txtr(d, prj, 1);
+	}
 	else
+	{
 		if (d->rays[prj->i].face.u)
 			ft_proj_txtr(d, prj, 2);
 		else
 			ft_proj_txtr(d, prj, 3);
+	}
 }
 
 void	ft_gen_3d_proj(t_data *d)
