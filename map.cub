@@ -3,8 +3,7 @@ NO  ./img/bunkerwall.xpm
   SO      ./img/labwall.xpm     
 WE ./img/moldystonewall.xpm             
 EA ./img/stonewall.xpm
-EA ./img/stonewall.xpm
-S ./img/armor.xpm
+S ./img/armor.xpm ./img/armor.xpm
 C 191,192,193
 F 61,62,63
 
