@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:33:58 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/06 19:46:47 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,7 @@ void			ft_sprite_projection(t_data *d, t_pjspr *sprite, int i);
 void			ft_draw_sprite(t_data *d);
 int				ft_find_sprite(t_data *d);
 void			ft_free_c_line(char **clean_line);
-void			ft_ex_wrongdata(t_file *cubfile, char **clean_line, int fd);
+void			ft_ex_wrongdata(t_file *cubfile, int fd);
 void			ft_ex_wrongmap(t_file *cubfile, int f);
 void			ft_error(void);
 void			ft_validargs(t_file *cubfile, int argc, char **argv);

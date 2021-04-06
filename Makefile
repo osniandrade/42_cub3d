@@ -6,10 +6,11 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/03/31 11:14:07 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/04/06 18:48:36 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+NAME = cub3D
 MAINCODE = cub3d.c
 GNLFOLDER = ./gnl/
 MLXFOLDER = ./minilibx/
@@ -28,12 +29,22 @@ MLXHEADER = -I $(MLXFOLDER)
 MLXLIB = -L $(MLXFOLDER)
 MLXFLAGS = -lmlx -lm -lX11 -lXext
 MLX = $(MLXHEADER) $(MLXLIB) $(MLXFLAGS)
-OUTPUT = cub3d.out
+OUTPUT = cub3D
 MAPFILE = map.cub
 MEMLEAK = -fsanitize=address
 
-build:
+all: $(NAME)
+
+$(NAME):
 	gcc $(FLAGS) $(CODE) $(MLX) -o $(OUTPUT)
+
+clean:
+	rm -f $(OUTPUT)
+
+fclean:
+	rm -f $(OUTPUT)
+
+re:	fclean all
 
 debug:
 	gcc -g $(CODE) $(MLX) -o $(OUTPUT)
@@ -46,6 +57,3 @@ run:
 
 save:
 	./$(OUTPUT) $(MAPFILE) --save
-
-clean:
-	rm *.out

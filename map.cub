@@ -1,7 +1,8 @@
 R 1280  960
 NO  ./img/bunkerwall.xpm
-SO ./img/labwall.xpm     
+  SO      ./img/labwall.xpm     
 WE ./img/moldystonewall.xpm             
+EA ./img/stonewall.xpm
 EA ./img/stonewall.xpm
 S ./img/armor.xpm
 C 191,192,193

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:02:39 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/06 19:45:51 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		ft_id_n_load(t_file *file, char *line, int fd)
 	if (file->argcnt != 8)
 	{
 		printf("missing arguments in .cub file\n");
-		ft_ex_wrongdata(file, clean_line, fd);
+		ft_ex_wrongdata(file, fd);
 	}
 	return (TRUE);
 }

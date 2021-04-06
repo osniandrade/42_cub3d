@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:06:13 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/06 19:46:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ t_size	ft_ck_scrsize(t_file *cubfile, char **clean_line, int fd)
 	if (clean_line[1] == NULL || clean_line[2] == NULL)
 	{
 		printf("missing screen resolution data\n");
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	size.w = ft_atoi(clean_line[1]);
 	size.h = ft_atoi(clean_line[2]);
 	if (size.w % 4 != 0 || size.h % 4 != 0)
 	{
 		printf("invalid screen resolution\n");
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	cubfile->argcnt++;
 	return (size);
@@ -93,17 +93,17 @@ int		ft_ck_filetype(t_file *cubfile, char **clean_line, int fd)
 	if (ln == 0)
 	{
 		printf("missing file path\n");
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	if (!ft_ck_fileext(clean_line[1], "xpm"))
 	{
 		printf("invalid file extension\n");
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	if (access(clean_line[1], F_OK) != 0)
 	{
 		printf("file '%s' does not exist\n", clean_line[1]);
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	cubfile->argcnt++;
 	return (TRUE);
@@ -121,7 +121,7 @@ void	ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd)
 		printf("missing color value\n");
 		if (rgb_line != NULL)
 			ft_free_c_line(rgb_line);
-		ft_ex_wrongdata(cubfile, clean_line, fd);
+		ft_ex_wrongdata(cubfile, fd);
 	}
 	rgb[0] = ft_atoi(rgb_line[0]);
 	rgb[1] = ft_atoi(rgb_line[1]);
@@ -132,7 +132,7 @@ void	ft_ck_rgb(t_file *cubfile, char **clean_line, int *rgb, int fd)
 		if (rgb[j] < 0 || rgb[j++] > 255)
 		{
 			printf("invalid color values\n");
-			ft_ex_wrongdata(cubfile, clean_line, fd);
+			ft_ex_wrongdata(cubfile, fd);
 		}
 	cubfile->argcnt++;
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/03/31 09:58:43 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/06 19:45:40 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** void	ft_free_c_line(char **clean_line)
 **      frees clean_line array of arrays
-** void	ft_ex_wrongdata(t_file *cubfile, char **clean_line, int fd)
+** void	ft_ex_wrongdata(t_file *cubfile, int fd)
 **      exits cleanly if error found in cub file
 ** void	ft_ex_wrongmap(t_file *cubfile, int f)
 **      exit function from map part of validation
@@ -28,13 +28,17 @@ void	ft_free_c_line(char **clean_line)
 	int	i;
 
 	i = 0;
-	while (clean_line[i])
-		if (clean_line[i] != NULL)
-			free(clean_line[i++]);
+	if (clean_line != NULL)
+		while (clean_line[i])
+			if (clean_line[i] != NULL)
+			{
+				free(clean_line[i]);
+				i++;
+			}
 	free(clean_line);
 }
 
-void	ft_ex_wrongdata(t_file *cubfile, char **clean_line, int fd)
+void	ft_ex_wrongdata(t_file *cubfile, int fd)
 {
 	close(fd);
 	if (cubfile->txpath[0] != NULL)
@@ -47,8 +51,6 @@ void	ft_ex_wrongdata(t_file *cubfile, char **clean_line, int fd)
 		free(cubfile->txpath[3]);
 	if (cubfile->sppath[0] != NULL)
 		free(cubfile->sppath[0]);
-	if (clean_line != NULL)
-		ft_free_c_line(clean_line);
 	exit(0);
 }
 
