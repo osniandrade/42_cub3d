@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/06 19:46:47 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:33:25 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,11 @@ typedef struct	s_file
 	char		*txpath[TEXTURE_COUNT];
 	char		*sppath[SPRITE_COUNT];
 	char		plrdir;
+	char		*line;
 	int			argcnt;
 	int			bmp;
 	int			*map;
+	int			args[8];
 	int			rgbup[3];
 	int			rgbdw[3];
 	t_pos		strtpos;
@@ -254,6 +256,8 @@ int				ft_ck_validchar(int *map, t_cnt c, t_file *cubfile);
 int				ft_ck_sprite(t_file *cubfile, int *trgr);
 void			ft_ck_validmap(t_file *cubfile);
 void			ft_argtest(t_file *cubfile, char **clean_line, int fd);
+int				ft_argnumber(char **clean_line);
+int				ft_loadedargs(t_file *file, int key, int flag);
 int				ft_id_n_load(t_file *cubfile, char *line, int fd);
 int				ft_testmapchar(char *line);
 void			ft_getmapdata(t_file *cubfile, char *line, int fd);
@@ -285,4 +289,5 @@ void			ft_bitwiseconv(unsigned char *addr, unsigned int value);
 void			ft_initcount(t_data *d, t_cnt *c);
 void			ft_write_file(t_data *d, int fd);
 void			ft_save_img(t_data *d);
+void			ft_rmblank(t_file *file);
 #endif

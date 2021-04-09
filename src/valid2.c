@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:36:37 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:41:15 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 **		checks if sprite has been located before
 ** void	ft_ck_validmap(t_file *cubfile)
 **		tests for wall composing rules
+** void	ft_rmblank(t_file *file)
+**		removes blank spaces and identifier from argument line
 */
 
 int		ft_ck_mapdata(t_file *cubfile)
@@ -103,4 +105,29 @@ void	ft_ck_validmap(t_file *cubfile)
 	while (c.x < c.i * c.j)
 		if (map[c.x++] == 9)
 			map[c.x - 1] = 1;
+}
+
+void	ft_rmblank(t_file *file)
+{
+	int i;
+	int j;
+	int s;
+
+	i = 0;
+	s = ft_strlen(file->line);
+	while (i < s)
+	{
+		if (ft_tstspc(file->line[i]) == 1 || file->line[i] == 'C' ||
+			file->line[i] == 'F')
+		{
+			j = i;
+			while (file->line[j])
+			{
+				file->line[j] = file->line[j + 1];
+				j++;
+			}
+			s--;
+		}
+		i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/06 19:53:26 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:42:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ int		ft_id_n_load(t_file *file, char *line, int fd)
 {
 	char	**clean_line;
 
-	while (get_next_line(fd, &line) > 0)
+	while (get_next_line(fd, &line) > 0 && !ft_loadedargs(file, 0, 1))
 	{
 		clean_line = ft_split(line, ' ');
+		file->line = line;
 		if (clean_line[0] != NULL)
 			ft_argtest(file, clean_line, fd);
 		free(line);
