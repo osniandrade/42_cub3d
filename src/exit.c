@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/06 19:45:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 12:57:53 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 /*
 ** void	ft_free_c_line(char **clean_line)
 **      frees clean_line array of arrays
-** void	ft_ex_wrongdata(t_file *cubfile, int fd)
+** void	ft_ex_wrongdata(t_file *file, int fd)
 **      exits cleanly if error found in cub file
-** void	ft_ex_wrongmap(t_file *cubfile, int f)
+** void	ft_ex_wrongmap(t_file *file, int f)
 **      exit function from map part of validation
 ** void	ft_error(void)
 **      prints error message and finishes the program
@@ -38,32 +38,32 @@ void	ft_free_c_line(char **clean_line)
 	free(clean_line);
 }
 
-void	ft_ex_wrongdata(t_file *cubfile, int fd)
+void	ft_ex_wrongdata(t_file *file, int fd)
 {
 	close(fd);
-	if (cubfile->txpath[0] != NULL)
-		free(cubfile->txpath[0]);
-	if (cubfile->txpath[1] != NULL)
-		free(cubfile->txpath[1]);
-	if (cubfile->txpath[2] != NULL)
-		free(cubfile->txpath[2]);
-	if (cubfile->txpath[3] != NULL)
-		free(cubfile->txpath[3]);
-	if (cubfile->sppath[0] != NULL)
-		free(cubfile->sppath[0]);
+	if (file->txpath[0] != NULL)
+		free(file->txpath[0]);
+	if (file->txpath[1] != NULL)
+		free(file->txpath[1]);
+	if (file->txpath[2] != NULL)
+		free(file->txpath[2]);
+	if (file->txpath[3] != NULL)
+		free(file->txpath[3]);
+	if (file->sppath[0] != NULL)
+		free(file->sppath[0]);
 	exit(0);
 }
 
-void	ft_ex_wrongmap(t_file *cubfile, int f)
+void	ft_ex_wrongmap(t_file *file, int f)
 {
-	free(cubfile->txpath[0]);
-	free(cubfile->txpath[1]);
-	free(cubfile->txpath[2]);
-	free(cubfile->txpath[3]);
-	free(cubfile->sppath[0]);
+	free(file->txpath[0]);
+	free(file->txpath[1]);
+	free(file->txpath[2]);
+	free(file->txpath[3]);
+	free(file->sppath[0]);
 	if (f == 0)
 		exit(0);
-	free(cubfile->map);
+	free(file->map);
 	exit(0);
 }
 

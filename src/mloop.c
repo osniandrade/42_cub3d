@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:56:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 14:41:56 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ void	ft_setup(t_data *d)
 int		ft_update(t_data *d)
 {
 	ft_clear_colorbuffer(d, 0);
-	ft_reset_array(d->vsbspr, SPRITE_COUNT);
+	ft_reset_array(d->vsbspr, d->n_spr);
 	ft_update_sprite(d);
+	ft_sortspr(d);
 	ft_player_direction(d);
 	ft_cast_all_rays(d);
 	ft_move_player(d);

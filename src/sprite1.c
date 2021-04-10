@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sprite.c                                           :+:      :+:    :+:   */
+/*   sprite1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:55:16 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 14:39:29 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_update_sprite(t_data *d)
 
 	i = 0;
 	sprc = 0;
-	while (i < SPRITE_COUNT)
+	while (i < d->n_spr)
 	{
 		sprite_player_angle = d->plr.rt_angl - ft_sprite_arctan(d, i);
 		sprite_player_angle = fabs(ft_normalize_angle2(sprite_player_angle));
@@ -99,7 +99,7 @@ void	ft_draw_sprite(t_data *d)
 
 	i = 0;
 	j = 0;
-	while (i < SPRITE_COUNT)
+	while (i < d->n_spr)
 	{
 		if (i == d->vsbspr[j])
 		{
@@ -117,24 +117,24 @@ int		ft_find_sprite(t_data *d)
 
 	c = (t_cnt) {0};
 	c.j = d->mapsz.w;
-	while (c.i < SPRITE_COUNT)
+	c.i = 0;
+	while (c.y < d->mapsz.h)
 	{
-		while (c.y < d->mapsz.h)
+		c.x = 0;
+		while (c.x < d->mapsz.w)
 		{
-			c.x = 0;
-			while (c.x < d->mapsz.w)
+			if (d->maptbl[ft_pos(c.j, c.x, c.y)] == 2)
 			{
-				if (d->maptbl[ft_pos(c.j, c.x, c.y)] == 2)
-				{
-					d->spr[c.i].pos.x = c.x * d->tile.size.h;
-					d->spr[c.i].pos.y = c.y * d->tile.size.w;
+				d->spr[c.i].pos.x = c.x * d->tile.size.h;
+				d->spr[c.i].pos.y = c.y * d->tile.size.w;
+				if (c.i < d->n_spr)
+					c.i++;
+				else
 					return (TRUE);
-				}
-				c.x++;
 			}
-			c.y++;
+			c.x++;
 		}
-		c.i++;
+		c.y++;
 	}
-	return (FALSE);
+	return (TRUE);
 }

@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:35:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 14:08:50 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,14 @@ int		ft_init_sprite_struct(t_data *d)
 	int		i;
 
 	i = 0;
-	while (i < SPRITE_COUNT)
-		d->spr[i++] = (t_sprt) {0};
+	d->n_spr = d->cub.sprcnt;
+	d->spr = malloc(sizeof(t_sprt) * d->n_spr);
+	d->vsbspr = malloc(sizeof(int) * d->n_spr);
+	while (i < d->n_spr)
+	{
+		d->spr[i] = (t_sprt) {0};
+		i++;
+	}
 	return (TRUE);
 }
 

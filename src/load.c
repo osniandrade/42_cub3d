@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:22:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 13:20:38 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	ft_load_file_paths(t_data *d)
 		i++;
 	}
 	i = 0;
-	while (i < SPRITE_COUNT)
+	while (i < d->n_spr)
 	{
-		d->spr[i].txtr.path = d->cub.sppath[i];
+		d->spr[i].txtr.path = d->cub.sppath[0];
 		i++;
 	}
 }
@@ -70,7 +70,7 @@ void	ft_load_xpm_sprite(t_data *d)
 	int		i;
 
 	i = 0;
-	while (i < SPRITE_COUNT)
+	while (i < d->n_spr)
 	{
 		d->spr[i].txtr.instc.img = mlx_xpm_file_to_image(
 			d->mlx,
@@ -90,8 +90,7 @@ void	ft_load_xpm_sprite(t_data *d)
 int		ft_loadmap(t_data *d)
 {
 	t_cnt	c;
-	int		pos1;
-	int		pos2;
+	int		pos;
 
 	c = (t_cnt) {0};
 	ft_init_map_size(d);
@@ -100,9 +99,8 @@ int		ft_loadmap(t_data *d)
 	{
 		while (c.x < d->mapsz.w)
 		{
-			pos1 = ft_pos(c.i, c.x, c.y);
-			pos2 = ft_pos(c.i, c.x, c.y);
-			d->maptbl[pos1] = d->cub.map[pos2];
+			pos = ft_pos(c.i, c.x, c.y);
+			d->maptbl[pos] = d->cub.map[pos];
 			c.x++;
 		}
 		c.x = 0;

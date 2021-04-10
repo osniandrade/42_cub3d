@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/09 14:33:25 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 14:41:53 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct	s_file
 	char		plrdir;
 	char		*line;
 	int			argcnt;
+	int			sprcnt;
 	int			bmp;
 	int			*map;
 	int			args[8];
@@ -131,16 +132,17 @@ typedef struct	s_data
 {
 	void		*mlx;
 	void		*mlx_win;
-	int			vsbspr[SPRITE_COUNT];
+	int			*vsbspr;
 	int			*maptbl;
 	int			c_clr;
 	int			f_clr;
 	int			n_rays;
+	int			n_spr;
 	float		fov;
 	float		dpp;
 	float		gamespd;
 	t_file		cub;
-	t_sprt		spr[SPRITE_COUNT];
+	t_sprt		*spr;
 	t_txtr		txt[TEXTURE_COUNT];
 	t_dir		dir;
 	t_size		scrsz;
@@ -290,4 +292,5 @@ void			ft_initcount(t_data *d, t_cnt *c);
 void			ft_write_file(t_data *d, int fd);
 void			ft_save_img(t_data *d);
 void			ft_rmblank(t_file *file);
+void			ft_sortspr(t_data *d);
 #endif
