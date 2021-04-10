@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 14:41:53 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 15:18:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,4 +293,5 @@ void			ft_write_file(t_data *d, int fd);
 void			ft_save_img(t_data *d);
 void			ft_rmblank(t_file *file);
 void			ft_sortspr(t_data *d);
+void			ft_finish(t_file *file, char *msg, int fd);
 #endif

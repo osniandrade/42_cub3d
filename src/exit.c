@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 12:57:53 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 15:25:03 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 **      exit function from map part of validation
 ** void	ft_error(void)
 **      prints error message and finishes the program
+** void	ft_finish(t_file *file, char *msg, int fd)
+**		exits the programs and prints the error msg
 */
 
 void	ft_free_c_line(char **clean_line)
@@ -77,4 +79,10 @@ void	ft_error(void)
 		printf("%s\n", strerror(err));
 		exit(0);
 	}
+}
+
+void	ft_finish(t_file *file, char *msg, int fd)
+{
+	printf("%s\n", msg);
+	ft_ex_wrongdata(file, fd);
 }
