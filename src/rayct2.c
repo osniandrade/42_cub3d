@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 16:33:05 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 15:08:41 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,16 @@ void	ft_walltext(t_data *d, t_3dproj *prj)
 	if (d->rays[prj->i].v_hit)
 	{
 		if (d->rays[prj->i].face.l)
-			ft_proj_txtr(d, prj, 0);
+			ft_proj_txtr(d, prj, 3);
 		else
-			ft_proj_txtr(d, prj, 1);
+			ft_proj_txtr(d, prj, 2);
 	}
 	else
 	{
 		if (d->rays[prj->i].face.u)
-			ft_proj_txtr(d, prj, 2);
+			ft_proj_txtr(d, prj, 1);
 		else
-			ft_proj_txtr(d, prj, 3);
+			ft_proj_txtr(d, prj, 0);
 	}
 }
 

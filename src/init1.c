@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/01 17:04:36 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/10 14:48:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int		ft_init_win(t_data *d)
 	d->dpp = (c.i / 2) / tan(d->fov / 2);
 	d->n_rays = c.i;
 	d->rays = malloc(sizeof(t_rays) * d->n_rays);
-	d->mlx_win = mlx_new_window(d->mlx, c.i, c.j, "CUB3D");
+	if (d->cub.bmp != 1)
+		d->mlx_win = mlx_new_window(d->mlx, c.i, c.j, "CUB3D");
 	return (TRUE);
 }
 
