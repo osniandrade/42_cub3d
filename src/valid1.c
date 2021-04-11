@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/11 10:32:04 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/11 10:52:35 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ t_size	ft_ck_scrsize(t_file *file, char **clean_line, int fd)
 	size.h = ft_atoi(clean_line[2]);
 	if (size.w % 4 != 0 || size.h % 4 != 0 || size.w == 0 || size.h == 0)
 		ft_finish(file, "invalid screen resolution", fd);
+	if (clean_line[3] != NULL)
+		ft_finish(file, "wrong resolution data", fd);
 	file->argcnt++;
 	ft_loadedargs(file, 0, 0);
 	return (size);
