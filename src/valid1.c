@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 15:24:31 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/11 10:32:04 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_size	ft_ck_scrsize(t_file *file, char **clean_line, int fd)
 		ft_finish(file, "missing screen resolution data", fd);
 	size.w = ft_atoi(clean_line[1]);
 	size.h = ft_atoi(clean_line[2]);
-	if (size.w % 4 != 0 || size.h % 4 != 0)
+	if (size.w % 4 != 0 || size.h % 4 != 0 || size.w == 0 || size.h == 0)
 		ft_finish(file, "invalid screen resolution", fd);
 	file->argcnt++;
 	ft_loadedargs(file, 0, 0);
@@ -115,6 +115,8 @@ void	ft_ck_rgb(t_file *file, char **clean_line, int *rgb, int fd)
 	rgb[0] = ft_atoi(rgb_line[0]);
 	rgb[1] = ft_atoi(rgb_line[1]);
 	rgb[2] = ft_atoi(rgb_line[2]);
+	if (rgb_line[3] != NULL)
+		ft_finish(file, "too many color arguments", fd);
 	if (rgb_line != NULL)
 		ft_free_c_line(rgb_line);
 	while (j < 3)

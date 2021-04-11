@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 13:05:41 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/11 09:49:19 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int		ft_ck_validchar(int *map, t_cnt c, t_file *file)
 		map[ft_pos(c.j, c.x + 1, c.y + 1)] == 9)
 	{
 		printf("map not enclosed\n");
-		printf("wrong value at: x = %d, y = %d\n", c.x, c.y);
+		printf("wrong value at: x = %d, y = %d\n", c.x + 1, c.y + 1);
 		ft_ex_wrongmap(file, 1);
 		return (FALSE);
 	}
@@ -97,6 +97,7 @@ void	ft_ck_validmap(t_file *file)
 	while (c.x < c.i * c.j)
 		if (map[c.x++] == 9)
 			map[c.x - 1] = 1;
+	ft_ck_startpos(file);
 }
 
 void	ft_rmblank(t_file *file)

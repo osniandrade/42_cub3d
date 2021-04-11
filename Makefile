@@ -6,7 +6,7 @@
 #    By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/25 15:20:32 by ocarlos-          #+#    #+#              #
-#    Updated: 2021/04/10 14:41:35 by ocarlos-         ###   ########.fr        #
+#    Updated: 2021/04/11 09:49:55 by ocarlos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRCCODE = init1.c init2.c load.c mloop.c finish.c keybrd.c \
 			graph.c help1.c help2.c test.c move.c rayct1.c \
 			rayct2.c rayct3.c sprite1.c sprite2.c bmp.c \
 			color.c libft1.c libft2.c libft3.c exit.c valid1.c \
-			valid2.c file1.c file2.c file3.c
+			valid2.c valid3.c file1.c file2.c file3.c
 SRC = $(addprefix $(SRCFOLDER), $(SRCCODE))
 CODE = $(MAINCODE) $(SRC) $(GNL)
 FLAGS = -Wall -Wextra -Werror
