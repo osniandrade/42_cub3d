@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/06 19:57:04 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/11 10:59:16 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@ void	ft_load_cub_file(t_data *d, int argc, char **argv)
 	ft_processmap(&file, line, fd);
 	close(fd);
 	ft_ck_validmap(&file);
+	ft_ck_startpos(&file);
 	d->cub = file;
 }

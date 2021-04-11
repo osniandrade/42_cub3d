@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/11 09:49:19 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/11 10:59:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	ft_ck_validmap(t_file *file)
 	while (c.x < c.i * c.j)
 		if (map[c.x++] == 9)
 			map[c.x - 1] = 1;
-	ft_ck_startpos(file);
 }
 
 void	ft_rmblank(t_file *file)
