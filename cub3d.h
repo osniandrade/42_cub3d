@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:14:38 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:15:01 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,31 +111,24 @@ typedef struct	s_rays
 	t_pos		n_touch;
 	t_img		rayspr;
 }				t_rays;
-
-typedef struct	s_data
+typedef struct	s_file
 {
-	void		*mlx;
-	void		*mlx_win;
-	int			*vsbspr;
-	int			*maptbl;
-	int			c_clr;
-	int			f_clr;
-	int			n_rays;
-	int			n_spr;
-	float		fov;
-	float		dpp;
-	float		gamespd;
-	t_file		cub;
-	t_sprt		*spr;
-	t_txtr		txt[TEXTURE_COUNT];
-	t_dir		dir;
-	t_size		scrsz;
-	t_size		mapsz;
-	T_CL		*buf;
-	t_img		tile;
-	t_rays		*rays;
-	t_player	plr;
-}				t_data;
+	char		*txpath[TEXTURE_COUNT];
+	char		*sppath[SPRITE_COUNT];
+	char		plrdir;
+	char		*line;
+	int			argcnt;
+	int			sprcnt;
+	int			bmp;
+	int			*map;
+	int			args[8];
+	int			rgbup[3];
+	int			rgbdw[3];
+	t_pos		strtpos;
+	t_size		scrsize;
+	t_size		mapsize;
+}				t_file;
+
 typedef struct	s_3dproj
 {
 	int			cltop;
