@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 14:39:29 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:25:01 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	ft_sprite_projection(t_data *d, t_pjspr *spr, int i)
 				if (spr->color != d->spr[i].txtr.buffer[0])
 					if (spr->x < d->scrsz.w)
 						if (d->spr[i].dstnc < d->rays[spr->x].dist)
-							d->buf[spr->t_pos] = spr->color;
+							d->buf[spr->tpos] = spr->color;
 			}
 			spr->y++;
 		}

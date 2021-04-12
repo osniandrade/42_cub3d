@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/10 14:08:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:25:01 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	ft_initsprproj(t_data *d, t_pjspr *spr, int i)
 	spr->dsttop = spr->y + (spr->h / 2) - (d->scrsz.h / 2);
 	spr->yofst = spr->dsttop * (spr->texsz.h / spr->h);
 	spr->buff = (T_CL*)d->spr[i].txtr.buffer;
-	spr->t_pos = ft_pos(spr->texsz.w, spr->xofst, spr->yofst);
-	spr->color = spr->buff[spr->t_pos];
-	spr->t_pos = ft_pos(d->scrsz.w, spr->x, spr->y);
+	spr->tpos = ft_pos(spr->texsz.w, spr->xofst, spr->yofst);
+	spr->color = spr->buff[spr->tpos];
+	spr->tpos = ft_pos(d->scrsz.w, spr->x, spr->y);
 }
