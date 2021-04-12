@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:13:46 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:14:12 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,20 +88,17 @@ typedef struct	s_sprt
 	t_txtr		txtr;
 	t_pos		pos;
 }				t_sprt;
-
-typedef struct	s_rays
+typedef struct	s_player
 {
-	float		angle;
-	float		dist;
-	float		t_ang;
-	int			v_hit;
-	int			fndwall;
-	int			ctntwall;
-	t_dir		face;
-	t_pos		w_hit;
-	t_pos		n_touch;
-	t_img		rayspr;
-}				t_rays;
+	int			turndir;
+	int			walkdir;
+	int			strafe;
+	float		rt_angl;
+	float		walkspd;
+	float		turnspd;
+	t_img		spr;
+}				t_player;
+
 typedef struct	s_file
 {
 	char		*txpath[TEXTURE_COUNT];
