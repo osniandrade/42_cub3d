@@ -6,13 +6,146 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:10:57 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:12:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 # include <stdlib.h>
+# include <math.h>
+# include <stdint.h>
+# include <errno.h>
+# include <string.h>
+# include <stdio.h>
+# include "minilibx/mlx.h"
+# include "gnl/get_next_line.h"
+
+# define TRUE 1
+# define FALSE 0
+# define GAMESPEED 0.5
+# define INIT_WALKSPD 16
+# define INIT_TURNSPD 6
+# define MOVESPEED 1
+# define KEYPRESS 2
+# define KEYRELEASE 3
+# define MOUSECLICK 33
+# define TEXTURE_COUNT 4
+# define SPRITE_COUNT 1
+# define UP 119
+# define DOWN 115
+# define RIGHT 100
+# define LEFT 97
+# define STRFR 101
+# define STRFL 113
+# define ESC 65307
+# define PI 3.14159265
+# define TILE_SIZE 64
+# define MAP_SCALE 0.1
+# define T_CL uint32_t
+
+typedef struct	s_player
+{
+	int			turndir;
+	int			walkdir;
+	int			strafe;
+	float		rt_angl;
+	float		walkspd;
+	float		turnspd;
+	t_img		spr;
+}				t_player;
+typedef struct	s_rays
+{
+	float		angle;
+	float		dist;
+	float		t_ang;
+	int			v_hit;
+	int			fndwall;
+	int			ctntwall;
+	t_dir		face;
+	t_pos		w_hit;
+	t_pos		n_touch;
+	t_img		rayspr;
+}				t_rays;
+typedef struct	s_file
+{
+	char		*txpath[TEXTURE_COUNT];
+	char		*sppath[SPRITE_COUNT];
+	char		plrdir;
+	char		*line;
+	int			argcnt;
+	int			sprcnt;
+	int			bmp;
+	int			*map;
+	int			args[8];
+	int			rgbup[3];
+	int			rgbdw[3];
+	t_pos		strtpos;
+	t_size		scrsize;
+	t_size		mapsize;
+}				t_file;
+typedef struct	s_data
+{
+	void		*mlx;
+	void		*mlx_win;
+	int			*vsbspr;
+	int			*maptbl;
+	int			c_clr;
+	int			f_clr;
+	int			n_rays;
+	int			n_spr;
+	float		fov;
+	float		dpp;
+	float		gamespd;
+	t_file		cub;
+	t_sprt		*spr;
+	t_txtr		txt[TEXTURE_COUNT];
+	t_dir		dir;
+	t_size		scrsz;
+	t_size		mapsz;
+	T_CL		*buf;
+	t_img		tile;
+	t_rays		*rays;
+	t_player	plr;
+}				t_data;
+typedef struct	s_3dproj
+{
+	int			cltop;
+	int			clbot;
+	int			strph;
+	int			i;
+	int			y;
+	float		pldist;
+	float		prwallh;
+}				t_3dproj;
+typedef struct	s_pjspr
+{
+	int			x;
+	int			y;
+	int			xofst;
+	int			yofst;
+	int			dsttop;
+	int			t_pos;
+	float		h;
+	float		w;
+	float		topy;
+	float		btmy;
+	float		angle;
+	float		scrx;
+	float		lftx;
+	float		rgtx;
+	float		txlw;
+	T_CL		*buff;
+	T_CL		color;
+	t_size		texsz;
+}				t_pjspr;
+typedef struct	s_cnt
+{
+	int			x;
+	int			y;
+	int			i;
+	int			j;
+}				t_cnt;
 
 int				ft_id_n_load(t_file *cubfile, char *line, int fd);
 void			ft_load_cub_file(t_data *d, int argc, char **argv);
