@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:19:50 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:20:30 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ typedef struct	s_pjspr
 	int			xofst;
 	int			yofst;
 	int			dsttop;
-	int			t_pos;
+	int			tpos;
 	float		h;
 	float		w;
 	float		topy;
