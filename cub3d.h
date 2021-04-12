@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:07:53 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:09:11 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,6 @@
 # include "minilibx/mlx.h"
 # include "gnl/get_next_line.h"
 
-# define TRUE 1
-# define FALSE 0
-# define GAMESPEED 0.5
-# define INIT_WALKSPD 16
-# define INIT_TURNSPD 6
-# define MOVESPEED 1
-# define KEYPRESS 2
-# define KEYRELEASE 3
-# define MOUSECLICK 33
-# define TEXTURE_COUNT 4
-# define SPRITE_COUNT 1
-# define UP 119
-# define DOWN 115
-# define RIGHT 100
-# define LEFT 97
-# define STRFR 101
-# define STRFL 113
-# define ESC 65307
-# define PI 3.14159265
-# define TILE_SIZE 64
-# define MAP_SCALE 0.1
 
 typedef struct	s_pos
 {
