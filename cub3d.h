@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 10:48:12 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:07:53 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@
 # define PI 3.14159265
 # define TILE_SIZE 64
 # define MAP_SCALE 0.1
-# define T_CL uint32_t
 
 typedef struct	s_pos
 {
