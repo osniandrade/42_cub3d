@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:14:12 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:14:38 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,24 +98,20 @@ typedef struct	s_player
 	float		turnspd;
 	t_img		spr;
 }				t_player;
-
-typedef struct	s_file
+typedef struct	s_rays
 {
-	char		*txpath[TEXTURE_COUNT];
-	char		*sppath[SPRITE_COUNT];
-	char		plrdir;
-	char		*line;
-	int			argcnt;
-	int			sprcnt;
-	int			bmp;
-	int			*map;
-	int			args[8];
-	int			rgbup[3];
-	int			rgbdw[3];
-	t_pos		strtpos;
-	t_size		scrsize;
-	t_size		mapsize;
-}				t_file;
+	float		angle;
+	float		dist;
+	float		t_ang;
+	int			v_hit;
+	int			fndwall;
+	int			ctntwall;
+	t_dir		face;
+	t_pos		w_hit;
+	t_pos		n_touch;
+	t_img		rayspr;
+}				t_rays;
+
 typedef struct	s_data
 {
 	void		*mlx;
