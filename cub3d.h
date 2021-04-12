@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:18:40 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:19:05 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,12 +164,12 @@ typedef struct	s_3dproj
 }				t_3dproj;
 typedef struct	s_pjspr
 {
-	//int			x;
-	//int			y;
-	//int			xofst;
-	//int			yofst;
-	//int			dsttop;
-	int			t_pos;
+	int			x;
+	int			y;
+	int			xofst;
+	int			yofst;
+	int			dsttop;
+	//int			t_pos;
 	float		h;
 	float		w;
 	float		topy;
