@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:15:54 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:16:53 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,27 @@ typedef struct	s_3dproj
 	float		pldist;
 	float		prwallh;
 }				t_3dproj;
+typedef struct	s_pjspr
+{
+	//int			x;
+	int			y;
+	int			xofst;
+	int			yofst;
+	int			dsttop;
+	int			t_pos;
+	float		h;
+	float		w;
+	float		topy;
+	float		btmy;
+	float		angle;
+	float		scrx;
+	float		lftx;
+	float		rgtx;
+	float		txlw;
+	T_CL		*buff;
+	T_CL		color;
+	t_size		texsz;
+}				t_pjspr;
 typedef struct	s_cnt
 {
 	int			x;
