@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:15:01 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:15:54 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,30 @@ typedef struct	s_file
 	t_size		scrsize;
 	t_size		mapsize;
 }				t_file;
-
+typedef struct	s_data
+{
+	void		*mlx;
+	void		*mlx_win;
+	int			*vsbspr;
+	int			*maptbl;
+	int			c_clr;
+	int			f_clr;
+	int			n_rays;
+	int			n_spr;
+	float		fov;
+	float		dpp;
+	float		gamespd;
+	t_file		cub;
+	t_sprt		*spr;
+	t_txtr		txt[TEXTURE_COUNT];
+	t_dir		dir;
+	t_size		scrsz;
+	t_size		mapsz;
+	T_CL		*buf;
+	t_img		tile;
+	t_rays		*rays;
+	t_player	plr;
+}				t_data;
 typedef struct	s_3dproj
 {
 	int			cltop;
@@ -139,27 +162,6 @@ typedef struct	s_3dproj
 	float		pldist;
 	float		prwallh;
 }				t_3dproj;
-typedef struct	s_pjspr
-{
-	int			x;
-	int			y;
-	int			xofst;
-	int			yofst;
-	int			dsttop;
-	int			t_pos;
-	float		h;
-	float		w;
-	float		topy;
-	float		btmy;
-	float		angle;
-	float		scrx;
-	float		lftx;
-	float		rgtx;
-	float		txlw;
-	T_CL		*buff;
-	T_CL		color;
-	t_size		texsz;
-}				t_pjspr;
 typedef struct	s_cnt
 {
 	int			x;
