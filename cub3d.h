@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:18:08 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:18:26 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,8 @@ typedef struct	s_pjspr
 	//int			dsttop;
 	//int			t_pos;
 	//float		h;
-	//float		w;
-	//float		topy;
+	float		w;
+	float		topy;
 	float		btmy;
 	float		angle;
 	float		scrx;
