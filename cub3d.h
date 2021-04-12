@@ -6,21 +6,13 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 08:55:43 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/12 11:09:11 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/12 11:10:10 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 # include <stdlib.h>
-# include <math.h>
-# include <stdint.h>
-# include <errno.h>
-# include <string.h>
-# include <stdio.h>
-# include "minilibx/mlx.h"
-# include "gnl/get_next_line.h"
-
 
 typedef struct	s_pos
 {
