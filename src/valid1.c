@@ -6,7 +6,7 @@
 /*   By: ocarlos- <ocarlos-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 16:09:30 by ocarlos-          #+#    #+#             */
-/*   Updated: 2021/04/11 10:52:35 by ocarlos-         ###   ########.fr       */
+/*   Updated: 2021/04/14 20:06:43 by ocarlos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_validargs(t_file *file, int argc, char **argv)
 		}
 	if (argc == 3)
 	{
-		if (ft_strncmp(argv[2], "--save", 6) != 0)
+		if (ft_strncmp(argv[2], "--save\0", 7) != 0)
 		{
 			printf("invalid argument\n");
 			exit(0);
